@@ -85,7 +85,7 @@ function jobCallback(job, worker, index) {
 }
 
 var pool = new Pool({
-    numWorkers: 10,
+    numWorkers: 3,
     jobCallback: jobCallback,
     workerFile: __dirname + '/worker.js' // location of our worker file (as an absolute path)
 });

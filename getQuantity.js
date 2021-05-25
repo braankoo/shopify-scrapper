@@ -43,32 +43,36 @@ function jobCallback(job, worker, index) {
         }, function (err) {
             // Lets log if it worked
             if (err) {
-                fs.readFile(
-                    __dirname + '/data/' + productsArray[index].product_id + '.csv',
-                    'utf8',
-                    function (err, data) {
-                        if (err) {
-                            console.log(err);
+                try {
+                    fs.readFile(
+                        __dirname + '/data/' + productsArray[index].product_id + '.csv',
+                        'utf8',
+                        function (err, data) {
+                            if (err) {
+                                console.log(err);
 
-                        }
-                        const regexp = /(?<=\[0\]\['inventory_quantity'\] =).\d*/g;
-                        const found = data.match(regexp);
-                        const quantity = found[0];
-
-
-                        conn.query(
-                            'select IFNULL(inventory_quantity,0) as inventory_quantity from historicals where date_created = DATE_ADD(CURDATE(), INTERVAL -1 DAY) and product_id = ? and site_id = ? LIMIT 1',
-                            [productsArray[index].product_id, productsArray[index].site_id],
-                            (err, results, fields) => {
-                                if (results.length) {
-                                    updateProductData(productsArray[index].product_id, productsArray[index].site_id, quantity, results.inventory_quantity - data)
-                                } else {
-                                    updateProductData(productsArray[index].product_id, productsArray[index].site_id, quantity, 0)
-                                }
                             }
-                        );
-                        fs.unlinkSync(__dirname + '/data/' + productsArray[index].product_id + '.csv');
-                    });
+                            const regexp = /(?<=\[0\]\['inventory_quantity'\] =).\d*/g;
+                            const found = data.match(regexp);
+                            const quantity = found[0];
+
+
+                            conn.query(
+                                'select IFNULL(inventory_quantity,0) as inventory_quantity from historicals where date_created = DATE_ADD(CURDATE(), INTERVAL -1 DAY) and product_id = ? and site_id = ? LIMIT 1',
+                                [productsArray[index].product_id, productsArray[index].site_id],
+                                (err, results, fields) => {
+                                    if (results.length) {
+                                        updateProductData(productsArray[index].product_id, productsArray[index].site_id, quantity, results.inventory_quantity - data)
+                                    } else {
+                                        updateProductData(productsArray[index].product_id, productsArray[index].site_id, quantity, 0)
+                                    }
+                                }
+                            );
+                            fs.unlinkSync(__dirname + '/data/' + productsArray[index].product_id + '.csv');
+                        });
+                } catch (err) {
+                    console.log(err);
+                }
                 console.log('There were some problems for url ' + productsArray[index].site + ': ' + err.message);
             } else {
                 console.log('DONE: ' + url + '(' + index + ')');

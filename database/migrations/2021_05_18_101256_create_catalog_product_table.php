@@ -17,6 +17,7 @@ class CreateCatalogProductTable extends Migration {
             $table->id();
             $table->bigInteger('product_id');
             $table->bigInteger('catalog_id');
+            $table->integer('position');
             $table->integer('site_id');
             $table->unique([ 'product_id', 'catalog_id', 'site_id' ]);
             $table->timestamps();

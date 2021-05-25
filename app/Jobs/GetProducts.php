@@ -81,7 +81,7 @@ class GetProducts implements ShouldQueue {
                         {
                             list($arr, $variants) = $this->prepareProductData($product, $variants, $catalog);
                             $products[] = $arr;
-                            $productCatalogRelation[] = [ 'catalog_id' => $catalog->catalog_id, 'product_id' => $product->id, 'site_id' => $catalog->site->id ];
+                            $productCatalogRelation[] = [ 'catalog_id' => $catalog->catalog_id, 'product_id' => $product->id, 'site_id' => $catalog->site->id, 'position' => $key ];
                         }
 
                         Product::upsert($products, [ 'product_id', 'site_id' ], array_keys($products[0]));
@@ -161,8 +161,6 @@ class GetProducts implements ShouldQueue {
      */
     private function generateExistingProductsTable()
     {
-
-
         DB::statement(
             "CREATE TEMPORARY TABLE {$this->dataBase}(
                 id int unsigned auto_increment primary key,
@@ -171,8 +169,6 @@ class GetProducts implements ShouldQueue {
                 UNIQUE(product_id, site_id)
             )"
         );
-
-
     }
 
     /**

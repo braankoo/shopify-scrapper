@@ -1,0 +1,11 @@
+@import "~bootstrap/scss/bootstrap.scss";
+@import "~bootstrap-vue/src/index.scss";
+@import "~vue-sidebar-menu/src/scss/vue-sidebar-menu.scss";
+
+html, body {
+    height: 100%;
+}
+
+.table td {
+    padding: 3px !important;
+}

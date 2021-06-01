@@ -52,23 +52,36 @@ function jobCallback(job, worker, index) {
                                 console.log(err);
 
                             }
-                            const regexp = /(?<=\[0\]\['inventory_quantity'\] =).\d*/g;
-                            const found = data.match(regexp);
-                            const quantity = found[0];
 
-
-                            conn.query(
-                                'select IFNULL(inventory_quantity,0) as inventory_quantity from historicals where date_created = DATE_ADD(CURDATE(), INTERVAL -1 DAY) and product_id = ? and site_id = ? LIMIT 1',
-                                [productsArray[index].product_id, productsArray[index].site_id],
-                                (err, results, fields) => {
-                                    if (results.length) {
-                                        updateProductData(productsArray[index].product_id, productsArray[index].site_id, quantity, results.inventory_quantity - data)
-                                    } else {
-                                        updateProductData(productsArray[index].product_id, productsArray[index].site_id, quantity, 0)
+                            conn.query('select `regexp` from sites where id = ?', [productsArray[index].site_id], (err, results) => {
+                                if (results.length) {
+                                    const regexp = results[0].regexp;
+                                    const re = new RegExp(regexp, 'g');
+                                    const found = data.match(re);
+                                    let quantity = found[0].trim();
+                                    if (quantity.length) {
+                                        quantity = 0;
                                     }
+
+                                    conn.query(
+                                        'select IFNULL(inventory_quantity,0) as inventory_quantity from historicals where date_created = DATE_ADD(CURDATE(), INTERVAL -1 DAY) and product_id = ? and site_id = ? LIMIT 1',
+                                        [productsArray[index].product_id, productsArray[index].site_id],
+                                        (err, results, fields) => {
+
+                                            if (results.length) {
+                                                updateProductData(productsArray[index].product_id, productsArray[index].site_id, quantity, results.inventory_quantity - data)
+                                            } else {
+                                                updateProductData(productsArray[index].product_id, productsArray[index].site_id, quantity, 0)
+                                            }
+                                        }
+                                    );
+                                    fs.unlinkSync(__dirname + '/data/' + productsArray[index].product_id + '.csv');
+
+
                                 }
-                            );
-                            fs.unlinkSync(__dirname + '/data/' + productsArray[index].product_id + '.csv');
+                            });
+
+
                         });
                 } catch (err) {
                     console.log(err);

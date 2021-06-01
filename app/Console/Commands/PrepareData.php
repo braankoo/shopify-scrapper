@@ -41,7 +41,7 @@ class PrepareData extends Command {
      */
     public function handle()
     {
-        Site::whereId(2)->each(function ($site) {
+        Site::each(function ($site) {
 
             Bus::batch([
                 new \App\Jobs\GetCatalogs($site),

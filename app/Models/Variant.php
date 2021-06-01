@@ -9,6 +9,7 @@ class Variant extends Model {
 
     use HasFactory;
 
+    protected $primaryKey = 'variant_id';
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

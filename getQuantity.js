@@ -59,7 +59,7 @@ function jobCallback(job, worker, index) {
                                     const re = new RegExp(regexp, 'g');
                                     const found = data.match(re);
                                     let quantity = found[0].trim();
-                                    if (quantity.length) {
+                                    if (quantity.length === 0) {
                                         quantity = 0;
                                     }
 

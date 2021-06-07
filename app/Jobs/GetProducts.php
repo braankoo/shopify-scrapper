@@ -38,7 +38,7 @@ class GetProducts implements ShouldQueue {
     public function __construct(Site $site)
     {
         $this->site = $site;
-        $this->dataBase = str_replace('.', '', \Illuminate\Support\Str::random(15));
+        $this->dataBase = substr(md5(microtime()),rand(0,26),5);
     }
 
     /**
@@ -62,7 +62,7 @@ class GetProducts implements ShouldQueue {
             {
                 $response = $client->send($request,
                     [
-                        'query' => [
+                        'query'           => [
                             'page'  => $page ++,
                             'limit' => '100'
                         ],
@@ -163,7 +163,7 @@ class GetProducts implements ShouldQueue {
     private function generateExistingProductsTable()
     {
         DB::statement(
-            "CREATE TEMPORARY TABLE {$this->dataBase}(
+            "CREATE TEMPORARY TABLE `{$this->dataBase}`(
                 id int unsigned auto_increment primary key,
                 product_id bigint not null,
                 site_id int,
@@ -186,7 +186,7 @@ class GetProducts implements ShouldQueue {
             'active' => 'false'
         ]);
 
-        DB::statement("DROP TABLE `{$this->dataBase}`");
+        DB::statement("DROP TEMPORARY TABLE `{$this->dataBase}`");
     }
 }
 

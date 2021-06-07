@@ -40,7 +40,7 @@ class GetCatalogs implements ShouldQueue {
     public function __construct(Site $site)
     {
         $this->site = $site;
-        $this->dataBase = str_replace('.', '', Str::random(15));
+        $this->dataBase = substr(md5(microtime()), rand(0, 26), 5);
     }
 
     /**
@@ -111,7 +111,7 @@ class GetCatalogs implements ShouldQueue {
     private function generateExistingCatalogsTable()
     {
         DB::statement(
-            "CREATE  TABLE {$this->dataBase}(
+            "CREATE TEMPORARY TABLE {$this->dataBase}(
                 id int unsigned auto_increment primary key,
                 catalog_id bigint not null,
                 site_id int,
@@ -134,6 +134,6 @@ class GetCatalogs implements ShouldQueue {
         })->update([
             'active' => 'false'
         ]);
-        DB::statement("DROP TABLE `{$this->dataBase}`");
+        DB::statement("DROP TEMPORARY TABLE `{$this->dataBase}`");
     }
 }

@@ -31,6 +31,7 @@ class GetCatalogs implements ShouldQueue {
      */
     public $dataBase;
 
+
     /**
      * Create a new job instance.
      *
@@ -59,11 +60,12 @@ class GetCatalogs implements ShouldQueue {
 
             $response = $client->send($request,
                 [
-                    'query' => [
+                    'query'           => [
                         'page'  => $collectionPage ++,
                         'limit' => '100'
                     ],
-                    'proxy' => Proxy::inRandomOrder()->first()->ip
+                    'proxy'           => Proxy::inRandomOrder()->first()->ip,
+                    'connect_timeout' => 15
                 ]
             );
 

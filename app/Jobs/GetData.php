@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Historical;
+use App\Models\Proxy;
 use App\Models\Site;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -57,7 +58,8 @@ class GetData implements ShouldQueue {
 
                     $productsResponse = $this->client->send($productsRequest,
                         [
-//                            'proxy' => Proxy::inRandomOrder()->first()->ip
+                            'proxy' => Proxy::inRandomOrder()->first()->ip,
+                            'connect_timeout' => 15
                         ]
                     );
 

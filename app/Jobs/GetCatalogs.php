@@ -80,9 +80,11 @@ class GetCatalogs implements ShouldQueue {
                         $catalog['url'] = '/collections/' . $catalogInResponse->handle;
                         $catalog['name'] = $catalogInResponse->title;
                         $catalog['site_id'] = $this->site->id;
+                        $catalog['active'] = 'true';
                         $catalogs[] = $catalog;
                     }
                     Catalog::upsert($catalogs, [ 'catalog_id', 'site_id' ], array_keys($catalogs[0]));
+
                     DB::table($this->dataBase)->upsert(
                         array_map(function ($catalog) {
                             return [
@@ -106,7 +108,7 @@ class GetCatalogs implements ShouldQueue {
     private function generateExistingCatalogsTable()
     {
         DB::statement(
-            "CREATE TEMPORARY TABLE {$this->dataBase}(
+            "CREATE  TABLE {$this->dataBase}(
                 id int unsigned auto_increment primary key,
                 catalog_id bigint not null,
                 site_id int,

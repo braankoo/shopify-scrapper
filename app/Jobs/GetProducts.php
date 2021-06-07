@@ -81,7 +81,8 @@ class GetProducts implements ShouldQueue {
                         {
                             list($arr, $variants) = $this->prepareProductData($product, $variants, $catalog);
                             $products[] = $arr;
-                            $productCatalogRelation[] = [ 'catalog_id' => $catalog->catalog_id, 'product_id' => $product->id, 'site_id' => $catalog->site->id, 'position' => $key ];
+                            $productCatalogRelation[] = [ 'catalog_id' => $catalog->catalog_id, 'product_id' => $product->id, 'site_id' => $catalog->site->id ];
+
                         }
 
                         Product::upsert($products, [ 'product_id', 'site_id' ], array_keys($products[0]));
@@ -141,8 +142,6 @@ class GetProducts implements ShouldQueue {
             $variant['product_id'] = $product->id;
             $variant['variant_id'] = $product->variants[$i]->id;
             $variant['sku'] = $product->variants[$i]->sku;
-            $variant['price'] = $product->variants[$i]->price;
-            $variant['position'] = $product->variants[$i]->position;
             $variants[] = $variant;
         }
         $arr['tags'] = json_encode($product->tags);
@@ -188,3 +187,5 @@ class GetProducts implements ShouldQueue {
         DB::statement("DROP TABLE `{$this->dataBase}`");
     }
 }
+
+

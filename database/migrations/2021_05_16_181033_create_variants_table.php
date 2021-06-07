@@ -17,8 +17,6 @@ class CreateVariantsTable extends Migration {
             $table->id();
             $table->bigInteger('product_id', false, true);
             $table->bigInteger('variant_id', false, true);
-            $table->float('price');
-            $table->integer('position');
             $table->char('sku', 255);
             $table->foreign('product_id')->references('product_id')->on('products')->cascadeOnDelete();
             $table->unique([ 'product_id', 'variant_id' ]);

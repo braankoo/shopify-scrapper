@@ -21,7 +21,7 @@ class HistoricalController extends Controller {
 
 
         $pagination = DB::table('variants')
-            ->selectRaw('ROUND(historicals.price / 1000000,2) as price,inventory_quantity as quantity,compare_at_price, sales,date_created')
+            ->selectRaw('ROUND(historicals.price / 1000000,2) as price,inventory_quantity as quantity,compare_at_price, sales,date_created, position')
             ->join('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
             ->where('variants.variant_id', '=', $variant->variant_id)
             ->orderBy('date_created')

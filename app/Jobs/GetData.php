@@ -22,6 +22,9 @@ class GetData implements ShouldQueue {
      * @var \App\Models\Site
      */
     public $site;
+    /**
+     * @var
+     */
     public $client;
 
     /**
@@ -72,6 +75,7 @@ class GetData implements ShouldQueue {
                                 $arr[] = $this->prepareVariantData($product, $i);
                             }
 
+
                             $this->variantsWithQuantityOperations(
                                 array_filter($arr, function ($variant) {
                                     return array_key_exists('inventory_quantity', $variant);
@@ -101,6 +105,7 @@ class GetData implements ShouldQueue {
         $data['variant_id'] = $product->variants[$i]->id;
         $data['product_id'] = $product->id;
         $data['price'] = (int) ($product->variants[$i]->price * 1000000);
+        $data['position'] = $product->variants[$i]->position;
         if (!empty($product->variants[$i]->compare_at_price))
         {
             $data['compare_at_price'] = (int) ($product->variants[$i]->compare_at_price * 1000000);
@@ -122,6 +127,9 @@ class GetData implements ShouldQueue {
     }
 
 
+    /**
+     * @param array $data
+     */
     private function variantsWithQuantityOperations(array $data)
     {
 
@@ -169,6 +177,9 @@ class GetData implements ShouldQueue {
     }
 
 
+    /**
+     * @param array $data
+     */
     private function variantsWithOutQuantityOperations(array $data)
     {
 

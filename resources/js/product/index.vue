@@ -22,6 +22,15 @@
             <template #cell(url)="data" class="text-center">
                 <a :href="data.item.url" target="_blank">{{ data.item.url }}</a>
             </template>
+            <template #cell(image_1)="data" class="text-center">
+                <img :src="data.item.image_1" class="img-thumbnail img-fluid" alt=""/>
+            </template>
+            <template #cell(image_2)="data" class="text-center">
+                <img :src="data.item.image_2" class="img-thumbnail img-fluid" alt=""/>
+            </template>
+            <template #cell(image_3)="data" class="text-center">
+                <img :src="data.item.image_3" class="img-thumbnail img-fluid" alt=""/>
+            </template>
 
         </b-table>
         <template #footer>
@@ -67,6 +76,9 @@ export default {
                     key: 'position',
                     sortable: true,
                     label: 'Position'
+                },
+                {
+                    key: 'price',
                 },
                 {
                     key: 'type',

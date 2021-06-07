@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Catalog;
 use App\Models\Product;
+use App\Models\Proxy;
 use App\Models\Site;
 use App\Models\Variant;
 use Carbon\Carbon;
@@ -65,7 +66,7 @@ class GetProducts implements ShouldQueue {
                             'page'  => $page ++,
                             'limit' => '100'
                         ],
-//                    'proxy' => Proxy::inRandomOrder()->first()->ip
+                        'proxy' => Proxy::inRandomOrder()->first()->ip
                     ]
                 );
                 if ($response->getStatusCode() == 200)

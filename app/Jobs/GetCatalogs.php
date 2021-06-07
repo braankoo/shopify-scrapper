@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Catalog;
+use App\Models\Proxy;
 use App\Models\Site;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
@@ -62,7 +63,7 @@ class GetCatalogs implements ShouldQueue {
                         'page'  => $collectionPage ++,
                         'limit' => '100'
                     ],
-//                        'proxy' => Proxy::inRandomOrder()->first()->ip
+                    'proxy' => Proxy::inRandomOrder()->first()->ip
                 ]
             );
 

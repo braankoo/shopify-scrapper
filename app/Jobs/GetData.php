@@ -58,7 +58,7 @@ class GetData implements ShouldQueue {
 
                     $productsResponse = $this->client->send($productsRequest,
                         [
-                            'proxy' => Proxy::inRandomOrder()->first()->ip,
+//                            'proxy' => Proxy::inRandomOrder()->first()->ip,
                             'connect_timeout' => 15
                         ]
                     );

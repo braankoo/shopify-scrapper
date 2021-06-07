@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Jobs\GetData;
 use App\Models\Site;
+use Illuminate\Bus\Batch;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
 
@@ -47,7 +48,7 @@ class PrepareData extends Command {
                 new \App\Jobs\GetCatalogs($site),
                 new \App\Jobs\GetProducts($site),
                 new GetData($site)
-            ])->dispatch();
+            ])->allowFailures(false)->dispatch();
         });
     }
 }

@@ -69,7 +69,7 @@ function jobCallback(job, worker, index) {
                                         (err, results, fields) => {
 
                                             if (results.length) {
-                                                updateProductData(productsArray[index].product_id, productsArray[index].site_id, quantity, results.inventory_quantity - quantity)
+                                                updateProductData(productsArray[index].product_id, productsArray[index].site_id, quantity, results.inventory_quantity - parseInt(quantity))
                                             } else {
                                                 updateProductData(productsArray[index].product_id, productsArray[index].site_id, quantity, 0)
                                             }

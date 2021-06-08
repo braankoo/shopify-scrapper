@@ -51,7 +51,7 @@ class GetCatalogs implements ShouldQueue {
     public function handle()
     {
         $client = new Client([ 'base_uri' => $this->site->url ]);
-        $this->generateExistingCatalogsTable();
+//        $this->generateExistingCatalogsTable();
         $collectionPage = 0;
 
         do
@@ -101,7 +101,7 @@ class GetCatalogs implements ShouldQueue {
 
         } while ( !empty($response->getBody()->getContents()->collections) && $response->getStatusCode() == 200 );
 
-        $this->deactivateRemovedCatalogs();
+//        $this->deactivateRemovedCatalogs();
     }
 
 

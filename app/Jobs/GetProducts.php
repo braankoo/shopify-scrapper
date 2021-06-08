@@ -49,7 +49,7 @@ class GetProducts implements ShouldQueue {
     public function handle()
     {
 
-        $this->generateExistingProductsTable();
+//        $this->generateExistingProductsTable();
 
         $this->site->catalogs()->where('active', '=', 'true')->each(function ($catalog) {
 
@@ -114,7 +114,7 @@ class GetProducts implements ShouldQueue {
 
         });
 
-        $this->deactivateRemovedProducts();
+//        $this->deactivateRemovedProducts();
     }
 
     /**

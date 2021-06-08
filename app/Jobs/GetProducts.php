@@ -95,14 +95,14 @@ class GetProducts implements ShouldQueue {
                             'first_scrape' => Carbon::now()
                         ]);
 
-                        DB::table($this->dataBase)->upsert(
-                            array_map(
-                                function ($product) {
-                                    return [
-                                        'product_id' => $product['product_id'],
-                                        'site_id'    => $product['site_id']
-                                    ];
-                                }, $products), [ 'product_id', 'site_id' ], [ 'product_id', 'site_id' ]);
+//                        DB::table($this->dataBase)->upsert(
+//                            array_map(
+//                                function ($product) {
+//                                    return [
+//                                        'product_id' => $product['product_id'],
+//                                        'site_id'    => $product['site_id']
+//                                    ];
+//                                }, $products), [ 'product_id', 'site_id' ], [ 'product_id', 'site_id' ]);
 
                         Variant::upsert($variants, [ 'product_id' ], array_keys($variants[0]));
 

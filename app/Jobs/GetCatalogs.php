@@ -87,14 +87,14 @@ class GetCatalogs implements ShouldQueue {
                         $catalogs[] = $catalog;
                     }
                     Catalog::upsert($catalogs, [ 'catalog_id', 'site_id' ], array_keys($catalogs[0]));
-
-                    DB::table($this->dataBase)->upsert(
-                        array_map(function ($catalog) {
-                            return [
-                                'catalog_id' => $catalog['catalog_id'],
-                                'site_id'    => $this->site->id
-                            ];
-                        }, $catalogs), [ 'catalog_id', 'site_id' ], [ 'catalog_id', 'site_id' ]);
+//
+//                    DB::table($this->dataBase)->upsert(
+//                        array_map(function ($catalog) {
+//                            return [
+//                                'catalog_id' => $catalog['catalog_id'],
+//                                'site_id'    => $this->site->id
+//                            ];
+//                        }, $catalogs), [ 'catalog_id', 'site_id' ], [ 'catalog_id', 'site_id' ]);
                 }
 
             }

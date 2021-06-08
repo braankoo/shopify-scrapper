@@ -69,6 +69,8 @@ function jobCallback(job, worker, index) {
                                         (err, results, fields) => {
 
                                             if (results.length) {
+                                                conosle.log(results.inventory_quantity);
+                                                console.log(parseInt(quantity));
                                                 updateProductData(productsArray[index].product_id, productsArray[index].site_id, quantity, results.inventory_quantity - parseInt(quantity))
                                             } else {
                                                 updateProductData(productsArray[index].product_id, productsArray[index].site_id, quantity, 0)

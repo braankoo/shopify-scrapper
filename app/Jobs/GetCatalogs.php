@@ -64,7 +64,7 @@ class GetCatalogs implements ShouldQueue {
                         'page'  => $collectionPage ++,
                         'limit' => '100'
                     ],
-//                    'proxy'           => Proxy::inRandomOrder()->first()->ip,
+                    'proxy'           => Proxy::inRandomOrder()->first()->ip,
                     'connect_timeout' => 15
                 ]
             );

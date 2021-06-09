@@ -38,7 +38,7 @@ class GetProducts implements ShouldQueue {
     public function __construct(Site $site)
     {
         $this->site = $site;
-        $this->dataBase = substr(md5(microtime()),rand(0,26),5);
+        $this->dataBase = substr(md5(microtime()), rand(0, 26), 5);
     }
 
     /**
@@ -62,12 +62,11 @@ class GetProducts implements ShouldQueue {
             {
                 $response = $client->send($request,
                     [
-                        'query'           => [
+                        'query' => [
                             'page'  => $page ++,
                             'limit' => '100'
                         ],
-                        'proxy' => Proxy::inRandomOrder()->first()->ip,
-                        'connect_timeout' => 15
+                        'proxy' => Proxy::inRandomOrder()->first()->ip
                     ]
                 );
                 if ($response->getStatusCode() == 200)
@@ -109,6 +108,7 @@ class GetProducts implements ShouldQueue {
                         DB::table('catalog_product')->upsert($productCatalogRelation, [ 'catalog_id', 'product_id', 'site_id' ], array_keys($productCatalogRelation[0]));
                     }
                 }
+                usleep(300);
             } while ( !(empty($response->getBody()->getContents()->products)) && $response->getStatusCode() == 200 );
 
 

@@ -58,8 +58,7 @@ class GetData implements ShouldQueue {
 
                     $productsResponse = $this->client->send($productsRequest,
                         [
-                            'proxy'           => Proxy::inRandomOrder()->first()->ip,
-                            'connect_timeout' => 15
+                            'proxy' => Proxy::inRandomOrder()->first()->ip
                         ]
                     );
 
@@ -91,6 +90,7 @@ class GetData implements ShouldQueue {
 
                         }
                     }
+                    usleep(300);
                 } while ( $productsResponse->getStatusCode() == 200 && !empty($productsResponse->getBody()->getContents()->products) );
             });
         });

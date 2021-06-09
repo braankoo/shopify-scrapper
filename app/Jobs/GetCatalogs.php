@@ -60,12 +60,11 @@ class GetCatalogs implements ShouldQueue {
 
             $response = $client->send($request,
                 [
-                    'query'           => [
+                    'query' => [
                         'page'  => $collectionPage ++,
                         'limit' => '100'
                     ],
-                    'proxy'           => Proxy::inRandomOrder()->first()->ip,
-                    'connect_timeout' => 15
+                    'proxy' => Proxy::inRandomOrder()->first()->ip
                 ]
             );
 
@@ -98,7 +97,7 @@ class GetCatalogs implements ShouldQueue {
                 }
 
             }
-
+            usleep(300);
         } while ( !empty($response->getBody()->getContents()->collections) && $response->getStatusCode() == 200 );
 
 //        $this->deactivateRemovedCatalogs();

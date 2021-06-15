@@ -66,8 +66,11 @@ var pool = new Pool({
 });
 
 conn.query("SELECT id,product_html FROM sites", (err, result, fields) => {
-    console.log(result);
+
     const {hostname} = new URL(result[0].product_html);
+    fs.unlink('data/position/' + hostname + '.csv', function (err) {
+        if (err) throw err;
+    });
     positionUrl.push(
         {
             siteId: result[0].id,

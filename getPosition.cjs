@@ -33,9 +33,6 @@ function jobCallback(job, worker, index) {
                 if (err) {
                     try {
 
-                        fs.unlink('data/position/' + positionUrl[index].hostname + '.csv', function (err) {
-                            if (err) throw err;
-                        })
 
                         async function importModule() {
                             return await import('./js-workers/position/' + positionUrl[index].hostname + '.mjs' );

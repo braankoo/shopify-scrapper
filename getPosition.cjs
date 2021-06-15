@@ -68,9 +68,12 @@ var pool = new Pool({
 conn.query("SELECT id,product_html FROM sites", (err, result, fields) => {
 
     const {hostname} = new URL(result[0].product_html);
-    fs.unlink('data/position/' + hostname + '.csv', function (err) {
-        if (err) throw err;
-    });
+    if (fs.existsSync('data/position/' + hostname + '.csv')) {
+        fs.unlink('data/position/' + hostname + '.csv', function (err) {
+            if (err) throw err;
+        });
+    }
+
     positionUrl.push(
         {
             siteId: result[0].id,

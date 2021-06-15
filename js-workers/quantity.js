@@ -19,9 +19,7 @@ module.exports = function (data, done, worker) {
 
     });
 
-    page.onError = function (msg, trace) {
-        page.exitPhantom();
-    };
+
 
 
 }

@@ -33,10 +33,11 @@ function jobCallback(job, worker, index) {
                 // Lets log if it worked
                 if (err) {
                     try {
-
-                        fs.unlink('data/quantity/' + data[index].hostname + '.csv', function (err) {
-                            if (err) throw err;
-                        })
+                        if (fs.existsSync('data/quantity/' + data[index].hostname + '.csv')) {
+                            fs.unlink('data/quantity/' + data[index].hostname + '.csv', function (err) {
+                                if (err) throw err;
+                            })
+                        }
 
                         async function importModule() {
                             return await import('./js-workers/quantity/' + data[index].hostname + '.mjs' );

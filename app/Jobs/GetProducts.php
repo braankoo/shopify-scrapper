@@ -69,8 +69,7 @@ class GetProducts implements ShouldQueue {
 
         do
         {
-            print_r($page);
-            echo PHP_EOL;
+
             $response = $client->send(
                 $request,
                 [
@@ -89,7 +88,7 @@ class GetProducts implements ShouldQueue {
                     $products = [];
                     $variants = [];
                     $productCatalogRelation = [];
-                    print_r(count($data->products));
+
                     echo PHP_EOL;
                     foreach ( $data->products as $product )
                     {
@@ -98,7 +97,7 @@ class GetProducts implements ShouldQueue {
                         $productCatalogRelation[] = [ 'catalog_id' => $this->catalog->catalog_id, 'product_id' => $product->id, 'site_id' => $this->catalog->site->id ];
                     }
 
-                    print_r($products);
+
                     Product::upsert($products, [ 'product_id', 'site_id' ], array_keys($products[0]));
                     Product::whereIn('product_id', array_map(function ($product) {
                         return $product['product_id'];

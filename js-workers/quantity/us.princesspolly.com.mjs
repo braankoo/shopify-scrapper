@@ -31,7 +31,4 @@ export default function (productId, csv) {
 
 
     });
-    fs.unlink(csv, function (err) {
-        if (err) throw err;
-    });
 }

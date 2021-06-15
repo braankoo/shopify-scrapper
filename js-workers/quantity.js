@@ -15,6 +15,7 @@ module.exports = function (data, done, worker) {
     page.open(params.url, function (status) {
         const content = page.content;
         writeData(content);
+        done(null);
     });
 
 

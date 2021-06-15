@@ -34,6 +34,10 @@ function jobCallback(job, worker, index) {
                 if (err) {
                     try {
 
+                        fs.unlink('data/quantity/' + data[index].hostname + '.csv', function (err) {
+                            if (err) throw err;
+                        })
+
                         async function importModule() {
                             return await import('./js-workers/quantity/' + data[index].hostname + '.mjs' );
                         }
@@ -42,9 +46,7 @@ function jobCallback(job, worker, index) {
 
                             module.default(data[index].productId, 'data/quantity/' + data[index].hostname + '.csv');
 
-
                         })
-
 
                     } catch (err) {
                         console.log(err);

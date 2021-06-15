@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration {
             $table->bigInteger('product_id', false, true);
             $table->integer('site_id', false, true);
             $table->char('title', 255);
-            $table->integer('position');
+            $table->integer('position')->nullable();
             $table->char('type', 255);
             $table->char('image', 255)->nullable();
             $table->char('handle', 255);

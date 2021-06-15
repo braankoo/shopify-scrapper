@@ -4,9 +4,9 @@ var fs = require('fs');
 
 module.exports = function (data, done, worker) {
 
-    var params = data;
+    const params = data;
+    const page = webpage.create();
 
-    var page = webpage.create();
     const writeData = function (data) {
         const path = 'data/quantity/' + params.hostname + '.csv';
         fs.touch(path);
@@ -16,7 +16,12 @@ module.exports = function (data, done, worker) {
         const content = page.content;
         writeData(content);
         done(null);
+
     });
+
+    page.onError = function (msg, trace) {
+        page.exitPhantom();
+    };
 
 
 }

@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Jobs\GetData;
 use App\Models\Site;
-use Illuminate\Bus\Batch;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
 
@@ -37,7 +36,7 @@ class PrepareData extends Command {
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return void
      * @throws \Throwable
      */
     public function handle()
@@ -45,10 +44,12 @@ class PrepareData extends Command {
         Site::each(function ($site) {
 
             Bus::batch([
-                new \App\Jobs\GetCatalogs($site),
+                new \App\Jobs\GetCatalog($site),
                 new \App\Jobs\GetProducts($site),
                 new GetData($site)
-            ])->allowFailures(false)->dispatch();
+            ])->allowFailures(false)->then(function ($e) {
+                //initialize node
+            })->dispatch();
         });
     }
 }

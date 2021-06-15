@@ -27,8 +27,17 @@ class GetProducts implements ShouldQueue {
      */
     public $site;
 
-
+    /**
+     * @var false|string
+     */
     public $dataBase;
+    /**
+     * @var
+     */
+    public $catalog;
+
+    public $tries = 1;
+//    public $backoff = [ 600, 1200 ];
 
     /**
      * Create a new job instance.
@@ -38,107 +47,101 @@ class GetProducts implements ShouldQueue {
     public function __construct(Site $site)
     {
         $this->site = $site;
-        $this->dataBase = substr(md5(microtime()), rand(0, 26), 5);
     }
 
     /**
      * Execute the job.
      *
      * @return void
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function handle()
     {
 
-//        $this->generateExistingProductsTable();
+        $client = new Client([ 'base_uri' => $this->site->url ]);
 
-        $this->site->catalogs()->where('active', '=', 'true')->each(function ($catalog) {
 
-            $client = new Client([ 'base_uri' => $catalog->site->url ]);
+        $this->catalog = Catalog::where('handle', '=', $this->site->handler)->where('site_id', '=', $this->site->id)->first();
 
-            $request = new Request('GET', "{$catalog->url}/products.json");
-            $page = 0;
 
-            do
+        $request = new Request('GET', $this->site->product_json_path);
+        $page = 1;
+
+        do
+        {
+            print_r($page);
+            echo PHP_EOL;
+            $response = $client->send(
+                $request,
+                [
+                    'query' => [
+                        'page' => $page ++
+                    ],
+//                    'proxy' => Proxy::inRandomOrder()->first()->ip
+                ]
+            );
+            if ($response->getStatusCode() == 200)
             {
-                $response = $client->send($request,
-                    [
-                        'query' => [
-                            'page'  => $page ++,
-                            'limit' => '100'
-                        ],
-                        'proxy' => Proxy::inRandomOrder()->first()->ip
-                    ]
-                );
-                if ($response->getStatusCode() == 200)
+                $data = json_decode($response->getBody()->getContents(), false);
+
+                if (!empty($data->products))
                 {
-                    $data = json_decode($response->getBody()->getContents(), false);
-
-                    if (!empty($data->products))
+                    $products = [];
+                    $variants = [];
+                    $productCatalogRelation = [];
+                    print_r(count($data->products));
+                    echo PHP_EOL;
+                    foreach ( $data->products as $product )
                     {
-                        $products = [];
-                        $variants = [];
-                        $productCatalogRelation = [];
-                        foreach ( $data->products as $key => $product )
-                        {
-                            list($arr, $variants) = $this->prepareProductData($product, $variants, $catalog);
-                            $products[] = $arr;
-                            $productCatalogRelation[] = [ 'catalog_id' => $catalog->catalog_id, 'product_id' => $product->id, 'site_id' => $catalog->site->id ];
-
-                        }
-
-                        Product::upsert($products, [ 'product_id', 'site_id' ], array_keys($products[0]));
-
-                        Product::whereIn('product_id', array_map(function ($product) {
-                            return $product['product_id'];
-                        }, $products))->whereNull('first_scrape')->update([
-                            'first_scrape' => Carbon::now()
-                        ]);
-
-//                        DB::table($this->dataBase)->upsert(
-//                            array_map(
-//                                function ($product) {
-//                                    return [
-//                                        'product_id' => $product['product_id'],
-//                                        'site_id'    => $product['site_id']
-//                                    ];
-//                                }, $products), [ 'product_id', 'site_id' ], [ 'product_id', 'site_id' ]);
-
-                        Variant::upsert($variants, [ 'product_id' ], array_keys($variants[0]));
-
-                        DB::table('catalog_product')->upsert($productCatalogRelation, [ 'catalog_id', 'product_id', 'site_id' ], array_keys($productCatalogRelation[0]));
+                        list($arr, $variants) = $this->prepareProductData($product, $variants);
+                        $products[] = $arr;
+                        $productCatalogRelation[] = [ 'catalog_id' => $this->catalog->catalog_id, 'product_id' => $product->id, 'site_id' => $this->catalog->site->id ];
                     }
+
+                    print_r($products);
+                    Product::upsert($products, [ 'product_id', 'site_id' ], array_keys($products[0]));
+                    Product::whereIn('product_id', array_map(function ($product) {
+                        return $product['product_id'];
+                    }, $products))->whereNull('first_scrape')->update([
+                        'first_scrape' => Carbon::now()
+                    ]);
+                    Variant::upsert($variants, [ 'product_id', 'variant_id' ], array_keys($variants[0]));
+                    DB::table('catalog_product')->upsert($productCatalogRelation, [ 'catalog_id', 'product_id', 'site_id' ], array_keys($productCatalogRelation[0]));
                 }
-                usleep(300);
-            } while ( !(empty($response->getBody()->getContents()->products)) && $response->getStatusCode() == 200 );
+            }
 
+        } while ( $response->getStatusCode() == 200 && !empty($data->products) );
 
-        });
-
-//        $this->deactivateRemovedProducts();
     }
 
     /**
      * @param $product
      * @param array $variants
-     * @param $catalog
      * @return array
      */
-    private function prepareProductData($product, array $variants, $catalog): array
+    private
+    function prepareProductData($product, array $variants): array
     {
         $arr = [];
         $arr['product_id'] = $product->id;
         $arr['title'] = $product->title;
         $arr['type'] = $product->product_type;
-        for ( $i = 0; $i < 3; $i ++ )
+        $arr['handle'] = $product->handle;
+        $arr['created_at'] = $product->created_at;
+        $arr['updated_at'] = $product->updated_at;
+        $arr['published_at'] = $product->published_at;
+
+        $arr['site_id'] = $this->catalog->site->id;
+
+
+        if (array_key_exists('0', $product->images))
         {
-            if (array_key_exists($i, $product->images))
-            {
-                $arr["image_" . ($i + 1)] = $product->images[$i]->src;
-            } else
-            {
-                $arr["image_" . ($i + 1)] = null;
-            }
+            $arr["image"] = $product->images[0]->src;
+        } else
+        {
+            $arr["image"] = '';
         }
+
         for ( $i = 0; $i < count($product->variants); $i ++ )
         {
             $variant['product_id'] = $product->id;
@@ -146,48 +149,7 @@ class GetProducts implements ShouldQueue {
             $variant['sku'] = $product->variants[$i]->sku;
             $variants[] = $variant;
         }
-        $arr['tags'] = json_encode($product->tags);
-        $arr['link'] = "/products/{$product->handle}";
-        $arr['created_at'] = $product->created_at;
-        $arr['updated_at'] = $product->updated_at;
-        $arr['published_at'] = $product->published_at;
-        $arr['site_id'] = $catalog->site->id;
 
         return array( $arr, $variants );
     }
-
-
-    /**
-     * return @void
-     */
-    private function generateExistingProductsTable()
-    {
-        DB::statement(
-            "CREATE TEMPORARY TABLE `{$this->dataBase}`(
-                id int unsigned auto_increment primary key,
-                product_id bigint not null,
-                site_id int,
-                UNIQUE(product_id, site_id)
-            )"
-        );
-    }
-
-    /**
-     * return @void
-     */
-    private function deactivateRemovedProducts()
-    {
-        Product::whereNotExists(function ($q) {
-            $q->select(DB::raw(1))
-                ->from($this->dataBase)
-                ->whereRaw("products.product_id = `{$this->dataBase}`.`product_id`")
-                ->whereRaw("products.site_id = `{$this->dataBase}`.site_id");
-        })->update([
-            'active' => 'false'
-        ]);
-
-        DB::statement("DROP TEMPORARY TABLE `{$this->dataBase}`");
-    }
 }
-
-

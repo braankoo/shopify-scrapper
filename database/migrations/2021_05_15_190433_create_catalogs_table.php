@@ -17,12 +17,14 @@ class CreateCatalogsTable extends Migration {
             $table->increments('id');
             $table->bigInteger('catalog_id');
             $table->integer('site_id', false, true);
-            $table->char('name');
-            $table->enum('active',['true','false'])->default('true');
-            $table->char('url');
+            $table->char('handle', 255);
+            $table->char('title', 255);
+            $table->char('description', 255);
+            $table->timestamp('published_at');
+            $table->timestamp('created_at');
+            $table->timestamp('updated_at');
             $table->foreign('site_id')->references('id')->on('sites')->cascadeOnDelete();
             $table->unique([ 'catalog_id', 'site_id' ]);
-            $table->timestamps();
         });
     }
 

@@ -30,6 +30,7 @@
         "phantomjs-pool": "^0.3.1",
         "phantomjs2": "^2.2.0",
         "phridge": "^2.0.0",
+        "psl": "^1.8.0",
         "system": "^2.0.1",
         "vue": "^2.6.12",
         "vue-router": "^3.5.1",

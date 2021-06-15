@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Models\Catalog;
 use App\Models\Historical;
-use App\Models\Proxy;
 use App\Models\Site;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -27,6 +27,10 @@ class GetData implements ShouldQueue {
      * @var
      */
     public $client;
+    public $catalog;
+
+    public $tries = 5;
+    public $backoff = [ 120, 240, 600, 1200 ];
 
     /**
      * Create a new job instance.
@@ -42,57 +46,65 @@ class GetData implements ShouldQueue {
      * Execute the job.
      *
      * @return void
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function handle()
     {
-        $this->client = new Client([ 'base_uri' => $this->site->url ]);
 
-        $this->site->catalogs()->where('active', '=', 'true')->each(function ($catalog) {
+        $catalog = Catalog::where('handle', '=', $this->site->handler)->where('site_id', '=', $this->site->id)->first();
 
-            $catalog->products()->where('active', '=', 'true')->each(function ($product) use ($catalog) {
+        $client = new Client([ 'base_uri' => $this->site->url ]);
 
-                do
+
+        $catalog->products()->each(function ($product) use ($client, $catalog) {
+
+            $request = new Request('GET', "collections/{$catalog->handle}/products/{$product->handle}.json");
+            $page = 0;
+            do
+            {
+                $response = $client->send(
+                    $request,
+                    [
+                        'query' => [
+                            'page'  => $page ++,
+                            'limit' => 500
+                        ],
+//                    'proxy' => Proxy::inRandomOrder()->first()->ip
+                    ]
+                );
+
+
+                if ($response->getStatusCode() == 200)
                 {
+                    $data = json_decode($response->getBody()->getContents(), false);
 
-                    $productsRequest = new Request('GET', "{$catalog->url}{$product->link}.json");
-
-                    $productsResponse = $this->client->send($productsRequest,
-                        [
-                            'proxy' => Proxy::inRandomOrder()->first()->ip
-                        ]
-                    );
-
-                    if ($productsResponse->getStatusCode() == 200)
+                    if (!empty($data->product))
                     {
-                        $productsData = json_decode($productsResponse->getBody()->getContents(), false);
+                        $product = $data->product;
+                        $arr = [];
 
-                        if (!empty($productsData->product))
+                        for ( $i = 0; $i < count($data->product->variants); $i ++ )
                         {
-                            $product = $productsData->product;
-                            $arr = [];
-
-                            for ( $i = 0; $i < count($productsData->product->variants); $i ++ )
-                            {
-                                $arr[] = $this->prepareVariantData($product, $i);
-                            }
-
-
-                            $this->variantsWithQuantityOperations(
-                                array_filter($arr, function ($variant) {
-                                    return array_key_exists('inventory_quantity', $variant);
-                                })
-                            );
-
-                            $this->variantsWithOutQuantityOperations(array_filter($arr, function ($variant) {
-                                    return !array_key_exists('inventory_quantity', $variant);
-                                })
-                            );
+                            $arr[] = $this->prepareVariantData($product, $i);
 
                         }
+
+                        $this->variantsWithQuantityOperations(
+                            array_filter($arr, function ($variant) {
+                                return array_key_exists('inventory_quantity', $variant);
+                            })
+                        );
+
+                        $this->variantsWithOutQuantityOperations(array_filter($arr, function ($variant) {
+                                return !array_key_exists('inventory_quantity', $variant);
+                            })
+                        );
+
                     }
-                    usleep(300);
-                } while ( $productsResponse->getStatusCode() == 200 && !empty($productsResponse->getBody()->getContents()->products) );
-            });
+                }
+
+                usleep(300);
+            } while ( $response->getStatusCode() == 200 && !empty($response->getBody()->getContents()->products) );
         });
     }
 
@@ -144,7 +156,7 @@ class GetData implements ShouldQueue {
                 function ($product) {
                     return $product['variant_id'];
                 }, $data))
-            ->where('date_created', '=', Carbon::yesterday())
+            ->where('date_created', ' = ', Carbon::yesterday())
             ->get()
             ->toArray();
 
@@ -184,10 +196,12 @@ class GetData implements ShouldQueue {
      */
     private function variantsWithOutQuantityOperations(array $data)
     {
-
         if (!empty($data))
         {
             Historical::upsert($data, [ 'variant_id', 'product_id', 'site_id', 'date_created' ], array_keys($data[0]));
         }
     }
 }
+
+
+

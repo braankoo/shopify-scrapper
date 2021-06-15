@@ -2,11 +2,8 @@
 
 namespace App\Console;
 
-use App\Console\Commands\GetCatalogs;
-use App\Console\Commands\GetProducts;
+
 use App\Console\Commands\PrepareData;
-use App\Console\Commands\PrepareHistoricalData;
-use App\Console\Commands\TestProxies;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -18,10 +15,6 @@ class Kernel extends ConsoleKernel {
      * @var array
      */
     protected $commands = [
-        GetCatalogs::class,
-        GetProducts::class,
-        PrepareHistoricalData::class,
-        TestProxies::class,
         PrepareData::class
     ];
 

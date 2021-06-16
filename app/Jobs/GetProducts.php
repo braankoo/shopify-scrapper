@@ -76,7 +76,7 @@ class GetProducts implements ShouldQueue {
                     'query' => [
                         'page' => $page ++
                     ],
-//                    'proxy' => Proxy::inRandomOrder()->first()->ip
+                    'proxy' => Proxy::inRandomOrder()->first()->ip
                 ]
             );
             if ($response->getStatusCode() == 200)
@@ -89,7 +89,6 @@ class GetProducts implements ShouldQueue {
                     $variants = [];
                     $productCatalogRelation = [];
 
-                    echo PHP_EOL;
                     foreach ( $data->products as $product )
                     {
                         list($arr, $variants) = $this->prepareProductData($product, $variants);

@@ -57,7 +57,7 @@ class GetCatalog implements ShouldQueue {
 
         $response = $client->send($request,
             [
-                //  'proxy' => Proxy::inRandomOrder()->first()->ip
+                  'proxy' => Proxy::inRandomOrder()->first()->ip
             ]
         );
 

@@ -31,8 +31,7 @@ module.exports = function (data, done, worker) {
 
             if (fail === 10) {
                 fail = 0;
-
-
+                loadPage(url, pageId + 1);
                 return;
 
             }

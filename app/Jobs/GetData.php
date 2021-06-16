@@ -69,7 +69,7 @@ class GetData implements ShouldQueue {
                             'page'  => $page ++,
                             'limit' => 500
                         ],
-                    'proxy' => Proxy::inRandomOrder()->first()->ip
+//                    'proxy' => Proxy::inRandomOrder()->first()->ip
                     ]
                 );
 

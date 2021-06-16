@@ -76,7 +76,7 @@ class GetProducts implements ShouldQueue {
                     'query' => [
                         'page' => $page ++
                     ],
-                    'proxy' => Proxy::inRandomOrder()->first()->ip
+//                    'proxy' => Proxy::inRandomOrder()->first()->ip
                 ]
             );
             if ($response->getStatusCode() == 200)

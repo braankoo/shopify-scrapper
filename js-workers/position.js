@@ -34,7 +34,7 @@ module.exports = function (data, done, worker) {
                     return document.getElementsByClassName('paginate__link--next')[0].className.includes('--disabled');
                 })
 
-                if (isLastPage) {
+                if (isLastPage || page === 5) {
                     done(null);
                 } else {
                     writeData(content);

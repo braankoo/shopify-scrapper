@@ -12,6 +12,7 @@ module.exports = function (data, done, worker) {
 
     const writeData = function (data) {
         const path = 'data/position/' + params.hostname + '.csv';
+
         fs.touch(path);
         fs.write(path, data, 'a');
     }

@@ -32,10 +32,8 @@ function jobCallback(job, worker, index) {
             }, function (err) {
                 // Lets log if it worked
                 if (err) {
+
                     try {
-                        if (fs.existsSync('data/quantity/' + data[index].hostname + '.csv')) {
-                            fs.unlinkSync('data/quantity/' + data[index].hostname + '.csv');
-                        }
 
                         async function importModule() {
                             return await import('./js-workers/quantity/' + data[index].hostname + '.mjs' );
@@ -43,15 +41,23 @@ function jobCallback(job, worker, index) {
 
                         importModule().then(function (module) {
 
-                            module.default(data[index].productId, 'data/quantity/' + data[index].hostname + '.csv');
+                            module.default(data[index].productId, 'data/quantity/' + data[index].hostname + data[index].productId + '.csv');
+                            setTimeout(function () {
+                                fs.unlink('data/quantity/' + data[index].hostname + data[index].productId + '.csv', function (err) {
+                                    if (err) throw err;
+                                });
+                            }, 20000)
 
-                        })
+
+                        });
+
 
                     } catch (err) {
                         console.log(err);
                     }
 
                 } else {
+
                     console.log('DONE: ' + url + '(' + index + ')');
                 }
             });
@@ -63,7 +69,7 @@ function jobCallback(job, worker, index) {
 
 //
 var pool = new Pool({
-    numWorkers: 1,
+    numWorkers: 5,
     jobCallback: jobCallback,
     workerFile: __dirname + '/js-workers/quantity.js',
     workerTimeout: 300000

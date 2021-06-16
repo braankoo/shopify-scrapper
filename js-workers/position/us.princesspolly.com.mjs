@@ -58,11 +58,14 @@ export default function (csv) {
                     });
                 });
 
-                variantsWithPosition.forEach(function(variant){
-                    conn.query('UPDATE historicals SET position = ? WHERE product_id = ? AND variant_id = ? AND date_created = CURDATE()' , [variant.position + 1, variant.product_id, variant.variant_id])
+                variantsWithPosition.forEach(function (variant) {
+                    conn.query('UPDATE historicals SET position = ? WHERE product_id = ? AND variant_id = ? AND date_created = CURDATE()', [variant.position + 1, variant.product_id, variant.variant_id])
                 })
 
             });
-        })
+        });
+
+
     });
+
 }

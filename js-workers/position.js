@@ -19,20 +19,22 @@ module.exports = function (data, done, worker) {
     const loadPage = function (url, pageId) {
 
         page.open(url + '&page=' + pageId, function (status) {
-            console.log('****');
-            console.log(status);
-            console.log('****');
+
 
             if (status !== 'success') {
                 fail++;
                 setTimeout(function () {
                     loadPage(url, pageId);
-                }, 15000)
+                }, 20000)
+                return;
             }
 
             if (fail === 10) {
                 fail = 0;
-                loadPage(url, pageId++);
+
+
+                return;
+
             }
 
             const productsHtml = page.evaluate(function () {
@@ -41,6 +43,7 @@ module.exports = function (data, done, worker) {
 
             if (productsHtml === 0) {
                 loadPage(url, pageId)
+
             } else {
                 const content = page.evaluate(function () {
                     return document.getElementById('bc-sf-filter-products').outerHTML;

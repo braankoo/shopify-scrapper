@@ -23,7 +23,7 @@ function sliceIntoChunks(arr, chunkSize) {
 export default function (productId, csv) {
     fs.readFile(csv, 'utf8', function (err, data) {
         const variantsQuantity = data.match(/_BISConfig.product.variants\[\d]\['inventory_quantity'] = \d.*;/g);
-        if (variantsQuantity.length > 0) {
+        if (typeof variantsQuantity!== "undefined" && variantsQuantity.length > 0) {
             variantsQuantity.forEach(function (row) {
                 const data = [...row.matchAll(/\d/g)];
                 const variant = data[0];

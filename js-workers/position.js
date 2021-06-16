@@ -18,7 +18,9 @@ module.exports = function (data, done, worker) {
     const loadPage = function (url, pageId) {
 
         page.open(url + '&page=' + pageId, function (status) {
-
+            console.log('****');
+            console.log(status);
+            console.log('****');
             const productsHtml = page.evaluate(function () {
                 return document.getElementById('bc-sf-filter-products').children.length;
             });
@@ -30,11 +32,17 @@ module.exports = function (data, done, worker) {
                     return document.getElementById('bc-sf-filter-products').outerHTML;
                 });
 
+
                 const isLastPage = page.evaluate(function () {
                     return document.getElementsByClassName('paginate__link--next')[0].className.includes('--disabled');
-                })
+                });
 
-                if (isLastPage ) {
+                console.log('*****');
+                console.log(isLastPage);
+                console.log('*****');
+
+
+                if (isLastPage) {
                     done(null);
                 } else {
                     const toWrite = content.match(/data-product-selected-variant=".\d*/g);

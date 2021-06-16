@@ -21,6 +21,13 @@ module.exports = function (data, done, worker) {
             console.log('****');
             console.log(status);
             console.log('****');
+
+            if (status !== 'success') {
+                setTimeout(function () {
+                    loadPage(url, pageId);
+                }, 15000)
+            }
+
             const productsHtml = page.evaluate(function () {
                 return document.getElementById('bc-sf-filter-products').children.length;
             });
@@ -36,10 +43,6 @@ module.exports = function (data, done, worker) {
                 const isLastPage = page.evaluate(function () {
                     return document.getElementsByClassName('paginate__link--next')[0].className.includes('--disabled');
                 });
-
-                console.log('*****');
-                console.log(isLastPage);
-                console.log('*****');
 
 
                 if (isLastPage) {

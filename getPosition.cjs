@@ -33,7 +33,6 @@ function jobCallback(job, worker, index) {
                 if (err) {
                     try {
 
-
                         async function importModule() {
                             return await import('./js-workers/position/' + positionUrl[index].hostname + '.mjs' );
                         }
@@ -73,6 +72,7 @@ conn.query("SELECT id,product_html FROM sites", (err, result, fields) => {
             if (err) throw err;
         });
     }
+
 
     positionUrl.push(
         {

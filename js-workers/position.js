@@ -34,10 +34,11 @@ module.exports = function (data, done, worker) {
                     return document.getElementsByClassName('paginate__link--next')[0].className.includes('--disabled');
                 })
 
-                if (isLastPage || page === 5) {
+                if (isLastPage || pageId == 2) {
                     done(null);
                 } else {
-                    writeData(content);
+                    const toWrite = content.match(/data-product-selected-variant=".\d*/g);
+                    writeData(toWrite.toString());
                     loadPage(url, ++pageId)
                 }
             }

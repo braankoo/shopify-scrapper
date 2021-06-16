@@ -43,6 +43,8 @@ function jobCallback(job, worker, index) {
 
                         })
 
+                        process.exit();
+
                     } catch (err) {
                         console.log(err);
                     }

@@ -10,7 +10,7 @@ module.exports = function (data, done, worker) {
     const writeData = function (data) {
         const path = 'data/quantity/' + params.hostname + '.csv';
         fs.touch(path);
-        fs.write(path, data, 'a');
+        fs.writeSync(path, data, 'a');
     }
     page.open(params.url, function (status) {
         const content = page.content;

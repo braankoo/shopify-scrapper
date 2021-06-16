@@ -63,7 +63,7 @@ var pool = new Pool({
     numWorkers: 1,
     jobCallback: jobCallback,
     workerFile: __dirname + '/js-workers/position.js',
-    workerTimeout: 300000
+    workerTimeout: 900000
 });
 
 conn.query("SELECT id,product_html FROM sites", (err, result, fields) => {

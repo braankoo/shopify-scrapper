@@ -8,6 +8,7 @@ module.exports = function (data, done, worker) {
 
     var page = webpage.create();
     var pageId = 1;
+    var fail = 0;
 
     const writeData = function (data) {
         const path = 'data/position/' + params.hostname + '.csv';
@@ -23,9 +24,15 @@ module.exports = function (data, done, worker) {
             console.log('****');
 
             if (status !== 'success') {
+                fail++;
                 setTimeout(function () {
                     loadPage(url, pageId);
                 }, 15000)
+            }
+
+            if (fail === 10) {
+                fail = 0;
+                loadPage(url, pageId++);
             }
 
             const productsHtml = page.evaluate(function () {

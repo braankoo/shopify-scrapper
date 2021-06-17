@@ -25,7 +25,7 @@ class ProductController extends Controller {
             ->join('catalogs', 'catalog_product.catalog_id', '=', 'catalogs.catalog_id')
             ->join('variants', 'products.product_id', '=', 'variants.product_id')
             ->leftJoin(
-                DB::raw("(SELECT product_id, catalog_id, sum(inventory_quantity) as quantity,sum(sales) as sales from historicals WHERE date_created = CURDATE() GROUP BY product_id,catalog_id) inv"),
+                DB::raw("(SELECT product_id, sum(inventory_quantity) as quantity,sum(sales) as sales from historicals WHERE date_created = CURDATE() GROUP BY product_id,catalog_id) inv"),
                 function ($join) {
                     $join->on('products.id', '=', 'inv.product_id');
                 })

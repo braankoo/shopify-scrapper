@@ -77,8 +77,9 @@ export default {
                     sortable: true
                 },
                 {
-                    key: 'position',
-                    sortable: true
+                    key: 'products.position',
+                    sortable: true,
+                    label: 'position'
                 },
                 {
                     key: 'quantity',

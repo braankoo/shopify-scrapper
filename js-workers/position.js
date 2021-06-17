@@ -20,10 +20,7 @@ module.exports = function (data, done, worker) {
     const loadPage = function (url, pageId) {
 
         page.open(url + '&page=' + pageId, function (status) {
-            console.log('*****');
-            console.log(status);
-            console.log('*****');
-            status = 'asda';
+
             if (fail === 10) {
                 fail = 0;
                 loadPage(url, ++pageId);
@@ -35,12 +32,12 @@ module.exports = function (data, done, worker) {
                 fail++;
 
                 setTimeout(function () {
-                    loadPage(url, ++pageId);
+                    loadPage(url, pageId);
                 }, 10000);
                 return;
 
             }
-            
+
             const productsHtml = page.evaluate(function () {
                 return document.getElementById('bc-sf-filter-products').children.length;
             });

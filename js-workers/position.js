@@ -20,13 +20,34 @@ module.exports = function (data, done, worker) {
     const loadPage = function (url, pageId) {
 
         page.open(url + '&page=' + pageId, function (status) {
+            console.log('*****');
+            console.log(status);
+            console.log('*****');
+            status = 'asda';
+            if (fail === 10) {
+                fail = 0;
+                loadPage(url, ++pageId);
+                return;
 
+
+            }
+            if (status !== 'success') {
+                fail++;
+
+                setTimeout(function () {
+                    loadPage(url, ++pageId);
+                }, 10000);
+                return;
+
+            }
+            
             const productsHtml = page.evaluate(function () {
                 return document.getElementById('bc-sf-filter-products').children.length;
             });
 
             if (productsHtml === 0) {
-                loadPage(url, pageId)
+                loadPage(url, pageId);
+
 
             } else {
                 const content = page.evaluate(function () {
@@ -44,7 +65,8 @@ module.exports = function (data, done, worker) {
                 } else {
                     const toWrite = content.match(/data-product-selected-variant=".\d*/g);
                     writeData(toWrite.toString());
-                    loadPage(url, ++pageId)
+                    loadPage(url, ++pageId);
+
                 }
             }
         });

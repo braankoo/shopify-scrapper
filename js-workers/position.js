@@ -21,9 +21,6 @@ module.exports = function (data, done, worker) {
 
         page.open(url + '&page=' + pageId, function (status) {
 
-
-
-
             const productsHtml = page.evaluate(function () {
                 return document.getElementById('bc-sf-filter-products').children.length;
             });

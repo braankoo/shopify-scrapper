@@ -14,7 +14,12 @@
                  ref="site-table"
         >
             <template #cell(id)="data" class="text-center">
-                <b-button variant="danger" size="sm" @click="removeSite(data.item.id)">x</b-button>
+                <b-button-group>
+                    <b-button variant="outline-success" size="sm" @click="fetchData(data.item.id)">Fetch Data</b-button>
+                    <b-button disabled size="sm"></b-button>
+                    <b-button variant="outline-danger" size="sm" @click="removeSite(data.item.id)">x</b-button>
+                </b-button-group>
+
             </template>
         </b-table>
         <template #footer>
@@ -38,6 +43,12 @@ export default {
             totalRows: 1,
             perPage: 10,
             isBusy: false,
+            fields: [
+                {
+                    key: 'id',
+                    label: 'Actions'
+                }
+            ]
         }
     },
     methods: {
@@ -61,10 +72,20 @@ export default {
 
         },
         removeSite(id) {
-            this.$http.delete(`/api/site/${id}`).then(() => {
-                this.$refs["site-table"].refresh();
-            });
+            if (window.confirm('Are you sure?')) {
+                this.$http.delete(`/api/site/${id}`).then(() => {
+                    this.$refs["site-table"].refresh();
+                });
+            }
+        },
+        fetchData(id) {
+            if (window.confirm('Are you sure?')) {
+                this.$http.post(`/api/site/${id}/fetch`).then(() => {
+
+                });
+            }
         }
+
     }
 }
 </script>

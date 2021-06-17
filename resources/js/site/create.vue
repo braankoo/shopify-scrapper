@@ -2,43 +2,43 @@
     <div id="create-site">
         <b-card header="New Site">
             <b-form-group
-                label="Site Url"
+                label="Products HTML"
                 label-cols-sm="4"
                 content-cols-sm="8"
                 label-cols-lg="3"
                 content-cols-lg="9"
                 class="mb-3"
-                label-for="answer"
-                :invalid-feedback="response.url.feedback"
+                label-for="html"
+                :invalid-feedback="response.html.feedback"
             >
                 <b-input
-                    id="actor"
-                    name="actor"
+                    id="html"
+                    name="html"
                     @keyup.enter="createSite"
-                    v-model="site.url"
-                    :state="response.url.state"
+                    v-model="site.html"
+                    :state="response.html.state"
                 />
             </b-form-group>
             <b-form-group
-                label="Site Regexp"
+                label="Products JSON"
                 label-cols-sm="4"
                 content-cols-sm="8"
                 label-cols-lg="3"
                 content-cols-lg="9"
                 class="mb-3"
-                label-for="answer"
-                :invalid-feedback="response.regexp.feedback"
+                label-for="json"
+                :invalid-feedback="response.json.feedback"
             >
                 <b-input
                     id="regexp"
                     name="regexp"
                     @keyup.enter="createSite"
-                    v-model="site.regexp"
-                    :state="response.regexp.state"
+                    v-model="site.json"
+                    :state="response.json.state"
                 />
             </b-form-group>
             <template #footer>
-                <b-button :disabled="site.url === ''" variant="success" class="pull-right" @click="createSite">Create
+                <b-button :disabled="site.html === ''" variant="success" class="pull-right" @click="createSite">Create
                     New
                 </b-button>
             </template>
@@ -52,15 +52,15 @@ export default {
     data() {
         return {
             site: {
-                url: '',
-                regexp: ''
+                html: '',
+                json: ''
             },
             response: {
-                url: {
+                html: {
                     state: null,
                     feedback: ''
                 },
-                regexp: {
+                json: {
                     state: null,
                     feedback: null
                 }
@@ -69,11 +69,16 @@ export default {
     },
     methods: {
         createSite() {
-            if (this.site.url !== '') {
+            if (this.site.html !== '') {
                 this.$http.post('/api/site', {
                     ...this.site
                 }).then(() => {
-                    this.response.url.state = true;
+                    this.response.html.state = true;
+                    this.response.json.state = true;
+                    setTimeout(() => {
+                        this.response.html.state = null;
+                        this.response.json.state = null;
+                    }, 3000);
 
                 }).catch((error) => {
                     const errors = error.response.data.errors;
@@ -92,10 +97,10 @@ export default {
         }
     },
     watch: {
-        'site.url': function (newVal) {
-            if (this.response.url.state || !this.response.url.state) {
-                this.response.url.state = null;
-                this.response.url.feedback = '';
+        'site.html': function (newVal) {
+            if (this.response.html.state || !this.response.html.state) {
+                this.response.html.state = null;
+                this.response.html.feedback = '';
             }
         }
     }

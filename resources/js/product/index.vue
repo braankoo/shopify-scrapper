@@ -14,22 +14,11 @@
                  :outlined="true"
                  ref="products-table"
         >
-            <template #cell(variant_id)="data" class="text-center">
-                <router-link :to="{name:'Variant Historical', params: {variant: data.item.variant_id}}">
-                    {{ data.item.variant_id }}
-                </router-link>
-            </template>
             <template #cell(url)="data" class="text-center">
                 <a :href="data.item.url" target="_blank">{{ data.item.url }}</a>
             </template>
-            <template #cell(image_1)="data" class="text-center">
-                <img :src="data.item.image_1" class="img-thumbnail img-fluid" alt=""/>
-            </template>
-            <template #cell(image_2)="data" class="text-center">
-                <img :src="data.item.image_2" class="img-thumbnail img-fluid" alt=""/>
-            </template>
-            <template #cell(image_3)="data" class="text-center">
-                <img :src="data.item.image_3" class="img-thumbnail img-fluid" alt=""/>
+            <template #cell(image)="data" class="text-center">
+                <img :src="data.item.image" class="img-thumbnail img-fluid" style="max-height: 100px;" alt=""/>
             </template>
 
         </b-table>
@@ -58,40 +47,26 @@ export default {
             isBusy: false,
             fields: [
                 {
-                    key: 'title',
-                    sortable: true,
-                    label: 'Product'
+                    key: 'site'
                 },
                 {
-                    key: 'name',
-                    sortable: true,
-                    label: 'Catalog'
+                    key: 'catalog',
+                    sortable: true
                 },
                 {
-                    key: 'variant_id',
+                    key: 'product',
                     sortable: true,
-                    label: 'Variant'
                 },
                 {
-                    key: 'position',
-                    sortable: true,
-                    label: 'Position'
+                    key: 'image',
+                    sortable: false
                 },
                 {
-                    key: 'price',
+                    key: 'url',
                 },
                 {
                     key: 'type',
                     sortable: true
-                },
-                {
-                    key: 'url'
-                },
-                {
-                    key: 'sku'
-                },
-                {
-                    key: 'tags'
                 },
                 {
                     key: 'created_at',
@@ -102,15 +77,17 @@ export default {
                     sortable: true
                 },
                 {
-                    key: 'image_1'
+                    key: 'position',
+                    sortable: true
                 },
                 {
-                    key: 'image_2'
+                    key: 'quantity',
+                    sortable: true
                 },
                 {
-                    key: 'image_3'
+                    key: 'sales',
+                    sortable: true
                 }
-
 
             ]
         }

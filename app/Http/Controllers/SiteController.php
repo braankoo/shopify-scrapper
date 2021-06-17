@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class SiteController extends Controller {
 
@@ -18,7 +19,7 @@ class SiteController extends Controller {
     public function index(): JsonResponse
     {
 
-        return response()->json(Site::paginate(10, [ 'url', 'regexp', 'id' ]), JsonResponse::HTTP_OK);
+        return response()->json(Site::paginate(10, [ 'product_html', 'product_json', 'id' ]), JsonResponse::HTTP_OK);
     }
 
     /**
@@ -41,19 +42,18 @@ class SiteController extends Controller {
     public function store(Request $request): JsonResponse
     {
         $request->validate([
-            'url' => 'required|url'
+            'html' => 'required|url|unique:sites,product_html',
+            'json' => 'required|url|unique:sites,product_json'
+
         ]);
 
 
         $site = new Site;
-        $site->url = $request->input('url');
-        if ($request->has('regexp'))
-        {
-            $site->regexp = $request->input('regexp');
-        }
+        $site->product_html = $request->input('html');
+        $site->product_json = $request->input('json');
         $site->save();
 
-        return response()->json([ 'message' => 'Successfuly added' ], JsonResponse::HTTP_CREATED);
+        return response()->json([ 'message' => 'Successfuly added' ], Response::HTTP_CREATED);
     }
 
     /**

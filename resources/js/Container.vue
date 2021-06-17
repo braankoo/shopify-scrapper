@@ -2,9 +2,9 @@
     <div id="main-container">
         <b-container :fluid="true">
             <b-row>
-                <sidebar-menu :menu="menu" :collapsed="true" width="130px"/>
+                <sidebar-menu :menu="menu" width="200px"/>
 
-                <b-col cols="11" class="pt-1 offset-1">
+                <b-col cols="10" class="pt-1 offset-2">
                     <router-view></router-view>
                 </b-col>
             </b-row>
@@ -25,8 +25,7 @@ export default {
             menu: [
                 {
                     header: true,
-                    title: 'Navigation',
-                    hiddenOnCollapse: true
+                    title: 'Navigation'
                 },
                 {
                     title: 'Sites',

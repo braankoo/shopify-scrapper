@@ -22,20 +22,7 @@ module.exports = function (data, done, worker) {
         page.open(url + '&page=' + pageId, function (status) {
 
 
-            if (status !== 'success') {
-                fail++;
-                setTimeout(function () {
-                    loadPage(url, pageId);
-                }, 20000)
-                return;
-            }
 
-            if (fail === 10) {
-                fail = 0;
-                loadPage(url, pageId + 1);
-                return;
-
-            }
 
             const productsHtml = page.evaluate(function () {
                 return document.getElementById('bc-sf-filter-products').children.length;

@@ -11,6 +11,7 @@ module.exports = function (data, done, worker) {
 
     }
     page.open(params.url, function (status) {
+
         const content = page.content;
         const path = 'data/quantity/' + params.hostname + params.productId + '.csv';
 

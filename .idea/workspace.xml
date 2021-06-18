@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1383e6f0-ae28-49df-878f-4958e48cbbf6" name="Default Changelist" comment="Update Phantom.JS">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="1383e6f0-ae28-49df-878f-4958e48cbbf6" name="Default Changelist" comment="product controller">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ProductController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/getQuantity.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/getQuantity.cjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js-workers/position.js" beforeDir="false" afterPath="$PROJECT_DIR$/js-workers/position.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js-workers/quantity.js" beforeDir="false" afterPath="$PROJECT_DIR$/js-workers/quantity.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js-workers/quantity/us.princesspolly.com.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/js-workers/quantity/us.princesspolly.com.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -226,35 +227,7 @@
       <workItem from="1623767435461" duration="873000" />
       <workItem from="1623768379117" duration="22109000" />
       <workItem from="1623920726765" duration="11357000" />
-      <workItem from="1623956788070" duration="2749000" />
-    </task>
-    <task id="LOCAL-00006" summary="Front End">
-      <created>1622552135225</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1622552135225</updated>
-    </task>
-    <task id="LOCAL-00007" summary="update get quantity">
-      <created>1622616794444</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1622616794444</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Update Phantom.JS">
-      <created>1623063479254</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1623063479255</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Js/Css">
-      <created>1623064456971</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1623064456971</updated>
+      <workItem from="1623956788070" duration="4727000" />
     </task>
     <task id="LOCAL-00010" summary="activate proxy">
       <created>1623064936145</created>
@@ -571,7 +544,35 @@
       <option name="project" value="LOCAL" />
       <updated>1623967004916</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="group by catalog">
+      <created>1623967037884</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1623967037885</updated>
+    </task>
+    <task id="LOCAL-00056" summary="group by catalog">
+      <created>1623967440829</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1623967440829</updated>
+    </task>
+    <task id="LOCAL-00057" summary="group by catalog">
+      <created>1623968106681</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1623968106681</updated>
+    </task>
+    <task id="LOCAL-00058" summary="product controller">
+      <created>1623968287724</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1623968287724</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -613,7 +614,9 @@
     <MESSAGE value="update product controller" />
     <MESSAGE value="products controller" />
     <MESSAGE value="Update Phantom.JS" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update Phantom.JS" />
+    <MESSAGE value="group by catalog" />
+    <MESSAGE value="product controller" />
+    <option name="LAST_COMMIT_MESSAGE" value="product controller" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

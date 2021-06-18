@@ -42,11 +42,11 @@ function jobCallback(job, worker, index) {
                         importModule().then(function (module) {
 
                             module.default(data[index].productId, 'data/quantity/' + data[index].hostname + data[index].productId + '.csv');
-                            setTimeout(function () {
-                                fs.unlink('data/quantity/' + data[index].hostname + data[index].productId + '.csv', function (err) {
-                                    if (err) throw err;
-                                });
-                            }, 20000)
+                            // setTimeout(function () {
+                            //     fs.unlink('data/quantity/' + data[index].hostname + data[index].productId + '.csv', function (err) {
+                            //         if (err) throw err;
+                            //     });
+                            // }, 20000)
 
 
                         });
@@ -69,13 +69,13 @@ function jobCallback(job, worker, index) {
 
 //
 var pool = new Pool({
-    numWorkers: 5,
+    numWorkers: 1,
     jobCallback: jobCallback,
     workerFile: __dirname + '/js-workers/quantity.js',
     workerTimeout: 300000
 });
 
-conn.query("SELECT GROUP_CONCAT(REPLACE(product_json,'.json',''),CONCAT('/',products.handle) ) as url, products.product_id FROM sites INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id GROUP BY products.product_id", (err, results, fields) => {
+conn.query("SELECT distinct CONCAT(REPLACE(product_json, '.json', ''), CONCAT('/', products.handle)) as url, products.product_id FROM sites INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id", (err, results, fields) => {
 
     results.forEach(function (result) {
         const {hostname} = new URL(result.url);

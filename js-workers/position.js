@@ -25,9 +25,8 @@ module.exports = function (data, done, worker) {
                 fail = 0;
                 loadPage(url, ++pageId);
                 return;
-
-
             }
+
             if (status !== 'success') {
                 fail++;
 

@@ -33,6 +33,7 @@
         "psl": "^1.8.0",
         "system": "^2.0.1",
         "vue": "^2.6.12",
+        "vue-multiselect": "^2.1.6",
         "vue-router": "^3.5.1",
         "vue-sidebar-menu": "^4.7.4",
         "webpage": "^0.3.0"

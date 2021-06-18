@@ -21,5 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resource('site', \App\Http\Controllers\SiteController::class);
 
+Route::get('/catalog', [ \App\Http\Controllers\CatalogController::class, 'index' ]);
 Route::get('/product', [ \App\Http\Controllers\ProductController::class, 'index' ]);
+Route::get('/product/data', [ \App\Http\Controllers\ProductController::class, 'data' ]);
 Route::get('/{variant}/historical', [ \App\Http\Controllers\HistoricalController::class, 'index' ]);

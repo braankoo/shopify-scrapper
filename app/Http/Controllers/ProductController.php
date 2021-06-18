@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Catalog;
+use App\Models\Product;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -10,9 +13,29 @@ class ProductController extends Controller {
 
     /**
      * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index(Request $request): JsonResponse
+    {
+        if ($request->has('title'))
+        {
+            return response()->json(Product::where('title', 'LIKE', '%' . $request->input('title') . '%')->paginate(10, [ 'title', 'id' ]), JsonResponse::HTTP_OK);
+        }
+        if ($request->has('type'))
+        {
+            return response()->json(Product::where('type', 'LIKE', '%' . $request->input('type') . '%')->paginate(10, [ 'type','id' ]), JsonResponse::HTTP_OK);
+        }
+
+        return response()->json(Product::paginate(10, [ 'title', 'id' ]), JsonResponse::HTTP_OK);
+
+    }
+
+
+    /**
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function index(Request $request): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function data(Request $request): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
 
         return DB::table('products')

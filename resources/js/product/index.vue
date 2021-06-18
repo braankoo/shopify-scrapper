@@ -1,6 +1,112 @@
 <template>
     <b-card header="Products" style="overflow: scroll;">
-        <b-table api-url="/api/product"
+        <b-row>
+            <b-col>
+                <multiselect :options="filters.loaded.site.url"
+                             v-model="filters.selected.site.url"
+                             label="site"
+                             track-by="id"
+                             :multiple="true"
+                             :searchable="true"
+                             :internal-search="false"
+                             :clear-on-select="false"
+                             :close-on-select="false"
+                             :options-limit="300"
+                             :limit="3"
+                             :max-height="600"
+                             :show-no-results="false"
+                             :hide-selected="true"
+                             @search-change="find('site','url',$event)"
+                             placeholder="Sites"/>
+            </b-col>
+            <b-col>
+                <multiselect
+                    :options="filters.loaded.catalog.title"
+                    v-model="filters.selected.catalog.title"
+                    label="title"
+                    track-by="title"
+                    :multiple="true"
+                    :searchable="true"
+                    :internal-search="false"
+                    :clear-on-select="false"
+                    :close-on-select="false"
+                    :options-limit="300"
+                    :limit="3"
+                    :max-height="600"
+                    :show-no-results="false"
+                    :hide-selected="true"
+                    @search-change="find('catalog','title',$event)"
+                    placeholder="Catalog"/>
+            </b-col>
+            <b-col>
+                <multiselect
+                    :options="filters.loaded.product.title"
+                    v-model="filters.selected.product.title"
+                    label="title"
+                    track-by="id"
+                    :multiple="true"
+                    :searchable="true"
+                    :internal-search="false"
+                    :clear-on-select="false"
+                    :close-on-select="false"
+                    :options-limit="300"
+                    :limit="3"
+                    :max-height="600"
+                    :show-no-results="false"
+                    :hide-selected="true"
+                    @search-change="find('product','title',$event)"
+                    placeholder="Product"/>
+            </b-col>
+            <b-col>
+                <multiselect
+                    :options="filters.loaded.product.type"
+                    v-model="filters.selected.product.type"
+                    label="type"
+                    track-by="type"
+                    :multiple="true"
+                    :searchable="true"
+                    :internal-search="false"
+                    :clear-on-select="false"
+                    :close-on-select="false"
+                    :options-limit="300"
+                    :limit="3"
+                    :max-height="600"
+                    :show-no-results="false"
+                    :hide-selected="true"
+                    @search-change="find('product','type',$event)"
+                    placeholder="Type"/>
+            </b-col>
+        </b-row>
+        <hr>
+        <b-row>
+            <b-col>
+                <b-form-datepicker
+                    v-model="filters.selected.created_at"
+                    locale="en"
+                    placeholder="Created At"
+                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                ></b-form-datepicker>
+            </b-col>
+            <b-col>
+                <b-form-datepicker
+                    v-model="filters.selected.published_at"
+                    locale="en"
+                    placeholder="Published At"
+                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                ></b-form-datepicker>
+            </b-col>
+            <b-col>
+                <b-input type="number" v-model="filters.selected.position" placeholder="Position"/>
+            </b-col>
+            <b-col>
+                <b-input type="number" v-model="filters.selected.quantity" placeholder="Quantity"/>
+            </b-col>
+            <b-col>
+                <b-input type="number" v-model="filters.selected.sales" placeholder="Sales"/>
+            </b-col>
+        </b-row>
+        <hr>
+        <b-table api-url="/api/product/data"
                  id="products"
                  :busy.sync="isBusy"
                  :items="getProducts"
@@ -37,8 +143,13 @@
 </template>
 
 <script>
+import Multiselect from 'vue-multiselect';
+
 export default {
     name: "index",
+    components: {
+        Multiselect
+    },
     data() {
         return {
             currentPage: 1,
@@ -90,7 +201,40 @@ export default {
                     sortable: true
                 }
 
-            ]
+            ],
+            filters: {
+                loaded: {
+                    site: {
+                        url: []
+                    },
+                    catalog: {
+                        title: []
+                    },
+                    product: {
+                        title: [],
+                        type: []
+                    },
+
+                },
+                selected: {
+                    site: {
+                        url: []
+                    },
+                    catalog: {
+                        title: []
+                    },
+                    product: {
+                        title: [],
+                        type: []
+                    },
+                    created_at: {},
+                    published_at: {},
+                    quantity: null,
+                    sales: null,
+                    position: null
+
+                }
+            }
         }
     },
     methods: {
@@ -112,6 +256,17 @@ export default {
                 return []
             }
 
+        },
+        find(type, param, query) {
+            console.log(type, query);
+            this.$http.get(`api/${type}`, {
+                params: {
+                    [param]: query
+                }
+            }).then((response) => {
+                console.log(response);
+                this.filters.loaded[type][param] = response.data.data;
+            });
         }
     }
 }

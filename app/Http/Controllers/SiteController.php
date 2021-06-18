@@ -6,6 +6,7 @@ use App\Models\Site;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,10 +15,15 @@ class SiteController extends Controller {
     /**
      * Display a listing of the resource.
      *
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        if ($request->has('url'))
+        {
+            return response()->json(Site::where('product_html', 'LIKE', '%' . $request->input('url') . '%')->paginate(10, [ DB::raw('SUBSTRING_INDEX(sites.product_json, "/", 3)  as site'), 'id' ]), JsonResponse::HTTP_OK);
+        }
 
         return response()->json(Site::paginate(10, [ 'product_html', 'product_json', 'id' ]), JsonResponse::HTTP_OK);
     }

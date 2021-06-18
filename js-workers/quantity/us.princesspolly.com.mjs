@@ -47,12 +47,10 @@ export default function (productId, csv) {
                         if (err) throw err;
                         console.log(results);
 
-                    });
-
-                    conn.query('SELECT sales FROM historicals WHERE variant_id = ? AND date_created = SUBDATE(CURDATE(),1)', [variantId], function (err, results) {
-                        if (err) throw err;
 
                     });
+
+
                 })
             });
         }

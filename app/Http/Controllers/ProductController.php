@@ -17,13 +17,14 @@ class ProductController extends Controller {
      */
     public function index(Request $request): JsonResponse
     {
+
         if ($request->has('title'))
         {
             return response()->json(Product::where('title', 'LIKE', '%' . $request->input('title') . '%')->paginate(10, [ 'title', 'id' ]), JsonResponse::HTTP_OK);
         }
         if ($request->has('type'))
         {
-            return response()->json(Product::where('type', 'LIKE', '%' . $request->input('type') . '%')->paginate(10, [ 'type','id' ]), JsonResponse::HTTP_OK);
+            return response()->json(Product::where('type', 'LIKE', '%' . $request->input('type') . '%')->paginate(10, [ 'type', 'id' ]), JsonResponse::HTTP_OK);
         }
 
         return response()->json(Product::paginate(10, [ 'title', 'id' ]), JsonResponse::HTTP_OK);
@@ -37,6 +38,8 @@ class ProductController extends Controller {
      */
     public function data(Request $request): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
+        $filters = json_decode($request->input('filter'));
+
 
         return DB::table('products')
             ->selectRaw('SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at, IFNULL(products.position,"n/a") as `products.position`,IFNULL(quantity,"n/a") as quantity,IFNULL(sum(sales),"n/a") as sales')
@@ -50,6 +53,44 @@ class ProductController extends Controller {
                     $join->on('products.product_id', '=', 'inv.product_id');
                 }
             )
+            ->when(!empty($filters->site->url), function ($q) use ($filters) {
+                $q->whereIn('sites.id', array_map(function ($site) {
+                    return $site->id;
+                }, $filters->site->url));
+            })
+            ->when(!empty($filters->catalog->title), function ($q) use ($filters) {
+                $q->whereIn('catalogs.title', array_map(
+                        function ($catalog) {
+                            return $catalog->title;
+                        }, $filters->catalog->title)
+                );
+            })
+            ->when(!empty($filters->product->title), function ($q) use ($filters) {
+                $q->whereIn('products.title', array_map(
+                        function ($product) {
+                            return $product->title;
+                        }, $filters->product->title)
+                );
+            })
+            ->when(!empty($filters->product->type), function ($q) use ($filters) {
+                $q->whereIn('products.type', array_map(
+                        function ($product) {
+                            return $product->type;
+                        }, $filters->product->type)
+                );
+            })
+            ->when(!empty($filters->created_at), function ($q) use ($filters) {
+                $q->whereDate('products.created_at', $filters->created_at);
+            })
+            ->when(!empty($filters->published_at), function ($q) use ($filters) {
+                $q->where('products.published_at', '=', $filters->published_at);
+            })
+            ->when(!empty($filters->position), function ($q) use ($filters) {
+                $q->where('products.position', '<=', $filters->position);
+            })
+            ->when(!empty($filters->quantity), function ($q) use ($filters) {
+                $q->where('quantity', '<=', $filters->position);
+            })
             ->groupBy([ 'catalogs.id', 'products.id' ])
             ->orderBy($request->input('sortBy') == '' ? 'products.title' : $request->input('sortBy'), $request->input('sortDesc') == 'true' ? 'ASC' : 'DESC')
             ->paginate(20);

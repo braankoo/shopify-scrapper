@@ -118,6 +118,7 @@
                  :striped="true"
                  :bordered="true"
                  :outlined="true"
+                 :filter="filters.selected"
                  ref="products-table"
         >
             <template #cell(url)="data" class="text-center">
@@ -227,11 +228,11 @@ export default {
                         title: [],
                         type: []
                     },
-                    created_at: {},
-                    published_at: {},
-                    quantity: null,
-                    sales: null,
-                    position: null
+                    created_at: '',
+                    published_at: '',
+                    quantity: '',
+                    sales: '',
+                    position: ''
 
                 }
             }
@@ -247,6 +248,7 @@ export default {
                         perPage: ctx.perPage,
                         sortBy: ctx.sortBy,
                         sortDesc: ctx.sortDesc,
+                        filter: ctx.filter
                     }
                 });
                 this.totalRows = response.data.total;

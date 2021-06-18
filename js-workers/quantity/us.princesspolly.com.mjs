@@ -38,11 +38,10 @@ export default function (productId, csv) {
                 conn.query('SELECT variant_id FROM variants where product_id = ?', [productId], function (err, results) {
                     if (err) throw err;
                     const variantId = results[variant];
-
-
+                    
                     conn.query('UPDATE historicals SET inventory_quantity = ? WHERE variant_id = ? and date_created = CURDATE()', [quantity, variantId], function (err, results) {
                         if (err) throw err;
-
+                        console.log(results);
 
                     });
 

@@ -29,8 +29,8 @@ class GetData implements ShouldQueue {
     public $client;
     public $catalog;
 
-    public $tries = 5;
-    public $backoff = [ 120, 240, 600, 1200 ];
+    public $tries = 1;
+//    public $backoff = [ 120, 240, 600, 1200 ];
 
     /**
      * Create a new job instance.

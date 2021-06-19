@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1383e6f0-ae28-49df-878f-4958e48cbbf6" name="Default Changelist" comment="">
+    <list default="true" id="1383e6f0-ae28-49df-878f-4958e48cbbf6" name="Default Changelist" comment="Add option to initialize fetching from frontend">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js-workers/quantity/us.princesspolly.com.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/js-workers/quantity/us.princesspolly.com.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Console/Commands/PrepareData.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/PrepareData.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/SiteController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/SiteController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Jobs/GetData.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Jobs/GetData.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2021_05_15_190159_create_products_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_05_15_190159_create_products_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,13 +22,14 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Vue File" />
-        <option value="Vue Single File Component" />
         <option value="JavaScript File" />
+        <option value="Vue Single File Component" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="MIXED" />
   </component>
   <component name="GitSEFilterConfiguration">
     <file-type-list>
@@ -224,77 +229,8 @@
       <workItem from="1623767435461" duration="873000" />
       <workItem from="1623768379117" duration="22109000" />
       <workItem from="1623920726765" duration="11357000" />
-      <workItem from="1623956788070" duration="6759000" />
-    </task>
-    <task id="LOCAL-00015" summary="Update Phantom.JS">
-      <created>1623135568032</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1623135568032</updated>
-    </task>
-    <task id="LOCAL-00016" summary="Update Phantom.JS">
-      <created>1623135702357</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1623135702357</updated>
-    </task>
-    <task id="LOCAL-00017" summary="Update sales query">
-      <created>1623137792906</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1623137792906</updated>
-    </task>
-    <task id="LOCAL-00018" summary="Get Quantity Update">
-      <created>1623137973847</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1623137973847</updated>
-    </task>
-    <task id="LOCAL-00019" summary="Update Phantom.JS">
-      <created>1623138054326</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1623138054327</updated>
-    </task>
-    <task id="LOCAL-00020" summary="Update Phantom.JS">
-      <created>1623138097589</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1623138097589</updated>
-    </task>
-    <task id="LOCAL-00021" summary="Update Phantom.JS">
-      <created>1623138172148</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1623138172148</updated>
-    </task>
-    <task id="LOCAL-00022" summary="Update">
-      <created>1623224778576</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1623224778577</updated>
-    </task>
-    <task id="LOCAL-00023" summary="Add Usleep when getting data">
-      <created>1623228902938</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1623228902938</updated>
-    </task>
-    <task id="LOCAL-00024" summary="Updates Phantom.js position">
-      <created>1623776091515</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1623776091515</updated>
+      <workItem from="1623956788070" duration="18465000" />
+      <workItem from="1624088689274" duration="7355000" />
     </task>
     <task id="LOCAL-00025" summary="Update Phantom.JS">
       <created>1623779344899</created>
@@ -569,7 +505,77 @@
       <option name="project" value="LOCAL" />
       <updated>1624008005040</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="product controller">
+      <created>1624008202635</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1624008202635</updated>
+    </task>
+    <task id="LOCAL-00065" summary="product controller">
+      <created>1624008712197</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1624008712197</updated>
+    </task>
+    <task id="LOCAL-00066" summary="update ProductController.php">
+      <created>1624012351184</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1624012351184</updated>
+    </task>
+    <task id="LOCAL-00067" summary="Front End filters">
+      <created>1624019147189</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1624019147189</updated>
+    </task>
+    <task id="LOCAL-00068" summary="Front End filters">
+      <created>1624038337809</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1624038337809</updated>
+    </task>
+    <task id="LOCAL-00069" summary="Front End filters">
+      <created>1624089037516</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1624089037516</updated>
+    </task>
+    <task id="LOCAL-00070" summary="Add option to initialize fetching from frontend">
+      <created>1624123401921</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1624123401921</updated>
+    </task>
+    <task id="LOCAL-00071" summary="Add option to initialize fetching from frontend">
+      <created>1624123782103</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1624123782103</updated>
+    </task>
+    <task id="LOCAL-00072" summary="Add option to initialize fetching from frontend">
+      <created>1624124046468</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1624124046468</updated>
+    </task>
+    <task id="LOCAL-00073" summary="Add option to initialize fetching from frontend">
+      <created>1624126960719</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1624126960719</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -588,9 +594,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="get quantity update Phantom.JS" />
-    <MESSAGE value="Update Phantom.JS -&gt; worker timeout" />
-    <MESSAGE value="Front End" />
     <MESSAGE value="update get quantity" />
     <MESSAGE value="Js/Css" />
     <MESSAGE value="activate proxy" />
@@ -613,7 +616,10 @@
     <MESSAGE value="Update Phantom.JS" />
     <MESSAGE value="group by catalog" />
     <MESSAGE value="product controller" />
-    <option name="LAST_COMMIT_MESSAGE" value="product controller" />
+    <MESSAGE value="update ProductController.php" />
+    <MESSAGE value="Front End filters" />
+    <MESSAGE value="Add option to initialize fetching from frontend" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add option to initialize fetching from frontend" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

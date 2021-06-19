@@ -6,6 +6,7 @@ use App\Jobs\GetData;
 use App\Models\Site;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
+use Symfony\Component\Process\Process;
 
 class PrepareData extends Command {
 
@@ -47,8 +48,11 @@ class PrepareData extends Command {
                 new \App\Jobs\GetCatalog($site),
                 new \App\Jobs\GetProducts($site),
                 new GetData($site)
-            ])->allowFailures(false)->then(function ($e) {
-                //initialize node
+            ])->allowFailures(false)->then(function ($e) use ($site) {
+                $process = new Process([ 'node', 'getPosition.cjs' ]);
+                $process->start();
+                $process = new Process([ 'node', 'getQuantity.cjs' ]);
+                $process->start();
             })->dispatch();
         });
     }

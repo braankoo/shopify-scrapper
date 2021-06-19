@@ -22,6 +22,7 @@ class CreateProductsTable extends Migration {
             $table->char('type', 255);
             $table->char('image', 255)->nullable();
             $table->char('handle', 255);
+            $table->enum('status', [ 'ENABLED', 'DISABLED' ]);
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
             $table->timestamp('published_at');

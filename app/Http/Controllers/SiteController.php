@@ -127,9 +127,9 @@ class SiteController extends Controller {
         ])->allowFailures(false)->then(function ($e) use ($site) {
             //initialize node
             $process = new Process([ 'node', 'getPosition.cjs', $site->id ]);
-            $process->run();
+            $process->start();
             $process = new Process([ 'node', 'getQuantity.cjs', $site->id ]);
-            $process->run();
+            $process->start();
         })->dispatch();
 
         return response()->json([ 'message' => 'Initialized' ], JsonResponse::HTTP_OK);

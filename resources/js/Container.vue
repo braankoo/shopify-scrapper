@@ -41,6 +41,10 @@ export default {
                     ]
                 },
                 {
+                    title: 'Catalog',
+                    href: '/catalog'
+                },
+                {
                     title: 'Products',
                     href: '/product',
                 }

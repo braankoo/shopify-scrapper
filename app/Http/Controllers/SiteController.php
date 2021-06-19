@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\GetData;
 use App\Models\Site;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Validator;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Process\Process;
 
 class SiteController extends Controller {
 
@@ -107,5 +110,28 @@ class SiteController extends Controller {
         $site->delete();
 
         return response()->json([ 'message' => 'Successfuly removed' ], JsonResponse::HTTP_OK);
+    }
+
+
+    /**
+     * @param \App\Models\Site $site
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
+    public function fetch(Site $site): JsonResponse
+    {
+        Bus::batch([
+            new \App\Jobs\GetCatalog($site),
+            new \App\Jobs\GetProducts($site),
+            new GetData($site)
+        ])->allowFailures(false)->then(function ($e) use ($site) {
+            //initialize node
+            $process = new Process([ 'node', 'getPosition.cjs', $site->id ]);
+            $process->run();
+            $process = new Process([ 'node', 'getQuantity.cjs', $site->id ]);
+            $process->run();
+        })->dispatch();
+
+        return response()->json([ 'message' => 'Initialized' ], JsonResponse::HTTP_OK);
     }
 }

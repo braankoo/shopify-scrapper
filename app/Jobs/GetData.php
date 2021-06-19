@@ -51,7 +51,7 @@ class GetData implements ShouldQueue {
     public function handle()
     {
 
-        $catalog = Catalog::where('handle', '=', $this->site->handler)->where('site_id', '=', $this->site->id)->first();
+        $catalog = Catalog::where('handle', '=', $this->site->handler)->where('status', '=', 'ACTIVE')->where('site_id', '=', $this->site->id)->first();
 
         $client = new Client([ 'base_uri' => $this->site->url ]);
 

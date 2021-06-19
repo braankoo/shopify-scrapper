@@ -20,8 +20,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::resource('site', \App\Http\Controllers\SiteController::class);
+Route::post('site/{site}/fetch', [ \App\Http\Controllers\SiteController::class, 'fetch' ]);
 
 Route::get('/catalog', [ \App\Http\Controllers\CatalogController::class, 'index' ]);
+Route::patch('/catalog/{catalog}', [ \App\Http\Controllers\CatalogController::class, 'update' ]);
 Route::get('/product', [ \App\Http\Controllers\ProductController::class, 'index' ]);
 Route::get('/product/data', [ \App\Http\Controllers\ProductController::class, 'data' ]);
 Route::get('/{variant}/historical', [ \App\Http\Controllers\HistoricalController::class, 'index' ]);

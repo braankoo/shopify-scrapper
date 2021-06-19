@@ -4,6 +4,8 @@ import index from './historical/index';
 import create from "./site/create";
 import SiteIndex from "./site/index";
 //
+import CatalogIndex from './catalog/index';
+
 import ProductIndex from './product/index';
 import Container from "./Container";
 
@@ -28,6 +30,10 @@ const router = new VueRouter(
                     {
                         path: '/product',
                         component: ProductIndex
+                    },
+                    {
+                        path: '/catalog',
+                        component: CatalogIndex
                     },
                     {
 

@@ -3,7 +3,7 @@ const mysql = require('mysql');
 const _ = require('lodash');
 var Pool = require('phantomjs-pool').Pool;
 var fs = require('fs');
-
+var args = process.argv.slice(2);
 
 const conn = mysql.createConnection({
     'host': process.env.DB_HOST,
@@ -65,22 +65,52 @@ var pool = new Pool({
     workerTimeout: 1200000
 });
 
-conn.query("SELECT id,product_html FROM sites", (err, result, fields) => {
+if (args.length > 0) {
 
-    const {hostname} = new URL(result[0].product_html);
-    if (fs.existsSync('data/position/' + hostname + '.csv')) {
-        fs.unlinkSync('data/position/' + hostname + '.csv')
-    }
+    conn.query("SELECT id,product_html FROM sites WHERE site_id = ?", [args[0]], (err, result, fields) => {
+
+            const {hostname} = new URL(result[0].product_html);
+            if (fs.existsSync('data/position/' + hostname + '.csv')) {
+                fs.unlinkSync('data/position/' + hostname + '.csv')
+            }
 
 
-    positionUrl.push(
-        {
-            siteId: result[0].id,
-            url: result[0].product_html,
-            hostname: hostname,
+            positionUrl.push(
+                {
+                    siteId: result[0].id,
+                    url: result[0].product_html,
+                    hostname: hostname,
 
+                }
+            );
+
+            pool.start();
         }
-    );
+    )
+    ;
+} else {
+    conn.query("SELECT id,product_html FROM sites", (err, result, fields) => {
 
-    pool.start();
-});
+        const {hostname} = new URL(result[0].product_html);
+        if (fs.existsSync('data/position/' + hostname + '.csv')) {
+            fs.unlinkSync('data/position/' + hostname + '.csv')
+        }
+
+
+        positionUrl.push(
+            {
+                siteId: result[0].id,
+                url: result[0].product_html,
+                hostname: hostname,
+
+            }
+        );
+
+        pool.start();
+    });
+}
+
+
+
+
+

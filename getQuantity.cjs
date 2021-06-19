@@ -3,7 +3,7 @@ const mysql = require('mysql');
 const _ = require('lodash');
 var Pool = require('phantomjs-pool').Pool;
 var fs = require('fs');
-
+var args = process.argv.slice(2);
 
 const conn = mysql.createConnection({
     'host': process.env.DB_HOST,
@@ -74,13 +74,24 @@ var pool = new Pool({
     workerFile: __dirname + '/js-workers/quantity.js',
     workerTimeout: 300000
 });
+if (args.length > 0) {
+    conn.query("SELECT distinct CONCAT(REPLACE(product_json, '.json', ''), CONCAT('/', products.handle)) as url, products.product_id FROM sites WHERE site_id = ? INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id", [args[0]], (err, results, fields) => {
 
-conn.query("SELECT distinct CONCAT(REPLACE(product_json, '.json', ''), CONCAT('/', products.handle)) as url, products.product_id FROM sites INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id", (err, results, fields) => {
+        results.forEach(function (result) {
+            const {hostname} = new URL(result.url);
+            data.push({url: result.url, productId: result.product_id, hostname: hostname});
+        })
 
-    results.forEach(function (result) {
-        const {hostname} = new URL(result.url);
-        data.push({url: result.url, productId: result.product_id, hostname: hostname});
-    })
+        pool.start();
+    });
+} else {
+    conn.query("SELECT distinct CONCAT(REPLACE(product_json, '.json', ''), CONCAT('/', products.handle)) as url, products.product_id FROM sites WHERE site_id = ? INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id", (err, results, fields) => {
 
-    pool.start();
-});
+        results.forEach(function (result) {
+            const {hostname} = new URL(result.url);
+            data.push({url: result.url, productId: result.product_id, hostname: hostname});
+        })
+
+        pool.start();
+    });
+}

@@ -30,10 +30,11 @@ export default function (productId, csv) {
                 variantsQuantity = _.uniq(variantsQuantity);
                 variantsQuantity.forEach(function (row) {
 
-                    const data = [...row.matchAll(/\d/g)];
 
-                    const variant = data[0][0];
-                    const quantity = data[1][0];
+                    let variantQuantity = row.match(/[0-9]{1,10}/g);
+
+                    const variant = variantQuantity[0]
+                    const quantity = variantQuantity[1];
 
 
                     conn.query('SELECT variant_id FROM variants where product_id = ?', [productId], function (err, results) {

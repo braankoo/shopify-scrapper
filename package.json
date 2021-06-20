@@ -27,6 +27,7 @@
         "http": "0.0.1-security",
         "moment": "^2.29.1",
         "mysql": "^2.18.1",
+        "mysql2": "^2.2.5",
         "phantomjs-pool": "^0.3.1",
         "phantomjs2": "^2.2.0",
         "phridge": "^2.0.0",

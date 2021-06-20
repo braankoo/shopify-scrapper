@@ -28,7 +28,8 @@ export default function (csv) {
                 new Set(data.match(/data-product-selected-variant=".\d*/g)
                     .map(function (variant) {
                         return variant.replace(/\D/g, '');
-                    })));
+                    })
+                ));
 
             const chunks = sliceIntoChunks(variants, 100);
 
@@ -58,8 +59,7 @@ export default function (csv) {
                     for (const variant of variantsWithPosition) {
                         await conn.query('UPDATE historicals SET position = ? WHERE product_id = ? AND variant_id = ? AND date_created = CURDATE()', [variant.position + 1, variant.product_id, variant.variant_id])
                     }
-
-
+                    
                 })();
             }
             resolve('true');

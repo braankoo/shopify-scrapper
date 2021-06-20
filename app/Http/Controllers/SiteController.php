@@ -126,6 +126,7 @@ class SiteController extends Controller {
             new GetData($site)
         ])->allowFailures(false)->then(function ($e) use ($site) {
             //initialize node
+            
             $process = new Process([ 'node', 'getPosition.cjs', $site->id ]);
             $process->start();
             $process->wait();

@@ -20,12 +20,13 @@ module.exports = function (data, done, worker) {
     const loadPage = function (url, pageId) {
 
         page.open(url + '&page=' + pageId, function (status) {
-
+          
             if (fail === 10) {
                 fail = 0;
                 loadPage(url, ++pageId);
                 return;
             }
+
 
             if (status !== 'success') {
                 fail++;
@@ -58,6 +59,7 @@ module.exports = function (data, done, worker) {
 
                 if (isLastPage) {
                     done(null);
+
                 } else {
                     const toWrite = content.match(/data-product-selected-variant=".\d*/g);
                     writeData(toWrite.toString());

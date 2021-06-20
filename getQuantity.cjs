@@ -31,39 +31,36 @@ function jobCallback(job, worker, index) {
 
             }, function (err) {
                 // Lets log if it worked
-                if (err) {
 
-                    try {
+                if (err) throw err;
 
-                        async function importModule() {
-                            return await import('./js-workers/quantity/' + data[index].hostname + '.mjs' );
-                        }
+                try {
 
-                        importModule().then(function (module) {
-
-                            module.default(data[index].productId, 'data/quantity/' + data[index].hostname + data[index].productId + '.csv');
-                            setTimeout(function () {
-                                fs.unlink('data/quantity/' + data[index].hostname + data[index].productId + '.csv', function (err) {
-                                    if (err) throw err;
-                                });
-                            }, 30000)
-
-
-                        });
-
-
-                    } catch (err) {
-                        console.log(err);
+                    async function importModule() {
+                        return await import('./js-workers/quantity/' + data[index].hostname + '.mjs' );
                     }
 
-                } else {
+                    importModule().then(function (module) {
 
-                    console.log('DONE: ' + url + '(' + index + ')');
+                        module.default(data[index].productId, 'data/quantity/' + data[index].hostname + data[index].productId + '.csv');
+                        setTimeout(function () {
+                            fs.unlink('data/quantity/' + data[index].hostname + data[index].productId + '.csv', function (err) {
+                                if (err) throw err;
+                            });
+                        }, 30000)
+
+
+                    });
+                } catch (err) {
+                    console.log(err);
                 }
-            });
+            }
+        );
     } else {
         // if we have no more jobs, we call the function job with null
         job(null);
+
+
     }
 }
 
@@ -75,8 +72,8 @@ var pool = new Pool({
     workerTimeout: 300000
 });
 if (args.length > 0) {
-    conn.query("SELECT distinct CONCAT(REPLACE(product_json, '.json', ''), CONCAT('/', products.handle)) as url, products.product_id FROM sites WHERE site_id = ? INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id", [args[0]], (err, results, fields) => {
-
+    conn.query("SELECT distinct CONCAT(REPLACE(product_json, '.json', ''), CONCAT('/', products.handle)) as url, products.product_id FROM sites INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id  WHERE sites.id = ?", [args[0]], (err, results, fields) => {
+        if (err) throw err;
         results.forEach(function (result) {
             const {hostname} = new URL(result.url);
             data.push({url: result.url, productId: result.product_id, hostname: hostname});
@@ -85,8 +82,8 @@ if (args.length > 0) {
         pool.start();
     });
 } else {
-    conn.query("SELECT distinct CONCAT(REPLACE(product_json, '.json', ''), CONCAT('/', products.handle)) as url, products.product_id FROM sites WHERE site_id = ? INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id", (err, results, fields) => {
-
+    conn.query("SELECT distinct CONCAT(REPLACE(product_json, '.json', ''), CONCAT('/', products.handle)) as url, products.product_id FROM sites INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id", (err, results, fields) => {
+        if (err) throw err;
         results.forEach(function (result) {
             const {hostname} = new URL(result.url);
             data.push({url: result.url, productId: result.product_id, hostname: hostname});

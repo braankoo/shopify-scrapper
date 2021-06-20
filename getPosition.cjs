@@ -30,31 +30,30 @@ function jobCallback(job, worker, index) {
 
             }, function (err) {
                 // Lets log if it worked
-                if (err) {
-                    try {
+                if (err) throw err;
 
-                        async function importModule() {
-                            return await import('./js-workers/position/' + positionUrl[index].hostname + '.mjs' );
-                        }
-
-                        importModule().then(function (module) {
-
-                            module.default('data/position/' + positionUrl[index].hostname + '.csv');
-
-                        })
-
-
-                    } catch (err) {
-                        console.log(err);
+                try {
+                    async function importModule() {
+                        return await import('./js-workers/position/' + positionUrl[index].hostname + '.mjs' );
                     }
 
-                } else {
-                    console.log('DONE: ' + url + '(' + index + ')');
+                    importModule().then(function (module) {
+                        module.default('data/position/' + positionUrl[index].hostname + '.csv');
+                    })
+                } catch (err) {
+                    console.log('123');
+                    console.log(err);
                 }
+
+
+                console.log('gotovo');
+
             });
     } else {
         // if we have no more jobs, we call the function job with null
         job(null);
+
+
     }
 }
 
@@ -67,7 +66,7 @@ var pool = new Pool({
 
 if (args.length > 0) {
 
-    conn.query("SELECT id,product_html FROM sites WHERE site_id = ?", [args[0]], (err, result, fields) => {
+    conn.query("SELECT id,product_html FROM sites WHERE id = ?", [args[0]], (err, result, fields) => {
 
             const {hostname} = new URL(result[0].product_html);
             if (fs.existsSync('data/position/' + hostname + '.csv')) {

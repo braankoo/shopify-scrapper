@@ -35,9 +35,14 @@ class GetProducts implements ShouldQueue {
      * @var
      */
     public $catalog;
-
+    /**
+     * @var int
+     */
     public $tries = 1;
-//    public $backoff = [ 600, 1200 ];
+    /**
+     * @var int[]
+     */
+    public $backoff = [ 600, 1200 ];
 
     /**
      * Create a new job instance.

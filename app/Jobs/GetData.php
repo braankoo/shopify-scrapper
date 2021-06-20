@@ -41,7 +41,7 @@ class GetData implements ShouldQueue {
     /**
      * @var int[]
      */
-    public $backoff = [ 120, 240, 600, 1200 ];
+    public $backoff = [ 120, 240, 480, 480 ];
 
     /**
      * Create a new job instance.
@@ -118,8 +118,6 @@ class GetData implements ShouldQueue {
 
                     }
                 }
-
-                usleep(300);
             } while ( $response->getStatusCode() == 200 && !empty($response->getBody()->getContents()->products) );
         });
     }

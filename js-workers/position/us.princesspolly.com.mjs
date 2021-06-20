@@ -1,10 +1,10 @@
 import fs from 'fs';
-import mysql from 'mysql';
+import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const conn = mysql.createConnection({
+const conn = await mysql.createConnection({
     'host': process.env.DB_HOST,
     'user': process.env.DB_USERNAME,
     'password': process.env.DB_PASSWORD,
@@ -22,28 +22,26 @@ function sliceIntoChunks(arr, chunkSize) {
 
 export default function (csv) {
     return new Promise(function (resolve, reject) {
-        fs.readFile(csv, 'utf8', function (err, data) {
+        fs.readFile(csv, 'utf8', async function (err, data) {
 
             let variants = Array.from(
                 new Set(data.match(/data-product-selected-variant=".\d*/g)
                     .map(function (variant) {
-
                         return variant.replace(/\D/g, '');
                     })));
 
             const chunks = sliceIntoChunks(variants, 100);
 
-            chunks.forEach(function (chunk) {
-                console.log(chunk);
-                conn.query('SELECT product_id,variant_id FROM variants WHERE variant_id IN (?)', [chunk], function (err, results) {
-                    if (err) throw err;
+            for (const chunk of chunks) {
 
-                    const variantsWithPosition = results.map(function (result) {
-                        result.position = variants.findIndex(function (variant) {
-                            return variant == result.variant_id;
+                await (async () => {
+                    const [rows, fields] = await conn.query('SELECT product_id,variant_id FROM variants WHERE variant_id IN (?)', [chunk]);
+
+                    const variantsWithPosition = rows.map(function (row) {
+                        row.position = variants.findIndex(function (variant) {
+                            return variant == row.variant_id;
                         });
-
-                        return result;
+                        return row;
                     });
 
                     const productsWithPositions = variantsWithPosition.map(function (variant) {
@@ -52,20 +50,18 @@ export default function (csv) {
                         obj.position = variant.position + 1;
                         return obj;
                     });
+                    for (const product of productsWithPositions) {
 
-                    productsWithPositions.forEach(function (product) {
-                        conn.query('UPDATE products SET position = ? WHERE product_id = ?', [product.position, product.product_id], function (err) {
-                            if (err) throw err;
-                        });
-                    });
+                        await conn.query('UPDATE products SET position = ? WHERE product_id = ?', [product.position, product.product_id]);
 
-                    variantsWithPosition.forEach(function (variant) {
-                        conn.query('UPDATE historicals SET position = ? WHERE product_id = ? AND variant_id = ? AND date_created = CURDATE()', [variant.position + 1, variant.product_id, variant.variant_id])
-                    })
+                    }
+                    for (const variant of variantsWithPosition) {
+                        await conn.query('UPDATE historicals SET position = ? WHERE product_id = ? AND variant_id = ? AND date_created = CURDATE()', [variant.position + 1, variant.product_id, variant.variant_id])
+                    }
 
-                });
-            });
 
+                })();
+            }
             resolve('true');
         });
 

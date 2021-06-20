@@ -40,6 +40,7 @@ function jobCallback(job, worker, index) {
                     const module = await importModule();
                     try {
                         module.default('data/position/' + positionUrl[index].hostname + '.csv').then((res) => {
+
                             process.exit();
                         });
                     } catch (err) {

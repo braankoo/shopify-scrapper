@@ -20,11 +20,14 @@ module.exports = function (data, done, worker) {
     const loadPage = function (url, pageId) {
 
         page.open(url + '&page=' + pageId, function (status) {
-          
+
             if (fail === 10) {
                 fail = 0;
                 loadPage(url, ++pageId);
                 return;
+            }
+            if (pageId === 5) {
+                done(null);
             }
 
 

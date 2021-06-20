@@ -128,6 +128,7 @@ class SiteController extends Controller {
             //initialize node
             $process = new Process([ 'node', 'getPosition.cjs', $site->id ]);
             $process->start();
+            $process->wait();
             $process = new Process([ 'node', 'getQuantity.cjs', $site->id ]);
             $process->start();
         })->dispatch();

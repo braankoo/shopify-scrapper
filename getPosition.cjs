@@ -28,7 +28,7 @@ function jobCallback(job, worker, index) {
                 url: positionUrl[index].url,
                 hostname: positionUrl[index].hostname
 
-            }, function (err) {
+            }, async function (err) {
                 // Lets log if it worked
                 if (err) throw err;
 
@@ -37,22 +37,24 @@ function jobCallback(job, worker, index) {
                         return await import('./js-workers/position/' + positionUrl[index].hostname + '.mjs' );
                     }
 
-                    importModule().then(function (module) {
-                        module.default('data/position/' + positionUrl[index].hostname + '.csv');
-                    })
+                    const module = await importModule();
+                    try {
+                        module.default('data/position/' + positionUrl[index].hostname + '.csv').then((res) => {
+                            process.exit();
+                        });
+                    } catch (err) {
+                        throw err;
+                    }
+
                 } catch (err) {
-                    console.log('123');
+
                     console.log(err);
                 }
-
-
-                console.log('gotovo');
 
             });
     } else {
         // if we have no more jobs, we call the function job with null
         job(null);
-
 
     }
 }

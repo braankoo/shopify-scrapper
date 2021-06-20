@@ -91,6 +91,7 @@ class ProductController extends Controller {
             ->when(!empty($filters->quantity), function ($q) use ($filters) {
                 $q->where('quantity', '<=', $filters->position);
             })
+            ->whereNotNull('products.position')
             ->groupBy([ 'catalogs.id', 'products.id' ])
             ->orderBy($request->input('sortBy') == '' ? 'products.title' : $request->input('sortBy'), $request->input('sortDesc') == 'true' ? 'ASC' : 'DESC')
             ->paginate(20);

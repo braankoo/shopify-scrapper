@@ -89,7 +89,7 @@ class ProductController extends Controller {
                 $q->where('products.position', '<=', $filters->position);
             })
             ->when(!empty($filters->quantity), function ($q) use ($filters) {
-                $q->where('quantity', '<=', $filters->position);
+                $q->where('quantity', '<=', $filters->quantity);
             })
             ->whereNotNull('products.position')
             ->groupBy([ 'catalogs.id', 'products.id' ])

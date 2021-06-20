@@ -42,13 +42,11 @@ function jobCallback(job, worker, index) {
 
                     importModule().then(function (module) {
 
-                        module.default(data[index].productId, 'data/quantity/' + data[index].hostname + data[index].productId + '.csv');
-                        setTimeout(function () {
+                        module.default(data[index].productId, 'data/quantity/' + data[index].hostname + data[index].productId + '.csv').then(() => {
                             fs.unlink('data/quantity/' + data[index].hostname + data[index].productId + '.csv', function (err) {
                                 if (err) throw err;
                             });
-                        }, 30000)
-
+                        });
 
                     });
                 } catch (err) {

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Catalog;
+
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller {
@@ -42,7 +43,7 @@ class ProductController extends Controller {
 
 
         return DB::table('products')
-            ->selectRaw('SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at, IFNULL(products.position,"n/a") as `products.position`,IFNULL(quantity,"n/a") as quantity,IFNULL(sum(sales),"n/a") as sales')
+            ->selectRaw('SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at, IFNULL(products.position,"n/a") as `products.position`,IFNULL(quantity,"n/a") as quantity,IFNULL(sum(sales),"n/a") as sales, products.id as product_id')
             ->join('sites', 'products.site_id', '=', 'sites.id')
             ->join('catalog_product', 'products.product_id', '=', 'catalog_product.product_id')
             ->join('catalogs', 'catalog_product.catalog_id', '=', 'catalogs.catalog_id')
@@ -95,5 +96,66 @@ class ProductController extends Controller {
             ->groupBy([ 'catalogs.id', 'products.id' ])
             ->orderBy($request->input('sortBy') == '' ? 'products.title' : $request->input('sortBy'), $request->input('sortDesc') == 'true' ? 'ASC' : 'DESC')
             ->paginate(20);
+    }
+
+
+    /**
+     * @param \App\Models\Product $product
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function historical(Product $product, Request $request): \Illuminate\Pagination\LengthAwarePaginator
+    {
+
+        $filters = json_decode($request->input('filter'));
+
+
+        $pagination = DB::table('products')
+            ->selectRaw('ROUND(historicals.price / 1000000,2) as price,inventory_quantity as quantity,compare_at_price, sales,date_created')
+            ->join('variants', 'products.product_id', '=', 'variants.product_id')
+            ->join('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
+            ->where('products.id', '=', $product->id)
+            ->orderBy('date_created')
+            ->whereBetween('date_created', [ $filters->date->start_date, $filters->date->end_date ])
+            ->paginate(20);
+
+        $itemsTransformed = new Collection();
+
+        foreach ( $pagination->items() as $item )
+        {
+            $itemsTransformed->push($item);
+        }
+        $itemsTransformed = $itemsTransformed->groupBy('date_created');
+
+        $values = array_keys((array) $itemsTransformed->first()->first());
+
+        $data = [];
+        foreach ( $values as $value )
+        {
+            if ($value == 'date_created')
+            {
+                continue;
+            }
+            $b = [];
+            foreach ( $itemsTransformed as $date => $items )
+            {
+
+                $arr = (array) $items->first();
+                $b['product'] = str_replace('_', ' ', ucfirst($value));
+                $b[$date] = $arr[$value];
+            }
+            $data[] = $b;
+        }
+
+
+        return new \Illuminate\Pagination\LengthAwarePaginator(
+            $data,
+            $pagination->total(),
+            $pagination->perPage(),
+            $pagination->currentPage(),
+            [ 'path'  => \Request::url(),
+              'query' => [ 'page' => $pagination->currentPage() ]
+            ]
+        );
     }
 }

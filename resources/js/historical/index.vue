@@ -19,7 +19,7 @@
                     </b-row>
                 </b-col>
             </b-row>
-            <b-table :api-url="`/api/${$route.params.variant}/historical`"
+            <b-table :api-url="`/api/product/${$route.params.product}`"
                      id="variants"
                      :busy.sync="isBusy"
                      :items="getHistorical"

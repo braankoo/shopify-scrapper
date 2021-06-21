@@ -32,15 +32,15 @@ const router = new VueRouter(
                         component: ProductIndex
                     },
                     {
+                        path: 'product/:product/historical',
+                        component: index,
+                        name: "Product Historical"
+                    },
+                    {
                         path: '/catalog',
                         component: CatalogIndex
                     },
-                    {
 
-                        path: '/:variant/historical',
-                        component: index,
-                        name: "Variant Historical"
-                    }
                 ]
             }
         ]

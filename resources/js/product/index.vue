@@ -121,6 +121,11 @@
                  :filter="filters.selected"
                  ref="products-table"
         >
+            <template #cell(product)="data" class="text-center">
+                <router-link :to="{ name: 'Product Historical', params: { product: data.item.product_id }}">
+                    {{ data.item.product }}
+                </router-link>
+            </template>
             <template #cell(url)="data" class="text-center">
                 <a :href="data.item.url" target="_blank">{{ data.item.url }}</a>
             </template>

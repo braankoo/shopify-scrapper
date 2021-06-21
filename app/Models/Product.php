@@ -9,6 +9,7 @@ class Product extends Model {
 
     use HasFactory;
 
+
     public function catalogs(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'catalog_product', 'product_id', 'product_id', 'product_id', 'product_id');

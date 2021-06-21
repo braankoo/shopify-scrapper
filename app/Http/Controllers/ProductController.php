@@ -82,19 +82,20 @@ class ProductController extends Controller {
                 );
             })
             ->when(!empty($filters->created_at->start_date), function ($q) use ($filters) {
-                $q->where('products.created_at', '>=', $filters->created_at->start_date);
+                $q->whereDate('products.created_at', '>=', $filters->created_at->start_date);
             })
             ->when(!empty($filters->created_at->end_date), function ($q) use ($filters) {
-                $q->where('products.created_at', '=<', $filters->created_at->end_date);
+
+                $q->whereDate('products.created_at', '<=', $filters->created_at->end_date);
             })
             ->when(!empty($filters->published_at->start_date), function ($q) use ($filters) {
-                $q->where('products.published_at', '>=', $filters->published_at->start_date);
+                $q->whereDate('products.published_at', '>=', $filters->published_at->start_date);
             })
             ->when(!empty($filters->published_at->end_date), function ($q) use ($filters) {
-                $q->where('products.published_at', '=<', $filters->published_at->end_date);
+                $q->whereDate('products.published_at', '<=', $filters->published_at->end_date);
             })
             ->when(!empty($filters->position), function ($q) use ($filters) {
-                $q->where('products.position', '<=', $filters->position);
+                $q->where('products.position', '=<', $filters->position);
             })
             ->when(!empty($filters->quantity), function ($q) use ($filters) {
                 $q->where('quantity', '<=', $filters->quantity);
@@ -215,16 +216,16 @@ class ProductController extends Controller {
                 );
             })
             ->when(!empty($filters->created_at->start_date), function ($q) use ($filters) {
-                $q->where('products.created_at', '>=', $filters->created_at->start_date);
+                $q->whereDate('products.created_at', '>=', $filters->created_at->start_date);
             })
             ->when(!empty($filters->created_at->end_date), function ($q) use ($filters) {
-                $q->where('products.created_at', '=<', $filters->created_at->end_date);
+                $q->whereDate('products.created_at', '<=', $filters->created_at->end_date);
             })
             ->when(!empty($filters->published_at->start_date), function ($q) use ($filters) {
-                $q->where('products.published_at', '>=', $filters->published_at->start_date);
+                $q->whereDate('products.published_at', '>=', $filters->published_at->start_date);
             })
             ->when(!empty($filters->published_at->end_date), function ($q) use ($filters) {
-                $q->where('products.published_at', '=<', $filters->published_at->end_date);
+                $q->whereDate('products.published_at', '<=', $filters->published_at->end_date);
             })
             ->when(!empty($filters->position), function ($q) use ($filters) {
                 $q->where('products.position', '<=', $filters->position);

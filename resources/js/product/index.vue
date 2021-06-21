@@ -315,7 +315,7 @@ export default {
             this.$http.get('/api/product/csv', {
                 responseType: 'blob',
                 params: {
-                    filters: this.filters
+                    filters: this.filters.selected
                 }
             }).then((response) => {
                 fileDownload(response.data, 'stats.csv');

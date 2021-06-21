@@ -120,6 +120,10 @@ class GetData implements ShouldQueue {
                 }
             } while ( $response->getStatusCode() == 200 && !empty($response->getBody()->getContents()->products) );
         });
+
+
+        $this->site->last_scan = Carbon::now();
+        $this->site->last_scan->save();
     }
 
     /**GetDataProductsWithoutQuantity

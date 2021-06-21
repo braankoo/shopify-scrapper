@@ -29,5 +29,6 @@ Route::patch('/catalog/{catalog}', [ \App\Http\Controllers\CatalogController::cl
 
 Route::get('/product', [ \App\Http\Controllers\ProductController::class, 'index' ]);
 Route::get('/product/data', [ \App\Http\Controllers\ProductController::class, 'data' ]);
+Route::get('/product/csv', [ \App\Http\Controllers\ProductController::class, 'csv' ]);
 Route::get('/product/{product}', [ \App\Http\Controllers\ProductController::class, 'historical' ]);
 

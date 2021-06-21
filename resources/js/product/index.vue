@@ -78,23 +78,8 @@
             </b-col>
         </b-row>
         <hr>
+
         <b-row>
-            <b-col>
-                <b-form-datepicker
-                    v-model="filters.selected.created_at"
-                    locale="en"
-                    placeholder="Created At"
-                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-                ></b-form-datepicker>
-            </b-col>
-            <b-col>
-                <b-form-datepicker
-                    v-model="filters.selected.published_at"
-                    locale="en"
-                    placeholder="Published At"
-                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-                ></b-form-datepicker>
-            </b-col>
             <b-col>
                 <b-input type="number" v-model="filters.selected.position" placeholder="Position"/>
             </b-col>
@@ -103,6 +88,50 @@
             </b-col>
             <b-col>
                 <b-input type="number" v-model="filters.selected.sales" placeholder="Sales"/>
+            </b-col>
+        </b-row>
+        <hr>
+        <b-row>
+            <b-col>
+                <b-form-datepicker
+                    v-model="filters.selected.created_at.start_date"
+                    locale="en"
+                    placeholder="Created At (start)"
+                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                ></b-form-datepicker>
+            </b-col>
+            <b-col>
+                <b-form-datepicker
+                    v-model="filters.selected.created_at.end_date"
+                    locale="en"
+                    placeholder="Created At (end)"
+                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                ></b-form-datepicker>
+            </b-col>
+        </b-row>
+        <hr>
+        <b-row>
+            <b-col>
+                <b-form-datepicker
+                    v-model="filters.selected.published_at.start_date"
+                    locale="en"
+                    placeholder="Published At (start)"
+                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                ></b-form-datepicker>
+            </b-col>
+            <b-col>
+                <b-form-datepicker
+                    v-model="filters.selected.published_at.end_date"
+                    locale="en"
+                    placeholder="Published At (end)"
+                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                ></b-form-datepicker>
+            </b-col>
+        </b-row>
+        <hr>
+        <b-row>
+            <b-col>
+                <b-button @click="exportCSV" variant="success">CSV</b-button>
             </b-col>
         </b-row>
         <hr>
@@ -151,6 +180,7 @@
 <script>
 import Multiselect from 'vue-multiselect';
 
+const fileDownload = require('js-file-download');
 export default {
     name: "index",
     components: {
@@ -233,8 +263,14 @@ export default {
                         title: [],
                         type: []
                     },
-                    created_at: '',
-                    published_at: '',
+                    created_at: {
+                        start_date: '',
+                        end_date: ''
+                    },
+                    published_at: {
+                        start_date: '',
+                        end_date: ''
+                    },
                     quantity: '',
                     sales: '',
                     position: ''
@@ -273,6 +309,16 @@ export default {
             }).then((response) => {
                 console.log(response);
                 this.filters.loaded[type][param] = response.data.data;
+            });
+        },
+        exportCSV() {
+            this.$http.get('/api/product/csv', {
+                responseType: 'blob',
+                params: {
+                    filters: this.filters
+                }
+            }).then((response) => {
+                fileDownload(response.data, 'stats.csv');
             });
         }
     }

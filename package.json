@@ -25,6 +25,7 @@
         "crypto-js": "^4.0.0",
         "dotenv": "^9.0.2",
         "http": "0.0.1-security",
+        "js-file-download": "^0.4.12",
         "moment": "^2.29.1",
         "mysql": "^2.18.1",
         "mysql2": "^2.2.5",

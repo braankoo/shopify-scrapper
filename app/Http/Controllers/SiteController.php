@@ -28,7 +28,7 @@ class SiteController extends Controller {
             return response()->json(Site::where('product_html', 'LIKE', '%' . $request->input('url') . '%')->paginate(10, [ DB::raw('SUBSTRING_INDEX(sites.product_json, "/", 3)  as site'), 'id' ]), JsonResponse::HTTP_OK);
         }
 
-        return response()->json(Site::paginate(10, [ 'product_html', 'product_json', 'id' ]), JsonResponse::HTTP_OK);
+        return response()->json(Site::paginate(10, [ 'product_html', 'product_json', 'last_scan', 'id' ]), JsonResponse::HTTP_OK);
     }
 
     /**
@@ -126,7 +126,7 @@ class SiteController extends Controller {
             new GetData($site)
         ])->allowFailures(false)->then(function ($e) use ($site) {
             //initialize node
-            
+
             $process = new Process([ 'node', 'getPosition.cjs', $site->id ]);
             $process->start();
             $process->wait();

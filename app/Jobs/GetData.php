@@ -122,8 +122,9 @@ class GetData implements ShouldQueue {
         });
 
 
-        $this->site->last_scan = Carbon::now();
-        $this->site->last_scan->save();
+            $this->site->last_scan = Carbon::now();
+            $this->site->save();
+
     }
 
     /**GetDataProductsWithoutQuantity

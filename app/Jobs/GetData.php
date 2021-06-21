@@ -72,7 +72,7 @@ class GetData implements ShouldQueue {
         $client = new Client([ 'base_uri' => $this->site->url ]);
 
 
-        $catalog->products()->each(function ($product) use ($client, $catalog) {
+        $catalog->products()->where('status', '=', 'ENABLED')->each(function ($product) use ($client, $catalog) {
 
             $request = new Request('GET', "collections/{$catalog->handle}/products/{$product->handle}.json");
             $page = 0;

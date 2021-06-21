@@ -73,6 +73,8 @@ class GetProducts implements ShouldQueue {
             return;
         }
 
+        $this->catalog->products()->update([ 'status' => 'DISABLED' ]);
+
 
         $request = new Request('GET', $this->site->product_json_path);
         $page = 1;
@@ -139,7 +141,7 @@ class GetProducts implements ShouldQueue {
         $arr['updated_at'] = $product->updated_at;
         $arr['published_at'] = $product->published_at;
         $arr['position'] = null;
-
+        $arr['status'] = 'ENABLED';
         $arr['site_id'] = $this->catalog->site->id;
 
 

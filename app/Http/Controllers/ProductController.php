@@ -61,7 +61,7 @@ class ProductController extends Controller {
             ->join('catalog_product', 'products.product_id', '=', 'catalog_product.product_id')
             ->join('catalogs', 'catalog_product.catalog_id', '=', 'catalogs.catalog_id')
             ->join('variants', 'products.product_id', '=', 'variants.product_id')
-            ->join('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
+            ->leftjoin('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
             ->when(!empty($filters->site->url), function ($q) use ($filters) {
                 $q->whereIn('sites.id', array_map(function ($site) {
                     return $site->id;
@@ -127,53 +127,17 @@ class ProductController extends Controller {
         $filters = json_decode($request->input('filter'));
 
 
-        $pagination = DB::table('products')
-            ->selectRaw('ROUND(historicals.price / 1000000,2) as price,inventory_quantity as quantity,compare_at_price, sales,date_created')
+        return DB::table('products')
+            ->selectRaw('product_position.position as position,ROUND((AVG(historicals.price)/1000000),2) as price,sum(inventory_quantity) as quantity, sum(sales) as sales,historicals.date_created')
             ->join('variants', 'products.product_id', '=', 'variants.product_id')
             ->join('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
+            ->leftjoin('product_position', 'products.product_id', '=', 'product_position.product_id')
             ->where('products.id', '=', $product->id)
-            ->orderBy('date_created')
-            ->whereBetween('date_created', [ $filters->date->start_date, $filters->date->end_date ])
+            ->orderBy('historicals.date_created')
+            ->groupBy('products.product_id', 'historicals.date_created')
+            ->whereBetween('historicals.date_created', [ $filters->date->start_date, $filters->date->end_date ])
             ->paginate(20);
 
-        $itemsTransformed = new Collection();
-
-        foreach ( $pagination->items() as $item )
-        {
-            $itemsTransformed->push($item);
-        }
-        $itemsTransformed = $itemsTransformed->groupBy('date_created');
-
-        $values = array_keys((array) $itemsTransformed->first()->first());
-
-        $data = [];
-        foreach ( $values as $value )
-        {
-            if ($value == 'date_created')
-            {
-                continue;
-            }
-            $b = [];
-            foreach ( $itemsTransformed as $date => $items )
-            {
-
-                $arr = (array) $items->first();
-                $b['product'] = str_replace('_', ' ', ucfirst($value));
-                $b[$date] = $arr[$value];
-            }
-            $data[] = $b;
-        }
-
-
-        return new \Illuminate\Pagination\LengthAwarePaginator(
-            $data,
-            $pagination->total(),
-            $pagination->perPage(),
-            $pagination->currentPage(),
-            [ 'path'  => \Request::url(),
-              'query' => [ 'page' => $pagination->currentPage() ]
-            ]
-        );
     }
 
 

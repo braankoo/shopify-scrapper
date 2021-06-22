@@ -19,51 +19,13 @@ class HistoricalController extends Controller {
     {
         $filters = json_decode($request->input('filter'));
 
-
-        $pagination = DB::table('variants')
+        return DB::table('variants')
             ->selectRaw('ROUND(historicals.price / 1000000,2) as price,inventory_quantity as quantity,compare_at_price, sales,date_created, position')
             ->join('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
             ->where('variants.variant_id', '=', $variant->variant_id)
             ->orderBy('date_created')
             ->whereBetween('date_created', [ $filters->date->start_date, $filters->date->end_date ])
             ->paginate();
-        $itemsTransformed = new Collection();
 
-        foreach ( $pagination->items() as $item )
-        {
-            $itemsTransformed->push($item);
-        }
-        $itemsTransformed = $itemsTransformed->groupBy('date_created');
-
-        $values = array_keys((array) $itemsTransformed->first()->first());
-
-        $data = [];
-        foreach ( $values as $value )
-        {
-            if ($value == 'date_created')
-            {
-                continue;
-            }
-            $b = [];
-            foreach ( $itemsTransformed as $date => $items )
-            {
-
-                $arr = (array) $items->first();
-                $b['variant'] = str_replace('_', ' ', ucfirst($value));
-                $b[$date] = $arr[$value];
-            }
-            $data[] = $b;
-        }
-
-
-        return new \Illuminate\Pagination\LengthAwarePaginator(
-            $data,
-            $pagination->total(),
-            $pagination->perPage(),
-            $pagination->currentPage(),
-            [ 'path'  => \Request::url(),
-              'query' => [ 'page' => $pagination->currentPage() ]
-            ]
-        );
     }
 }

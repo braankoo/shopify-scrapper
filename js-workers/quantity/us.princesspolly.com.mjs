@@ -47,7 +47,7 @@ export default function (productId, csv) {
                                     await conn.query('UPDATE historicals set sales = ?  WHERE date_created = CURDATE() and variant_id = ?', [r[0].inventory_quantity - quantity, variantRawObj.variant_id]);
                                 }
                             }
-                            productQuantity += quantity;
+                            productQuantity += parseInt(quantity);
                         })();
                     }
 

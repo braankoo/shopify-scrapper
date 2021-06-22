@@ -17,6 +17,7 @@ class CreateSitesTable extends Migration {
             $table->increments('id');
             $table->char('product_json')->unique();
             $table->char('product_html', 255)->nullable();
+            $table->dateTime('last_scan');
             $table->timestamps();
         });
     }

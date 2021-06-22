@@ -52,7 +52,7 @@ class ProductController extends Controller {
             ->join('variants', 'products.product_id', '=', 'variants.product_id')
             ->leftJoin('historicals', function ($q) {
                 $q->on('variants.variant_id', '=', 'historicals.variant_id');
-                $q->whereDate('historicals.date_created', '=', Carbon::now());
+
             })
             ->when(!empty($filters->site->url), function ($q) use ($filters) {
                 $q->whereIn('sites.id', array_map(function ($site) {
@@ -101,6 +101,7 @@ class ProductController extends Controller {
             })
             ->whereNotNull('products.position')
             ->where('products.status', '=', 'ENABLED')
+            ->whereDate('historicals.date_created', '=', Carbon::now())
             ->groupBy([ 'catalogs.id', 'products.id' ])
             ->orderBy($request->input('sortBy') == '' ? 'products.title' : $request->input('sortBy'), $request->input('sortDesc') == 'true' ? 'ASC' : 'DESC')
             ->paginate(20);

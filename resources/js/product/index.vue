@@ -131,6 +131,24 @@
         <hr>
         <b-row>
             <b-col>
+                <b-form-datepicker
+                    v-model="filters.selected.date_range.start_date"
+                    locale="en"
+                    placeholder="Date Range(start)"
+                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                ></b-form-datepicker>
+            </b-col>
+            <b-col>
+                <b-form-datepicker
+                    v-model="filters.selected.date_range.end_date"
+                    locale="en"
+                    placeholder="Date Range(end)"
+                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                ></b-form-datepicker>
+            </b-col>
+        </b-row>
+        <b-row>
+            <b-col>
                 <b-button @click="exportCSV" variant="success">CSV</b-button>
             </b-col>
         </b-row>
@@ -179,7 +197,7 @@
 
 <script>
 import Multiselect from 'vue-multiselect';
-
+import moment from "moment";
 const fileDownload = require('js-file-download');
 export default {
     name: "index",
@@ -270,6 +288,10 @@ export default {
                     published_at: {
                         start_date: '',
                         end_date: ''
+                    },
+                    date_range: {
+                        start_date: moment().format('YYYY-MM-DD'),
+                        end_date: moment().subtract(7, 'd').format('YYYY-MM-DD')
                     },
                     quantity: '',
                     sales: '',

@@ -34,7 +34,6 @@ class ProductController extends Controller {
 
     }
 
-
     /**
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
@@ -47,13 +46,15 @@ class ProductController extends Controller {
             case '';
                 $sortBy = 'products.title';
                 break;
+            case 'sales':
+                $sortBy = DB::raw('SUM(sales)');
+                break;
             case 'quantity':
                 $sortBy = DB::raw('SUM(inventory_quantity)');
                 break;
             default:
                 $sortBy = $request->input('sortBy');
         }
-
 
         return DB::table('products')
             ->selectRaw('SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at, IFNULL(products.position,"n/a") as `products.position`,IFNULL(sum(sales),"n/a") as sales,IFNULL(sum(inventory_quantity),"n/a") as quantity, products.id as product_id')
@@ -109,7 +110,8 @@ class ProductController extends Controller {
             })
             ->whereNotNull('products.position')
             ->where('products.status', '=', 'ENABLED')
-            ->whereDate('historicals.date_created', '=', Carbon::now())
+            ->whereDate('historicals.date_created', '>=', $filters->date_range->start_date)
+            ->whereDate('historicals.date_created', '<=', $filters->date_range->end_date)
             ->groupBy([ 'catalogs.id', 'products.id' ])
             ->orderBy($sortBy, $request->input('sortDesc') == 'true' ? 'ASC' : 'DESC')
             ->paginate(20);
@@ -150,13 +152,13 @@ class ProductController extends Controller {
         $filters = json_decode($request->input('filter'));
 
         $data = DB::table('products')
-            ->selectRaw('SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at, IFNULL(products.position,"n/a") as `products.position`,IFNULL(quantity,"n/a") as quantity,IFNULL(sum(sales),"n/a") as sales, products.id as product_id')
+            ->selectRaw('SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at, IFNULL(products.position,"n/a") as `products.position`,IFNULL(inv.quantity,"n/a") as quantity,IFNULL(sum(sales),"n/a") as sales, products.id as product_id')
             ->join('sites', 'products.site_id', '=', 'sites.id')
             ->join('catalog_product', 'products.product_id', '=', 'catalog_product.product_id')
             ->join('catalogs', 'catalog_product.catalog_id', '=', 'catalogs.catalog_id')
             ->join('variants', 'products.product_id', '=', 'variants.product_id')
             ->leftJoin(
-                DB::raw("(SELECT product_id, sum(inventory_quantity) as quantity,sum(sales) as sales from historicals WHERE date_created = CURDATE() GROUP BY product_id) inv"),
+                DB::raw("(SELECT product_id, inventory_quantity as quantity from historicals WHERE date_created = CURDATE() GROUP BY product_id) inv"),
                 function ($join) {
                     $join->on('products.product_id', '=', 'inv.product_id');
                 }

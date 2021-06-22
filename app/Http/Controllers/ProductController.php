@@ -40,6 +40,7 @@ class ProductController extends Controller {
      */
     public function data(Request $request): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
+
         $filters = json_decode($request->input('filter'));
         switch ( $request->input('sortBy') )
         {
@@ -67,6 +68,8 @@ class ProductController extends Controller {
                 DB::table('historicals')
                     ->select('inventory_quantity')
                     ->whereDate('date_created', '=', Carbon::now())
+                    ->offset($request->input('page') == '1' ? 0 : $request->input('page') * 20)
+                    ->limit(20)
                 , 'inv', function ($join) {
                 $join->on('variants.variant_id', '=', 'historicals.variant_id');
             })

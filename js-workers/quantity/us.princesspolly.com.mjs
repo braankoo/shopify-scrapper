@@ -47,9 +47,13 @@ export default function (productId, csv) {
                                     await conn.query('UPDATE historicals set sales = ?  WHERE date_created = CURDATE() and variant_id = ?', [r[0].inventory_quantity - quantity, variantRawObj.variant_id]);
                                 }
                             }
-                            productQuantity += variantQuantity[1];
+                            productQuantity += quantity;
                         })();
                     }
+
+                    console.log('*****');
+                    console.log(productQuantity);
+                    console.log('*****');
 
                     await conn.query('UPDATE products set quantity = ? WHERE product_id = ?', [productQuantity, productId]);
                 }

@@ -63,7 +63,7 @@ class ProductController extends Controller {
             ->join('catalogs', 'catalog_product.catalog_id', '=', 'catalogs.catalog_id')
             ->join('variants', 'products.product_id', '=', 'variants.product_id')
             ->leftjoin('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
-            ->joinSub(
+            ->leftJoinSub(
                 DB::table('historicals')
                     ->select('inventory_quantity')
                     ->where('date_created', Carbon::now())

@@ -42,6 +42,17 @@ class ProductController extends Controller {
     public function data(Request $request): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         $filters = json_decode($request->input('filter'));
+        switch ( $request->input('sortBy') )
+        {
+            case '';
+                $sortBy = 'products.title';
+                break;
+            case 'quantity':
+                $sortBy = DB::raw('SUM(inventory_quantity)');
+                break;
+            default:
+                $sortBy = $request->input('sortBy');
+        }
 
 
         return DB::table('products')
@@ -100,7 +111,7 @@ class ProductController extends Controller {
             ->where('products.status', '=', 'ENABLED')
             ->whereDate('historicals.date_created', '=', Carbon::now())
             ->groupBy([ 'catalogs.id', 'products.id' ])
-            ->orderBy($request->input('sortBy') == '' ? 'products.title' : $request->input('sortBy'), $request->input('sortDesc') == 'true' ? 'ASC' : 'DESC')
+            ->orderBy($sortBy, $request->input('sortDesc') == 'true' ? 'ASC' : 'DESC')
             ->paginate(20);
     }
 

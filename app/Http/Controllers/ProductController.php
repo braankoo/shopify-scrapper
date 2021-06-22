@@ -50,10 +50,7 @@ class ProductController extends Controller {
             ->join('catalog_product', 'products.product_id', '=', 'catalog_product.product_id')
             ->join('catalogs', 'catalog_product.catalog_id', '=', 'catalogs.catalog_id')
             ->join('variants', 'products.product_id', '=', 'variants.product_id')
-            ->leftJoin('historicals', function ($q) {
-                $q->on('variants.variant_id', '=', 'historicals.variant_id');
-
-            })
+            ->join('historicals', 'variant_id', '=', 'variants.variant_id')
             ->when(!empty($filters->site->url), function ($q) use ($filters) {
                 $q->whereIn('sites.id', array_map(function ($site) {
                     return $site->id;

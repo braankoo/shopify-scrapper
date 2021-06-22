@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -44,17 +45,15 @@ class ProductController extends Controller {
 
 
         return DB::table('products')
-            ->selectRaw('SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at, IFNULL(products.position,"n/a") as `products.position`,IFNULL(quantity,"n/a") as quantity,IFNULL(sum(sales),"n/a") as sales, products.id as product_id')
+            ->selectRaw('SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at, IFNULL(products.position,"n/a") as `products.position`,IFNULL(quantity,"n/a") as quantity,IFNULL(sum(sales),"n/a") as sales,IFNULL(sum(inventory_quantity),"n/a") as inventory_quantity, products.id as product_id')
             ->join('sites', 'products.site_id', '=', 'sites.id')
             ->join('catalog_product', 'products.product_id', '=', 'catalog_product.product_id')
             ->join('catalogs', 'catalog_product.catalog_id', '=', 'catalogs.catalog_id')
             ->join('variants', 'products.product_id', '=', 'variants.product_id')
-            ->leftJoin(
-                DB::raw("(SELECT product_id, sum(inventory_quantity) as quantity,sum(sales) as sales from historicals WHERE date_created = CURDATE() GROUP BY product_id ORDER BY quantity ) inv"),
-                function ($join) {
-                    $join->on('products.product_id', '=', 'inv.product_id');
-                }
-            )
+            ->leftJoin('historicals', function ($q) {
+                $q->on('variants.variant_id', '=', 'historicals.variant_id');
+                $q->whereDate('created_at', '=', Carbon::now());
+            })
             ->when(!empty($filters->site->url), function ($q) use ($filters) {
                 $q->whereIn('sites.id', array_map(function ($site) {
                     return $site->id;

@@ -198,6 +198,7 @@
 <script>
 import Multiselect from 'vue-multiselect';
 import moment from "moment";
+
 const fileDownload = require('js-file-download');
 export default {
     name: "index",
@@ -290,8 +291,8 @@ export default {
                         end_date: ''
                     },
                     date_range: {
-                        start_date: moment().format('YYYY-MM-DD'),
-                        end_date: moment().subtract(7, 'd').format('YYYY-MM-DD')
+                        start_date: moment().subtract(7, 'd').format('YYYY-MM-DD'),
+                        end_date: moment().format('YYYY-MM-DD')
                     },
                     quantity: '',
                     sales: '',

@@ -45,7 +45,7 @@ class ProductController extends Controller {
         switch ( $request->input('sortBy') )
         {
             case '';
-                $sortBy = 'products.title';
+                $sortBy = 'products.position';
                 break;
             case 'sales':
                 $sortBy = DB::raw('SUM(sales)');

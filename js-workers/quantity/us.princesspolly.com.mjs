@@ -51,10 +51,6 @@ export default function (productId, csv) {
                         })();
                     }
 
-                    console.log('*****');
-                    console.log(productQuantity);
-                    console.log('*****');
-
                     await conn.query('UPDATE products set quantity = ? WHERE product_id = ?', [productQuantity, productId]);
                 }
             }

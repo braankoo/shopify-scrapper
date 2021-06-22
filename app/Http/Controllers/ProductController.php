@@ -66,7 +66,7 @@ class ProductController extends Controller {
             ->leftJoinSub(
                 DB::table('historicals')
                     ->select('inventory_quantity')
-                    ->where('date_created', Carbon::now())
+                    ->whereDate('date_created', '=', Carbon::now())
                 , 'inv', function ($join) {
                 $join->on('variants.variant_id', '=', 'historicals.variant_id');
             })

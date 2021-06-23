@@ -74,9 +74,9 @@ if (args.length > 0) {
     conn.query("SELECT id,product_html FROM sites WHERE id = ?", [args[0]], (err, result, fields) => {
 
             const {hostname} = new URL(result[0].product_html);
-            // if (fs.existsSync('data/position/' + hostname + '.csv')) {
-            //     fs.unlinkSync('data/position/' + hostname + '.csv')
-            // }
+        if (fs.existsSync('data/position/' + hostname + '.csv')) {
+            fs.unlinkSync('data/position/' + hostname + '.csv')
+        }
 
 
             positionUrl.push(

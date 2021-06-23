@@ -20,6 +20,7 @@ export default function (csv) {
 
             for (let i = 0; i < products.length; i++) {
                 await conn.query('UPDATE products SET position = ? WHERE product_id = ?', [i + 1, products[i]]);
+                await conn.query('INSERT INTO product_position (product_id,position,date_created) VALUES (?,?, CURDATE()) ON DUPLICATE KEY UPDATE position = VALUES(position)', [products[i], i + 1]);
             }
             resolve('true');
         });

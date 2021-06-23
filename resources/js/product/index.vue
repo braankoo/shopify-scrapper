@@ -345,6 +345,12 @@ export default {
                 fileDownload(response.data, 'stats.csv');
             });
         }
+    },
+    mounted() {
+        this.find('site', 'url', '');
+        this.find('catalog', 'title', '');
+        this.find('product', 'title', '');
+        this.find('product', 'type', '');
     }
 }
 </script>

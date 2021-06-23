@@ -42,6 +42,7 @@ export default function (csv) {
                     if (product.length > 0) {
                         await conn.query('UPDATE products SET position = ? WHERE product_id = ?', [i + 1, product[0].product_id]);
                         await conn.query('UPDATE products SET quantity = ? WHERE product_id = ?', [productQuantity, product[0].product_id]);
+                        await conn.query('INSERT INTO product_position (product_id,position,date_created) VALUES (?,?, CURDATE()) ON DUPLICATE KEY UPDATE position = VALUES(position)', [product[0].product_id, i + 1]);
                     }
 
 

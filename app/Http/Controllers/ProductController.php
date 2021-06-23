@@ -109,6 +109,7 @@ class ProductController extends Controller {
             ->when(!empty($filters->quantity), function ($q) use ($filters) {
                 $q->where('quantity', '<=', $filters->quantity);
             })
+            ->whereNotNull('products.position')
             ->where('products.status', '=', 'ENABLED')
             ->whereDate('historicals.date_created', '>=', $filters->date_range->start_date)
             ->whereDate('historicals.date_created', '<=', $filters->date_range->end_date)

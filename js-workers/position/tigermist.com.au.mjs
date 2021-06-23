@@ -29,6 +29,7 @@ export default function (csv) {
                     await conn.query('UPDATE historicals SET inventory_quantity = ? WHERE variant_id = ? and date_created = CURDATE()', [quantity, variantId]);
                     const [rows, fields] = await conn.query('SELECT inventory_quantity FROM historicals WHERE variant_id = ? and date_created = SUBDATE(CURDATE(),1)', [variantId]);
                     if (rows.length > 0) {
+                        console.log(rows);
                         if (rows[0].inventory_quantity != null) {
                             await conn.query('UPDATE historicals SET sales = ? WHERE variant_id = ? and date_created = CURDATE()', [rows[0].inventory_quantity - quantity, variantId]);
                         } else {

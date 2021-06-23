@@ -37,7 +37,7 @@ export default function (csv) {
                     }
                 }
                 if (variants.length > 0) {
-                    var [product, fields] = await conn.query('SELECT product_id FROM variants WHERE variant_id = ? LIMIT 1', [parseInt(variants[0].children[0].value)]);
+                    var [product, fields] = await conn.query('SELECT product_id FROM variants WHERE variant_id = ? LIMIT 1', [parseInt(variants[0].children[3].value)]);
                     if (product.length > 0) {
                         await conn.query('UPDATE products SET position = ? WHERE product_id = ?', [i + 1, product[0].product_id]);
                         await conn.query('UPDATE products SET quantity = ? WHERE product_id = ?', [productQuantity, product[0].product_id]);
@@ -46,6 +46,7 @@ export default function (csv) {
 
                 }
             }
+            resolve('true');
         });
     });
 }

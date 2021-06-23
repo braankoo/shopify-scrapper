@@ -60,21 +60,23 @@ function jobCallback(job, worker, index) {
     }
 }
 
-var pool = new Pool({
-    numWorkers: 1,
-    jobCallback: jobCallback,
-    workerFile: __dirname + '/js-workers/position.js',
-    workerTimeout: 1200000
-});
+var pool = function (hostname) {
+    return new Pool({
+        numWorkers: 1,
+        jobCallback: jobCallback,
+        workerFile: __dirname + `/js-workers/phantom/position/${hostname}.js`,
+        workerTimeout: 1200000
+    });
+}
 
 if (args.length > 0) {
 
     conn.query("SELECT id,product_html FROM sites WHERE id = ?", [args[0]], (err, result, fields) => {
 
             const {hostname} = new URL(result[0].product_html);
-            if (fs.existsSync('data/position/' + hostname + '.csv')) {
-                fs.unlinkSync('data/position/' + hostname + '.csv')
-            }
+            // if (fs.existsSync('data/position/' + hostname + '.csv')) {
+            //     fs.unlinkSync('data/position/' + hostname + '.csv')
+            // }
 
 
             positionUrl.push(
@@ -86,7 +88,8 @@ if (args.length > 0) {
                 }
             );
 
-            pool.start();
+
+            pool(hostname).start();
         }
     )
     ;

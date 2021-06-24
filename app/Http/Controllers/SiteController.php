@@ -131,8 +131,10 @@ class SiteController extends Controller {
 
             $process = new Process([ 'node', 'getPosition.cjs', $site->id ]);
             $process->start();
+            $process->wait();
             if (!Str::contains($site->product_json, [ 'tigermist', 'motelrocks' ]))
             {
+                $process->wait();
                 $process = new Process([ 'node', 'getQuantity.cjs', $site->id ]);
                 $process->start();
             }

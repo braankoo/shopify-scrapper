@@ -54,6 +54,7 @@ class PrepareData extends Command {
                 $process->start();
                 if (!Str::contains($site->product_json, [ 'tigermist', 'motelrocks' ]))
                 {
+                    $process->wait();
                     $process = new Process([ 'node', 'getQuantity.cjs' ]);
                     $process->start();
                 }

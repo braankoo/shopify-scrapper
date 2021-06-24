@@ -38,11 +38,11 @@ class GetProducts implements ShouldQueue {
     /**
      * @var int
      */
-    public $tries = 1;
+    public $tries = 3;
     /**
      * @var int[]
      */
-    public $backoff = [ 600, 1200 ];
+    public $backoff = [ 600, 1200, 1200 ];
 
     /**
      * Create a new job instance.
@@ -118,6 +118,7 @@ class GetProducts implements ShouldQueue {
                     Variant::upsert($variants, [ 'product_id', 'variant_id' ], array_keys($variants[0]));
                     DB::table('catalog_product')->upsert($productCatalogRelation, [ 'catalog_id', 'product_id', 'site_id' ], array_keys($productCatalogRelation[0]));
                 }
+                sleep(1);
             }
 
         } while ( $response->getStatusCode() == 200 && !empty($data->products) );

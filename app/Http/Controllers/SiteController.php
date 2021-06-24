@@ -129,11 +129,11 @@ class SiteController extends Controller {
             //initialize node
 
 
-            $process = new Process([ 'node', 'getPosition.cjs' ]);
+            $process = new Process([ 'node', 'getPosition.cjs', $site->id ]);
             $process->start();
             if (!Str::contains($site->product_json, [ 'tigermist', 'motelrocks' ]))
             {
-                $process = new Process([ 'node', 'getQuantity.cjs' ]);
+                $process = new Process([ 'node', 'getQuantity.cjs', $site->id ]);
                 $process->start();
             }
 

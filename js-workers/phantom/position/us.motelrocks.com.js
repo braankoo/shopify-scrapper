@@ -10,10 +10,8 @@ module.exports = function (data, done, worker) {
     var fail = 0;
 
     const writeData = function (data) {
-        const path = 'data/position/' + params.hostname + '.csv';
-
-        fs.touch(path);
-        fs.write(path, data, 'a');
+        fs.touch(params.filePath);
+        fs.write(params.filePath, data, 'a');
     }
     const loadPage = function (url, pageId) {
 

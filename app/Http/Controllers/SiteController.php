@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Validator;
 use Symfony\Component\HttpFoundation\Response;
@@ -124,20 +125,23 @@ class SiteController extends Controller {
     {
         Bus::batch([
             new \App\Jobs\GetCatalog($site),
-//            new \App\Jobs\GetProducts($site),
-//            new GetData($site)
-        ])->allowFailures(false)->then(function (Batch $batch) use ($site) {
+            new \App\Jobs\GetProducts($site),
+            new GetData($site)
+        ])->allowFailures(false)->finally(function (Batch $batch) use ($site) {
 
-            $process = new Process([ 'node', 'getPosition.cjs', $site->id ]);
+
+            $process = new Process([ 'node', base_path('getPosition.cjs'), $site->id ], base_path());
+
             $process->start();
-            $process->wait();
-            print_r($process->getOutput());
+
             if (!Str::contains($site->product_json, [ 'tigermist', 'motelrocks' ]))
             {
                 $process->wait();
                 $process = new Process([ 'node', 'getQuantity.cjs', $site->id ]);
+
                 $process->start();
             }
+
 
         })->dispatch();
 

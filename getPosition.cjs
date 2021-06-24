@@ -26,7 +26,8 @@ function jobCallback(job, worker, index) {
             {
                 id: index,
                 url: positionUrl[index].url,
-                hostname: positionUrl[index].hostname
+                hostname: positionUrl[index].hostname,
+                filePath: positionUrl[index].filePath
 
             }, async function (err) {
                 // Lets log if it worked
@@ -34,14 +35,14 @@ function jobCallback(job, worker, index) {
 
                 try {
                     async function importModule() {
-                        return await import('./js-workers/position/' + positionUrl[index].hostname + '.mjs' );
+                        return await import(__dirname + '/js-workers/position/' + positionUrl[index].hostname + '.mjs' );
                     }
 
                     const module = await importModule();
                     try {
-                        module.default('data/position/' + positionUrl[index].hostname + '.csv').then((res) => {
+                        module.default(__dirname + '/data/position/' + positionUrl[index].hostname + '.csv').then((res) => {
 
-                            process.exit();
+                            process.exit(0);
                         });
                     } catch (err) {
                         throw err;
@@ -71,11 +72,13 @@ var pool = function (hostname) {
 
 if (args.length > 0) {
 
-    conn.query("SELECT id,product_html FROM sites WHERE id = ?", [args[0]], (err, result, fields) => {
 
+    conn.query("SELECT id,product_html FROM sites WHERE id = ?", [parseInt(args[0])], (err, result, fields) => {
+
+            if (err) throw err;
             const {hostname} = new URL(result[0].product_html);
-            if (fs.existsSync('data/position/' + hostname + '.csv')) {
-                fs.unlinkSync('data/position/' + hostname + '.csv')
+            if (fs.existsSync(__dirname + '/data/position/' + hostname + '.csv')) {
+                fs.unlinkSync(__dirname + '/data/position/' + hostname + '.csv')
             }
 
 
@@ -84,6 +87,7 @@ if (args.length > 0) {
                     siteId: result[0].id,
                     url: result[0].product_html,
                     hostname: hostname,
+                    filePath: __dirname + '/data/position/' + hostname + '.csv'
 
                 }
             );

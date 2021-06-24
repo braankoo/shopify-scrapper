@@ -50,12 +50,12 @@ class PrepareData extends Command {
                 new \App\Jobs\GetProducts($site),
                 new GetData($site)
             ])->allowFailures(false)->then(function ($e) use ($site) {
-                $process = new Process([ 'node', 'getPosition.cjs' ]);
+                $process = new Process([ 'node', 'getPosition.cjs', $site->id ]);
                 $process->start();
                 if (!Str::contains($site->product_json, [ 'tigermist', 'motelrocks' ]))
                 {
                     $process->wait();
-                    $process = new Process([ 'node', 'getQuantity.cjs' ]);
+                    $process = new Process([ 'node', 'getQuantity.cjs', $site->id ]);
                     $process->start();
                 }
 

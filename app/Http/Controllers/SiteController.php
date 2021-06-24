@@ -127,22 +127,16 @@ class SiteController extends Controller {
             new \App\Jobs\GetCatalog($site),
             new \App\Jobs\GetProducts($site),
             new GetData($site)
-        ])->allowFailures(false)->finally(function (Batch $batch) use ($site) {
-
+        ])->allowFailures(false)->then(function (Batch $batch) use ($site) {
 
             $process = new Process([ 'node', base_path('getPosition.cjs'), $site->id ], base_path());
-
             $process->start();
-
             if (!Str::contains($site->product_json, [ 'tigermist', 'motelrocks' ]))
             {
                 $process->wait();
                 $process = new Process([ 'node', 'getQuantity.cjs', $site->id ]);
-
                 $process->start();
             }
-
-
         })->dispatch();
 
         return response()->json([ 'message' => 'Initialized' ], JsonResponse::HTTP_OK);

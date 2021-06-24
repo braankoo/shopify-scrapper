@@ -17,7 +17,7 @@ export default function (csv) {
         fs.readFile(csv, 'utf8', async function (err, data) {
 
             let products = Array.from(new Set(data.match(/[0-9]{0,}/g)));
-            products.filter(function (product) {
+            products = products.filter(function (product) {
                 return Number.isInteger(parseInt(product));
             })
             for (let i = 0; i < products.length; i++) {

@@ -6,6 +6,7 @@ use App\Jobs\GetData;
 use App\Models\Site;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 
 class PrepareData extends Command {
@@ -51,8 +52,12 @@ class PrepareData extends Command {
             ])->allowFailures(false)->then(function ($e) use ($site) {
                 $process = new Process([ 'node', 'getPosition.cjs' ]);
                 $process->start();
-                $process = new Process([ 'node', 'getQuantity.cjs' ]);
-                $process->start();
+                if (!Str::contains($site->product_json, [ 'tigermist', 'motelrocks' ]))
+                {
+                    $process = new Process([ 'node', 'getQuantity.cjs' ]);
+                    $process->start();
+                }
+
             })->dispatch();
         });
     }

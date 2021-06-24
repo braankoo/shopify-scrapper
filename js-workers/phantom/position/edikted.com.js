@@ -7,7 +7,7 @@ module.exports = function (data, done, worker) {
     var params = data;
 
     var page = webpage.create();
-    var pageId = 1;
+
     var fail = 0;
 
     const writeData = function (data) {
@@ -15,7 +15,7 @@ module.exports = function (data, done, worker) {
     }
 
     const loadPage = function (url, pageId) {
-        console.log(url + '?page=' + pageId);
+
         page.open(url + '?page=' + pageId, function (status) {
 
             if (fail === 10) {

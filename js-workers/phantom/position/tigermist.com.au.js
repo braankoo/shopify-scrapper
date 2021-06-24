@@ -11,7 +11,6 @@ module.exports = function (data, done, worker) {
     var fail = 0;
 
     const writeData = function (data) {
-        fs.touch(params.filePath);
         fs.write(params.filePath, data, 'a');
     }
 

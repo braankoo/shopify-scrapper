@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Validator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Process\Process;
@@ -127,11 +128,16 @@ class SiteController extends Controller {
         ])->allowFailures(false)->then(function ($e) use ($site) {
             //initialize node
 
-            $process = new Process([ 'node', 'getPosition.cjs', $site->id ]);
-            $process->start();
-            $process->wait();
-            $process = new Process([ 'node', 'getQuantity.cjs', $site->id ]);
-            $process->start();
+            if (!Str::contains($site->product_json, [ 'tigermist', 'motelrocks' ]))
+            {
+                $process = new Process([ 'node', 'getPosition.cjs' ]);
+                $process->start();
+                if (!Str::contains($site->product_json, [ 'tigermist', 'motelrocks' ]))
+                {
+                    $process = new Process([ 'node', 'getQuantity.cjs' ]);
+                    $process->start();
+                }
+            }
         })->dispatch();
 
         return response()->json([ 'message' => 'Initialized' ], JsonResponse::HTTP_OK);

@@ -37,13 +37,13 @@ function jobCallback(job, worker, index) {
                 try {
 
                     async function importModule() {
-                        return await import('./js-workers/quantity/' + data[index].hostname + '.mjs' );
+                        return await import(__dirname + '/js-workers/quantity/' + data[index].hostname + '.mjs' );
                     }
 
                     importModule().then(function (module) {
 
-                        module.default(data[index].productId, 'data/quantity/' + data[index].hostname + data[index].productId + '.csv').then(() => {
-                            fs.unlink('data/quantity/' + data[index].hostname + data[index].productId + '.csv', function (err) {
+                        module.default(data[index].productId, __dirname + 'data/quantity/' + data[index].hostname + data[index].productId + '.csv').then(() => {
+                            fs.unlink(__dirname + 'data/quantity/' + data[index].hostname + data[index].productId + '.csv', function (err) {
                                 if (err) throw err;
                             });
                         });

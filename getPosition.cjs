@@ -40,7 +40,7 @@ function jobCallback(job, worker, index) {
 
                     const module = await importModule();
                     try {
-                        module.default(__dirname + '/data/position/' + positionUrl[index].hostname + '.csv').then((res) => {
+                        module.default(positionUrl[index].filePath).then((res) => {
 
                             process.exit(0);
                         });
@@ -76,24 +76,30 @@ if (args.length > 0) {
     conn.query("SELECT id,product_html FROM sites WHERE id = ?", [parseInt(args[0])], (err, result, fields) => {
 
             if (err) throw err;
-            const {hostname} = new URL(result[0].product_html);
-            if (fs.existsSync(__dirname + '/data/position/' + hostname + '.csv')) {
-                fs.unlinkSync(__dirname + '/data/position/' + hostname + '.csv')
-            }
 
-
-            positionUrl.push(
-                {
-                    siteId: result[0].id,
-                    url: result[0].product_html,
-                    hostname: hostname,
-                    filePath: __dirname + '/data/position/' + hostname + '.csv'
-
+            try {
+                const {hostname} = new URL(result[0].product_html);
+                if (fs.existsSync(__dirname + '/data/position/' + hostname + '.csv')) {
+                    fs.unlinkSync(__dirname + '/data/position/' + hostname + '.csv')
+                    fs.closeSync(fs.openSync(__dirname + '/data/position/' + hostname + '.csv', 'w'));
                 }
-            );
 
 
-            pool(hostname).start();
+                positionUrl.push(
+                    {
+                        siteId: result[0].id,
+                        url: result[0].product_html,
+                        hostname: hostname,
+                        filePath: __dirname + '/data/position/' + hostname + '.csv'
+
+                    }
+                );
+
+
+                pool(hostname).start();
+            } catch (e) {
+                throw e;
+            }
         }
     )
     ;
@@ -101,8 +107,8 @@ if (args.length > 0) {
     conn.query("SELECT id,product_html FROM sites", (err, result, fields) => {
 
         const {hostname} = new URL(result[0].product_html);
-        if (fs.existsSync('data/position/' + hostname + '.csv')) {
-            fs.unlinkSync('data/position/' + hostname + '.csv')
+        if (fs.existsSync(__dirname + 'data/position/' + hostname + '.csv')) {
+            fs.unlinkSync(__dirname + 'data/position/' + hostname + '.csv')
         }
 
 

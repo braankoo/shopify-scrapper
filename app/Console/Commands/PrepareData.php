@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\GetData;
+use App\Jobs\GetPositionAndQuantity;
 use App\Models\Site;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
@@ -45,21 +46,11 @@ class PrepareData extends Command {
     {
         Site::each(function ($site) {
 
-            Bus::batch([
+            Bus::chain([
                 new \App\Jobs\GetCatalog($site),
                 new \App\Jobs\GetProducts($site),
-                new GetData($site)
-            ])->allowFailures(false)->then(function ($e) use ($site) {
-                $process = new Process([ 'node', base_path('getPosition.cjs') ], base_path());
-                $process->start();
-                if (!Str::contains($site->product_json, [ 'tigermist', 'motelrocks' ]))
-                {
-                    $process->wait();
-                    $process = new Process([ 'node', base_path('getQuantity.cjs') ], base_path());
-                    $process->start();
-                }
-
-            })->dispatch();
+                new GetPositionAndQuantity($site)
+            ])->dispatch();
         });
     }
 }

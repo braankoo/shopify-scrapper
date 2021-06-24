@@ -27,7 +27,8 @@ function jobCallback(job, worker, index) {
                 id: index,
                 url: data[index].url,
                 productId: data[index].productId,
-                hostname: data[index].hostname
+                hostname: data[index].hostname,
+                filePath: data[index].filePath
 
             }, function (err) {
                 // Lets log if it worked
@@ -37,15 +38,14 @@ function jobCallback(job, worker, index) {
                 try {
 
                     async function importModule() {
+
                         return await import(__dirname + '/js-workers/quantity/' + data[index].hostname + '.mjs' );
                     }
 
                     importModule().then(function (module) {
 
-                        module.default(data[index].productId, __dirname + 'data/quantity/' + data[index].hostname + data[index].productId + '.csv').then(() => {
-                            fs.unlink(__dirname + 'data/quantity/' + data[index].hostname + data[index].productId + '.csv', function (err) {
-                                if (err) throw err;
-                            });
+                        module.default(data[index].productId, data[index].filePath).then(() => {
+                            fs.unlinkSync(data[index].filePath);
                         });
 
                     });
@@ -68,14 +68,22 @@ var pool = new Pool({
     workerTimeout: 300000
 });
 if (args.length > 0) {
-    conn.query("SELECT distinct CONCAT(REPLACE(product_json, '.json', ''), CONCAT('/', products.handle)) as url, products.product_id FROM sites INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id  WHERE sites.id = ? AND products.position IS NOT NULL and products.status = 'ENABLED'", [args[0]], (err, results, fields) => {
+    conn.query("SELECT distinct CONCAT(REPLACE(product_json, '.json', ''), CONCAT('/', products.handle)) as url, products.product_id FROM sites INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id  WHERE sites.id = ? AND products.position IS NOT NULL and products.status = 'ENABLED' LIMIT 1", [args[0]], (err, results, fields) => {
         if (err) throw err;
-        console.log(results);
+
         results.forEach(function (result) {
             const {hostname} = new URL(result.url);
-            data.push({url: result.url, productId: result.product_id, hostname: hostname});
-        })
+            let filePath = __dirname + '/data/quantity/' + hostname + result.product_id + '.csv';
 
+
+            data.push(
+                {
+                    url: result.url,
+                    productId: result.product_id,
+                    hostname: hostname,
+                    filePath: filePath
+                });
+        });
         pool.start();
     });
 } else {
@@ -84,9 +92,15 @@ if (args.length > 0) {
         console.log(results);
         results.forEach(function (result) {
             const {hostname} = new URL(result.url);
-            data.push({url: result.url, productId: result.product_id, hostname: hostname});
+            let filePath = __dirname + '/data/quantity/' + hostname + result.productId + '.csv';
+            data.push(
+                {
+                    url: result.url,
+                    productId: result.product_id,
+                    hostname: hostname,
+                    filePath: filePath
+                });
         })
-
         pool.start();
     });
 }

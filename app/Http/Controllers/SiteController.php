@@ -123,8 +123,8 @@ class SiteController extends Controller {
     {
         Bus::batch([
             new \App\Jobs\GetCatalog($site),
-            new \App\Jobs\GetProducts($site),
-            new GetData($site)
+//            new \App\Jobs\GetProducts($site),
+//            new GetData($site)
         ])->allowFailures(false)->then(function ($e) use ($site) {
             //initialize node
 
@@ -132,6 +132,7 @@ class SiteController extends Controller {
             $process = new Process([ 'node', 'getPosition.cjs', $site->id ]);
             $process->start();
             $process->wait();
+            print_r($process->getOutput());
             if (!Str::contains($site->product_json, [ 'tigermist', 'motelrocks' ]))
             {
                 $process->wait();

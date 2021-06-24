@@ -128,16 +128,15 @@ class SiteController extends Controller {
         ])->allowFailures(false)->then(function ($e) use ($site) {
             //initialize node
 
+
+            $process = new Process([ 'node', 'getPosition.cjs' ]);
+            $process->start();
             if (!Str::contains($site->product_json, [ 'tigermist', 'motelrocks' ]))
             {
-                $process = new Process([ 'node', 'getPosition.cjs' ]);
+                $process = new Process([ 'node', 'getQuantity.cjs' ]);
                 $process->start();
-                if (!Str::contains($site->product_json, [ 'tigermist', 'motelrocks' ]))
-                {
-                    $process = new Process([ 'node', 'getQuantity.cjs' ]);
-                    $process->start();
-                }
             }
+
         })->dispatch();
 
         return response()->json([ 'message' => 'Initialized' ], JsonResponse::HTTP_OK);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\GetData;
 use App\Models\Site;
+use Illuminate\Bus\Batch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -125,9 +126,7 @@ class SiteController extends Controller {
             new \App\Jobs\GetCatalog($site),
 //            new \App\Jobs\GetProducts($site),
 //            new GetData($site)
-        ])->allowFailures(false)->then(function ($e) use ($site) {
-            //initialize node
-
+        ])->allowFailures(false)->then(function (Batch $batch) use ($site) {
 
             $process = new Process([ 'node', 'getPosition.cjs', $site->id ]);
             $process->start();

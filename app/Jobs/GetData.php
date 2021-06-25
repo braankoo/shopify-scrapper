@@ -33,10 +33,13 @@ class GetData implements ShouldQueue {
      */
     public $catalog;
 
+
+    public $arr = [];
     /**
      * @var int
      */
     public $tries = 5;
+
 
     /**
      * @var int[]
@@ -72,7 +75,7 @@ class GetData implements ShouldQueue {
         $client = new Client([ 'base_uri' => $this->site->url ]);
 
 
-        $catalog->products()->where('status', '=', 'ENABLED')->each(function ($product) use ($client, $catalog) {
+        $catalog->products()->where('status', '=', 'ENABLED')->get()->each(function ($product) use ($client, $catalog) {
 
             $request = new Request('GET', "collections/{$catalog->handle}/products/{$product->handle}.json");
             $page = 0;
@@ -97,33 +100,39 @@ class GetData implements ShouldQueue {
                     if (!empty($data->product))
                     {
                         $product = $data->product;
-                        $arr = [];
 
                         for ( $i = 0; $i < count($data->product->variants); $i ++ )
                         {
-                            $arr[] = $this->prepareVariantData($product, $i);
-
+                            $this->arr[] = $this->prepareVariantData($product, $i);
+                            print_r($this->arr);
                         }
-
-                        $this->variantsWithQuantityOperations(
-                            array_filter($arr, function ($variant) {
-                                return array_key_exists('inventory_quantity', $variant);
-                            })
-                        );
-
-                        $this->variantsWithOutQuantityOperations(array_filter($arr, function ($variant) {
-                                return !array_key_exists('inventory_quantity', $variant);
-                            })
-                        );
 
                     }
                 }
             } while ( $response->getStatusCode() == 200 && !empty($response->getBody()->getContents()->products) );
+
+
         });
 
 
-            $this->site->last_scan = Carbon::now();
-            $this->site->save();
+        $chunks = array_chunk($this->arr, 1000);
+        foreach ( $chunks as $chunk )
+        {
+            $this->variantsWithQuantityOperations(
+                array_filter($chunk, function ($variant) {
+                    return array_key_exists('inventory_quantity', $variant);
+                })
+            );
+
+            $this->variantsWithOutQuantityOperations(array_filter($chunk, function ($variant) {
+                    return !array_key_exists('inventory_quantity', $variant);
+                })
+            );
+        }
+
+
+        $this->site->last_scan = Carbon::now();
+        $this->site->save();
 
     }
 

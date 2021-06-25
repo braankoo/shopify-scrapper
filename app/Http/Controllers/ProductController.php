@@ -58,7 +58,7 @@ class ProductController extends Controller {
         }
 
         return DB::table('products')
-            ->selectRaw('SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at, IFNULL(products.position,"n/a") as `products.position`,IFNULL(sum(sales),"n/a") as sales, products.id as product_id')
+            ->selectRaw('SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at, IFNULL(products.position,"n/a") as `products.position`,IFNULL(sum(sales),"n/a") as sales,quantity, products.id as product_id')
             ->join('sites', 'products.site_id', '=', 'sites.id')
             ->join('catalog_product', 'products.product_id', '=', 'catalog_product.product_id')
             ->join('catalogs', 'catalog_product.catalog_id', '=', 'catalogs.catalog_id')
@@ -103,13 +103,19 @@ class ProductController extends Controller {
 //            ->when(!empty($filters->published_at->end_date), function ($q) use ($filters) {
 //                $q->whereDate('products.published_at', '<=', $filters->published_at->end_date);
 //            })
+//            ->when(!empty($filters->position), function ($q) use ($filters) {
+//                $q->where('products.position', '=<', $filters->position);
+//            })
+//            ->when(!empty($filters->quantity), function ($q) use ($filters) {
+//                $q->where('quantity', '<=', $filters->quantity);
+//            })
             ->whereNotNull('products.position')
             ->where('products.position', '<=', 200)
             ->where('products.status', '=', 'ENABLED')
             ->whereDate('historicals.date_created', '>=', $filters->date_range->start_date)
             ->whereDate('historicals.date_created', '<=', $filters->date_range->end_date)
             ->groupBy([ 'catalogs.id', 'products.id' ])
-            ->orderBy($sortBy, $request->input('sortDesc') == 'true' ? 'DESC' : 'ASC')
+            ->orderBy($sortBy, $request->input('sortDesc') == 'true' ? 'ASC' : 'DESC')
             ->paginate(20);
     }
 
@@ -125,16 +131,16 @@ class ProductController extends Controller {
         $filters = json_decode($request->input('filter'));
 
         return DB::table('products')
-            ->selectRaw('historicals.date_created,SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at,ROUND((AVG(historicals.price)/1000000),2) as price,sum(inventory_quantity) as quantity, sum(sales) as sales, products.id as product_id,product_position.position as position')
+            ->selectRaw('historicals.date_created, SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at, IFNULL(products.position,"n/a") as `products.position`,IFNULL(sum(sales),"n/a") as sales,quantity, products.id as product_id,ROUND((AVG(historicals.price)/1000000),2) as price')
             ->join('variants', 'products.product_id', '=', 'variants.product_id')
+            ->join('catalog_product', 'products.product_id', 'catalog_product.catalog_id')
+            ->join('catalogs', 'catalog_product.catalog_id', 'catalog_product.product_id')
+            ->join('sites', 'catalogs.site_id', 'sites.id')
             ->join('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
-            ->join('catalog_product', 'products.product_id', '=', 'catalog_product.catalog_id')
-            ->join('catalogs', 'catalog_product.catalog_id', '=', 'catalog_product.catalog_id')
-            ->join('sites', 'sites.id', '=', 'products.site_id')
             ->leftjoin('product_position', 'products.product_id', '=', 'product_position.product_id')
             ->where('products.id', '=', $product->id)
             ->orderBy('historicals.date_created')
-            ->groupBy([ 'catalogs.id', 'products.id', 'historicals.date_created', 'sites.id' ])
+            ->groupBy('catalogs.id', 'products.id','sites.id', 'historicals.date_created')
             ->whereBetween('historicals.date_created', [ $filters->date->start_date, $filters->date->end_date ])
             ->paginate(20);
 

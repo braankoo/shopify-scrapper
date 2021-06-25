@@ -125,6 +125,11 @@ class GetData implements ShouldQueue {
                     {
                         sleep(60);
                     }
+                    if ($i % 500 == 0)
+                    {
+                        sleep(180);
+                    }
+
                 } while ( $response->getStatusCode() == 200 && !empty($response->getBody()->getContents()->products) );
 
 

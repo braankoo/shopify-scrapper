@@ -6,7 +6,7 @@
                              v-model="filters.selected.site.url"
                              label="site"
                              track-by="id"
-                             :multiple="true"
+                             :multiple="filters.loaded.site.url.length>10"
                              :searchable="false"
                              :internal-search="false"
                              :clear-on-select="false"
@@ -25,7 +25,7 @@
                     v-model="filters.selected.catalog.title"
                     label="title"
                     track-by="title"
-                    :multiple="true"
+                    :multiple="filters.selected.catalog.title>10"
                     :searchable="false"
                     :internal-search="false"
                     :clear-on-select="false"
@@ -45,7 +45,7 @@
                     label="title"
                     track-by="id"
                     :multiple="true"
-                    :searchable="false"
+                    :searchable="filters.selected.product.title>10"
                     :internal-search="false"
                     :clear-on-select="false"
                     :close-on-select="false"
@@ -60,7 +60,7 @@
             <b-col>
                 <multiselect
                     :options="filters.loaded.product.type"
-                    v-model="filters.selected.product.type"
+                    v-model="filters.loaded.product.type>10"
                     label="type"
                     track-by="type"
                     :multiple="true"
@@ -78,44 +78,44 @@
             </b-col>
         </b-row>
         <hr>
-<!--        <hr>-->
-<!--        <b-row>-->
-<!--            <b-col>-->
-<!--                <b-form-datepicker-->
-<!--                    v-model="filters.selected.created_at.start_date"-->
-<!--                    locale="en"-->
-<!--                    placeholder="Created At (start)"-->
-<!--                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"-->
-<!--                ></b-form-datepicker>-->
-<!--            </b-col>-->
-<!--            <b-col>-->
-<!--                <b-form-datepicker-->
-<!--                    v-model="filters.selected.created_at.end_date"-->
-<!--                    locale="en"-->
-<!--                    placeholder="Created At (end)"-->
-<!--                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"-->
-<!--                ></b-form-datepicker>-->
-<!--            </b-col>-->
-<!--        </b-row>-->
-<!--        <hr>-->
-<!--        <b-row>-->
-<!--            <b-col>-->
-<!--                <b-form-datepicker-->
-<!--                    v-model="filters.selected.published_at.start_date"-->
-<!--                    locale="en"-->
-<!--                    placeholder="Published At (start)"-->
-<!--                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"-->
-<!--                ></b-form-datepicker>-->
-<!--            </b-col>-->
-<!--            <b-col>-->
-<!--                <b-form-datepicker-->
-<!--                    v-model="filters.selected.published_at.end_date"-->
-<!--                    locale="en"-->
-<!--                    placeholder="Published At (end)"-->
-<!--                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"-->
-<!--                ></b-form-datepicker>-->
-<!--            </b-col>-->
-<!--        </b-row>-->
+        <!--        <hr>-->
+        <!--        <b-row>-->
+        <!--            <b-col>-->
+        <!--                <b-form-datepicker-->
+        <!--                    v-model="filters.selected.created_at.start_date"-->
+        <!--                    locale="en"-->
+        <!--                    placeholder="Created At (start)"-->
+        <!--                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"-->
+        <!--                ></b-form-datepicker>-->
+        <!--            </b-col>-->
+        <!--            <b-col>-->
+        <!--                <b-form-datepicker-->
+        <!--                    v-model="filters.selected.created_at.end_date"-->
+        <!--                    locale="en"-->
+        <!--                    placeholder="Created At (end)"-->
+        <!--                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"-->
+        <!--                ></b-form-datepicker>-->
+        <!--            </b-col>-->
+        <!--        </b-row>-->
+        <!--        <hr>-->
+        <!--        <b-row>-->
+        <!--            <b-col>-->
+        <!--                <b-form-datepicker-->
+        <!--                    v-model="filters.selected.published_at.start_date"-->
+        <!--                    locale="en"-->
+        <!--                    placeholder="Published At (start)"-->
+        <!--                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"-->
+        <!--                ></b-form-datepicker>-->
+        <!--            </b-col>-->
+        <!--            <b-col>-->
+        <!--                <b-form-datepicker-->
+        <!--                    v-model="filters.selected.published_at.end_date"-->
+        <!--                    locale="en"-->
+        <!--                    placeholder="Published At (end)"-->
+        <!--                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"-->
+        <!--                ></b-form-datepicker>-->
+        <!--            </b-col>-->
+        <!--        </b-row>-->
         <hr>
         <b-row>
             <b-col>

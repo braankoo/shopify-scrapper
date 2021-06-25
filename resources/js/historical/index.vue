@@ -70,7 +70,7 @@ export default {
             isBusy: false,
             filters: {
                 date: {
-                    start_date: moment().subtract(5, 'days').format('YYYY-MM-DD'),
+                    start_date: moment().subtract(7, 'days').format('YYYY-MM-DD'),
                     end_date: moment().format('YYYY-MM-DD')
                 },
             }

@@ -7,7 +7,7 @@
                              label="site"
                              track-by="id"
                              :multiple="true"
-                             :searchable="filters.loaded.site.url>0"
+                             :searchable="searchable.sites.url"
                              :internal-search="false"
                              :clear-on-select="false"
                              :close-on-select="false"
@@ -26,7 +26,7 @@
                     label="title"
                     track-by="title"
                     :multiple="true"
-                    :searchable="filters.loaded.catalog.title>0"
+                    :searchable="searchable.catalog.title"
                     :internal-search="false"
                     :clear-on-select="false"
                     :close-on-select="false"
@@ -45,7 +45,7 @@
                     label="title"
                     track-by="id"
                     :multiple="true"
-                    :searchable="filters.loaded.product.title>0"
+                    :searchable="searchable.product.title"
                     :internal-search="false"
                     :clear-on-select="false"
                     :close-on-select="false"
@@ -64,7 +64,7 @@
                     label="type"
                     track-by="type"
                     :multiple="true"
-                    :searchable="filters.loaded.product.type>0"
+                    :searchable="searchable.product.type"
                     :internal-search="false"
                     :clear-on-select="false"
                     :close-on-select="false"
@@ -246,6 +246,19 @@ export default {
                 }
 
             ],
+            searchable: {
+                sites: {
+                    url: false,
+                },
+                catalog: {
+                    title: false,
+
+                },
+                product: {
+                    type: false,
+                    title: false
+                },
+            },
             filters: {
                 loaded: {
                     site: {
@@ -335,6 +348,30 @@ export default {
         this.find('catalog', 'title', '');
         this.find('product', 'title', '');
         this.find('product', 'type', '');
+    },
+    watch: {
+        'filters.loaded.site.url': function (newVal) {
+            if (newVal.length > 10 && this.searchable.sites.url === false) {
+                this.searchable.sites.url = true;
+            }
+
+        },
+        'filters.loaded.catalog.title': function (newVal) {
+            if (newVal.length > 10 && this.searchable.catalog.title === false) {
+                this.filters.loaded.catalog.title = true;
+            }
+        },
+        'filters.loaded.product.title': function (newVal) {
+            if (newVal.length > 10 && this.searchable.product.title === false) {
+                this.searchable.product.title = true;
+            }
+        },
+        'filters.loaded.product.type': function (newVal) {
+            if (newVal.length > 10 && this.searchable.product.type === false) {
+                this.searchable.product.type = true;
+            }
+        }
+
     }
 }
 </script>

@@ -17,11 +17,11 @@ class CatalogController extends Controller {
     {
         if ($request->has('title'))
         {
-            return response()->json(Catalog::where('title', 'LIKE', '%' . $request->input('title') . '%')->paginate(10, [ 'title' ]), JsonResponse::HTTP_OK);
+            return response()->json(Catalog::where('title', 'LIKE', '%' . $request->input('title') . '%')->paginate(20, [ 'title' ]), JsonResponse::HTTP_OK);
         }
 
 
-        return response()->json(Catalog::paginate(10, [ 'title', 'id', 'status' ]), JsonResponse::HTTP_OK);
+        return response()->json(Catalog::paginate(20, [ 'title', 'id', 'status' ]), JsonResponse::HTTP_OK);
     }
 
 

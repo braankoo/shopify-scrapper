@@ -23,14 +23,14 @@ class ProductController extends Controller {
 
         if ($request->has('title'))
         {
-            return response()->json(Product::where('title', 'LIKE', '%' . $request->input('title') . '%')->paginate(10, [ 'title', 'id' ]), JsonResponse::HTTP_OK);
+            return response()->json(Product::where('title', 'LIKE', '%' . $request->input('title') . '%')->paginate(20, [ 'title', 'id' ]), JsonResponse::HTTP_OK);
         }
         if ($request->has('type'))
         {
-            return response()->json(Product::where('type', 'LIKE', '%' . $request->input('type') . '%')->paginate(10, [ 'type', 'id' ]), JsonResponse::HTTP_OK);
+            return response()->json(Product::where('type', 'LIKE', '%' . $request->input('type') . '%')->paginate(20, [ 'type', 'id' ]), JsonResponse::HTTP_OK);
         }
 
-        return response()->json(Product::paginate(10, [ 'title', 'id' ]), JsonResponse::HTTP_OK);
+        return response()->json(Product::paginate(20, [ 'title', 'id' ]), JsonResponse::HTTP_OK);
 
     }
 

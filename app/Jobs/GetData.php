@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Catalog;
 use App\Models\Historical;
 use App\Models\Site;
+use App\Models\Variant;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
@@ -38,7 +39,7 @@ class GetData implements ShouldQueue {
     /**
      * @var int
      */
-    public $tries = 5;
+    public $tries = 1;
 
 
     /**
@@ -75,50 +76,59 @@ class GetData implements ShouldQueue {
         $client = new Client([ 'base_uri' => $this->site->url ]);
 
         $i = 0;
-        $catalog->products()->where('status', '=', 'ENABLED')->get()->each(function ($product) use ($client, $catalog, &$i) {
 
-            $request = new Request('GET', "collections/{$catalog->handle}/products/{$product->handle}.json");
-            $page = 0;
-            do
-            {
+        $catalog->products()
+            ->whereHas('variants',
+                function ($q) {
+                    $q->whereDoesntHave('historical',
+                        function ($q) {
+                            $q->whereDate('date_created', '=', Carbon::now());
+                        });
+                })->where('status', '=', 'ENABLED')->get()
+            ->each(function ($product) use ($client, $catalog, &$i) {
 
-                $i ++;
-                $response = $client->send(
-                    $request,
-                    [
-                        'query' => [
-                            'page'  => $page ++,
-                            'limit' => 500
-                        ],
-//                    'proxy' => Proxy::inRandomOrder()->first()->ip
-                    ]
-                );
-
-
-                if ($response->getStatusCode() == 200)
+                $request = new Request('GET', "collections/{$catalog->handle}/products/{$product->handle}.json");
+                $page = 0;
+                do
                 {
-                    $data = json_decode($response->getBody()->getContents(), false);
 
-                    if (!empty($data->product))
+                    $i ++;
+                    $response = $client->send(
+                        $request,
+                        [
+                            'query' => [
+                                'page'  => $page ++,
+                                'limit' => 500
+                            ],
+//                    'proxy' => Proxy::inRandomOrder()->first()->ip
+                        ]
+                    );
+
+
+                    if ($response->getStatusCode() == 200)
                     {
-                        $product = $data->product;
+                        $data = json_decode($response->getBody()->getContents(), false);
 
-                        for ( $i = 0; $i < count($data->product->variants); $i ++ )
+                        if (!empty($data->product))
                         {
-                            $this->arr[] = $this->prepareVariantData($product, $i);
+                            $product = $data->product;
+
+                            for ( $i = 0; $i < count($data->product->variants); $i ++ )
+                            {
+                                $this->arr[] = $this->prepareVariantData($product, $i);
+
+                            }
 
                         }
-
                     }
-                }
-                if ($i % 300 == 0)
-                {
-                    sleep(60);
-                }
-            } while ( $response->getStatusCode() == 200 && !empty($response->getBody()->getContents()->products) );
+                    if ($i % 300 == 0)
+                    {
+                        sleep(60);
+                    }
+                } while ( $response->getStatusCode() == 200 && !empty($response->getBody()->getContents()->products) );
 
 
-        });
+            });
 
 
         $chunks = array_chunk($this->arr, 1000);

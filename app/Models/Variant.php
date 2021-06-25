@@ -9,6 +9,9 @@ class Variant extends Model {
 
     use HasFactory;
 
+    /**
+     * @var string
+     */
     protected $primaryKey = 'variant_id';
 
     /**
@@ -17,6 +20,14 @@ class Variant extends Model {
     public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'product_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function historical()
+    {
+        return $this->hasMany(Historical::class, 'variant_id', 'variant_id');
     }
 
 }

@@ -26,9 +26,9 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('prepare:data')->dailyAt('03:00');
+        $schedule->command('prepare:data')->dailyAt('01:00');
 
-        $schedule->command('queue:retry all')->everyThirtyMinutes();
+        $schedule->command('queue:retry all')->everyFourHours();
 
 
     }

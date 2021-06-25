@@ -104,7 +104,7 @@ class GetData implements ShouldQueue {
                         for ( $i = 0; $i < count($data->product->variants); $i ++ )
                         {
                             $this->arr[] = $this->prepareVariantData($product, $i);
-                            print_r($this->arr);
+                            
                         }
 
                     }

@@ -7,7 +7,7 @@
                              label="site"
                              track-by="id"
                              :multiple="true"
-                             :searchable="true"
+                             :searchable="false"
                              :internal-search="false"
                              :clear-on-select="false"
                              :close-on-select="false"
@@ -26,7 +26,7 @@
                     label="title"
                     track-by="title"
                     :multiple="true"
-                    :searchable="true"
+                    :searchable="false"
                     :internal-search="false"
                     :clear-on-select="false"
                     :close-on-select="false"
@@ -45,7 +45,7 @@
                     label="title"
                     track-by="id"
                     :multiple="true"
-                    :searchable="true"
+                    :searchable="false"
                     :internal-search="false"
                     :clear-on-select="false"
                     :close-on-select="false"
@@ -64,7 +64,7 @@
                     label="type"
                     track-by="type"
                     :multiple="true"
-                    :searchable="true"
+                    :searchable="false"
                     :internal-search="false"
                     :clear-on-select="false"
                     :close-on-select="false"
@@ -78,56 +78,44 @@
             </b-col>
         </b-row>
         <hr>
-
-        <b-row>
-            <b-col>
-                <b-input type="number" v-model="filters.selected.position" placeholder="Position"/>
-            </b-col>
-            <b-col>
-                <b-input type="number" v-model="filters.selected.quantity" placeholder="Quantity"/>
-            </b-col>
-            <b-col>
-                <b-input type="number" v-model="filters.selected.sales" placeholder="Sales"/>
-            </b-col>
-        </b-row>
-        <hr>
-        <b-row>
-            <b-col>
-                <b-form-datepicker
-                    v-model="filters.selected.created_at.start_date"
-                    locale="en"
-                    placeholder="Created At (start)"
-                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-                ></b-form-datepicker>
-            </b-col>
-            <b-col>
-                <b-form-datepicker
-                    v-model="filters.selected.created_at.end_date"
-                    locale="en"
-                    placeholder="Created At (end)"
-                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-                ></b-form-datepicker>
-            </b-col>
-        </b-row>
-        <hr>
-        <b-row>
-            <b-col>
-                <b-form-datepicker
-                    v-model="filters.selected.published_at.start_date"
-                    locale="en"
-                    placeholder="Published At (start)"
-                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-                ></b-form-datepicker>
-            </b-col>
-            <b-col>
-                <b-form-datepicker
-                    v-model="filters.selected.published_at.end_date"
-                    locale="en"
-                    placeholder="Published At (end)"
-                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-                ></b-form-datepicker>
-            </b-col>
-        </b-row>
+<!--        <hr>-->
+<!--        <b-row>-->
+<!--            <b-col>-->
+<!--                <b-form-datepicker-->
+<!--                    v-model="filters.selected.created_at.start_date"-->
+<!--                    locale="en"-->
+<!--                    placeholder="Created At (start)"-->
+<!--                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"-->
+<!--                ></b-form-datepicker>-->
+<!--            </b-col>-->
+<!--            <b-col>-->
+<!--                <b-form-datepicker-->
+<!--                    v-model="filters.selected.created_at.end_date"-->
+<!--                    locale="en"-->
+<!--                    placeholder="Created At (end)"-->
+<!--                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"-->
+<!--                ></b-form-datepicker>-->
+<!--            </b-col>-->
+<!--        </b-row>-->
+<!--        <hr>-->
+<!--        <b-row>-->
+<!--            <b-col>-->
+<!--                <b-form-datepicker-->
+<!--                    v-model="filters.selected.published_at.start_date"-->
+<!--                    locale="en"-->
+<!--                    placeholder="Published At (start)"-->
+<!--                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"-->
+<!--                ></b-form-datepicker>-->
+<!--            </b-col>-->
+<!--            <b-col>-->
+<!--                <b-form-datepicker-->
+<!--                    v-model="filters.selected.published_at.end_date"-->
+<!--                    locale="en"-->
+<!--                    placeholder="Published At (end)"-->
+<!--                    :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"-->
+<!--                ></b-form-datepicker>-->
+<!--            </b-col>-->
+<!--        </b-row>-->
         <hr>
         <b-row>
             <b-col>
@@ -283,22 +271,18 @@ export default {
                         title: [],
                         type: []
                     },
-                    created_at: {
-                        start_date: '',
-                        end_date: ''
-                    },
-                    published_at: {
-                        start_date: '',
-                        end_date: ''
-                    },
+                    // created_at: {
+                    //     start_date: '',
+                    //     end_date: ''
+                    // },
+                    // published_at: {
+                    //     start_date: '',
+                    //     end_date: ''
+                    // },
                     date_range: {
                         start_date: moment().subtract(7, 'd').format('YYYY-MM-DD'),
                         end_date: moment().format('YYYY-MM-DD')
-                    },
-                    quantity: '',
-                    sales: '',
-                    position: ''
-
+                    }
                 }
             }
         }

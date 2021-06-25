@@ -32,7 +32,16 @@
                      :bordered="true"
                      :outlined="true"
                      ref="variants-table"
-            ></b-table>
+            >
+
+                <template #cell(url)="data" class="text-center">
+                    <a :href="data.item.url" target="_blank">{{ data.item.url }}</a>
+                </template>
+                <template #cell(image)="data" class="text-center">
+                    <img :src="data.item.image" class="img-thumbnail img-fluid" style="max-height: 100px;" alt=""/>
+                </template>
+
+            </b-table>
 
             <template #footer>
                 <b-pagination

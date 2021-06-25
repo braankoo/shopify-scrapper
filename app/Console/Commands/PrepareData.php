@@ -47,11 +47,11 @@ class PrepareData extends Command {
         Site::each(function ($site) {
 
             Bus::chain([
-//                new \App\Jobs\GetCatalog($site),
-//                new \App\Jobs\GetProducts($site),
+                new \App\Jobs\GetCatalog($site),
+                new \App\Jobs\GetProducts($site),
                 new GetData($site),
-//                new GetPositionAndQuantity($site)
-            ])->dispatch();
+                new GetPositionAndQuantity($site)
+            ])->dispatch()->delay(now()->addMinutes(25));
         });
     }
 }

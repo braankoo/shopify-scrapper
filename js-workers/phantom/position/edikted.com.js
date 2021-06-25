@@ -41,10 +41,7 @@ module.exports = function (data, done, worker) {
             const productsHtml = page.evaluate(function () {
                 return document.querySelector('.ProductList').children.length > 0;
             });
-
-            console.log('****');
-            console.log(productsHtml);
-            console.log('****');
+            
 
             if (!productsHtml) {
                 fail++;

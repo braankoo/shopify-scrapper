@@ -74,13 +74,15 @@ class GetData implements ShouldQueue {
 
         $client = new Client([ 'base_uri' => $this->site->url ]);
 
-
-        $catalog->products()->where('status', '=', 'ENABLED')->get()->each(function ($product) use ($client, $catalog) {
+        $i = 0;
+        $catalog->products()->where('status', '=', 'ENABLED')->get()->each(function ($product) use ($client, $catalog, &$i) {
 
             $request = new Request('GET', "collections/{$catalog->handle}/products/{$product->handle}.json");
             $page = 0;
             do
             {
+
+                $i ++;
                 $response = $client->send(
                     $request,
                     [
@@ -104,10 +106,14 @@ class GetData implements ShouldQueue {
                         for ( $i = 0; $i < count($data->product->variants); $i ++ )
                         {
                             $this->arr[] = $this->prepareVariantData($product, $i);
-                            
+
                         }
 
                     }
+                }
+                if ($i % 300 == 0)
+                {
+                    sleep(60);
                 }
             } while ( $response->getStatusCode() == 200 && !empty($response->getBody()->getContents()->products) );
 

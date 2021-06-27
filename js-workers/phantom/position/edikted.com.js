@@ -23,7 +23,7 @@ module.exports = function (data, done, worker) {
                 done(null);
                 return;
             }
-            if (pageId === 7) {
+            if (pageId === 25) {
                 done(null);
             }
 
@@ -41,7 +41,7 @@ module.exports = function (data, done, worker) {
             const productsHtml = page.evaluate(function () {
                 return document.querySelector('.ProductList').children.length > 0;
             });
-            
+
 
             if (!productsHtml) {
                 fail++;

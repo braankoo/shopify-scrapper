@@ -110,7 +110,7 @@ class ProductController extends Controller {
 //                $q->where('quantity', '<=', $filters->quantity);
 //            })
             ->whereNotNull('products.position')
-            ->where('products.position', '<=', 200)
+            ->where('products.position', '<=', 1000)
             ->where('products.status', '=', 'ENABLED')
             ->whereDate('historicals.date_created', '>=', $filters->date_range->start_date)
             ->whereDate('historicals.date_created', '<=', $filters->date_range->end_date)
@@ -222,7 +222,7 @@ class ProductController extends Controller {
 //                $q->where('quantity', '<=', $filters->quantity);
 //            })
             ->whereNotNull('products.position')
-            ->where('products.position', '<=', 200)
+            ->where('products.position', '<=', 1000)
             ->where('products.status', '=', 'ENABLED')
             ->whereDate('historicals.date_created', '>=', $filters->date_range->start_date)
             ->whereDate('historicals.date_created', '<=', $filters->date_range->end_date)

@@ -21,7 +21,7 @@ module.exports = function (data, done, worker) {
                 loadPage(url, ++pageId);
                 return;
             }
-            if (pageId === 11) {
+            if (pageId === 25) {
                 done(null);
             }
 

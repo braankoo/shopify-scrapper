@@ -37,10 +37,11 @@ module.exports = function (data, done, worker) {
             }
 
             const productsHtml = page.evaluate(function () {
-                return document.getElementById('bc-sf-filter-products').children.length;
+                return document.getElementById('bc-sf-filter-load-more-button-container').length;
             });
 
             if (productsHtml === 0) {
+                done(null);
                 loadPage(url, pageId);
 
 

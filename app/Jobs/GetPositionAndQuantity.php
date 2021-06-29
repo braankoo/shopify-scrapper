@@ -15,7 +15,7 @@ use Symfony\Component\Process\Process;
 class GetPositionAndQuantity implements ShouldQueue {
 
 
-    public $timeout = 7500;
+    public $timeout = 35999;
     /**
      * @var \App\Models\Site
      */
@@ -42,7 +42,7 @@ class GetPositionAndQuantity implements ShouldQueue {
     public function handle()
     {
         $process = new Process([ 'node', 'getPosition.cjs', $this->site->id ], base_path());
-        $process->setTimeout(600);
+        $process->setTimeout(36000);
         $process->start();
         $process->wait();
         if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))

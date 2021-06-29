@@ -50,7 +50,7 @@ function jobCallback(job, worker, index) {
 
                 } catch (err) {
 
-                    // throw err;
+                    console.log(err);
                 }
 
             });

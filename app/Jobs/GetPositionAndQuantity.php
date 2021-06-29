@@ -23,6 +23,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
 
     public $timeout = 7001;
 
+    public $tries = 1;
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
@@ -46,14 +47,9 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
         {
 
             $process = new Process([ 'node', 'getPosition.cjs', $this->site->id ], base_path());
-            $process->setTimeout(7000);
+            $process->setTimeout(null);
             $process->mustRun();
             $process->wait();
-
-            if (!$process->isSuccessful())
-            {
-                throw new ProcessFailedException($process);
-            }
 
 
             if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))

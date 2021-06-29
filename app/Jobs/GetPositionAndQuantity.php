@@ -42,9 +42,10 @@ class GetPositionAndQuantity implements ShouldQueue {
      */
     public function handle()
     {
+        
         $process = new Process([ 'node', 'getPosition.cjs', $this->site->id ], base_path());
         $process->setTimeout(null);
-        $process->start();
+        $process->mustRun();
         $process->wait();
         if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))
         {

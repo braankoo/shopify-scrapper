@@ -4,17 +4,18 @@ namespace App\Jobs;
 
 use App\Models\Site;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Str;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class GetPositionAndQuantity implements ShouldQueue {
+class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
 
 
-    public $timeout = 3600;
     /**
      * @var \App\Models\Site
      */
@@ -33,8 +34,6 @@ class GetPositionAndQuantity implements ShouldQueue {
         $this->site = $site;
     }
 
-    public $tries = 1;
-
     /**
      * Execute the job.
      *
@@ -42,16 +41,31 @@ class GetPositionAndQuantity implements ShouldQueue {
      */
     public function handle()
     {
-        
-        $process = new Process([ 'node', 'getPosition.cjs', $this->site->id ], base_path());
-        $process->setTimeout(null);
-        $process->mustRun();
-        $process->wait();
-        if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))
+        try
         {
+
+            $process = new Process([ 'node', 'getPosition.cjs', $this->site->id ], base_path());
+            $process->setTimeout(3599);
+            $process->mustRun();
             $process->wait();
-            $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());
-            $process->start();
+
+            if (!$process->isSuccessful())
+            {
+                throw new ProcessFailedException($process);
+            }
+
+            echo $process->getOutput();
+
+
+            if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))
+            {
+                $process->wait();
+                $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());
+                $process->start();
+            }
+        } catch ( \Exception $e )
+        {
+            dd($e->getMessage());
         }
     }
 }

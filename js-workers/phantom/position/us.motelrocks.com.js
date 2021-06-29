@@ -72,6 +72,7 @@ module.exports = function (data, done, worker) {
                 writeData(toWrite.toString());
                 loadPage(url, ++pageId);
 
+
             } else {
                 fail++;
                 loadPage(url, pageId);

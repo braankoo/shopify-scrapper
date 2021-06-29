@@ -143,6 +143,7 @@ class GetProducts implements ShouldQueue {
         $arr['updated_at'] = $product->updated_at;
         $arr['published_at'] = $product->published_at;
         $arr['position'] = null;
+        $arr['quantity'] = null;
         $arr['status'] = 'ENABLED';
         $arr['site_id'] = $this->catalog->site->id;
 

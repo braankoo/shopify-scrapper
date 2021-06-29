@@ -15,7 +15,7 @@ use Symfony\Component\Process\Process;
 class GetPositionAndQuantity implements ShouldQueue {
 
 
-    public $timeout = 12000;
+    public $timeout = 7500;
     /**
      * @var \App\Models\Site
      */

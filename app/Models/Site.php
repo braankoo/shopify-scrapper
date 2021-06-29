@@ -18,6 +18,13 @@ class Site extends Model {
         return $url['scheme'] . '://' . $url['host'];
     }
 
+    public function getHostAttribute(): string
+    {
+        $url = parse_url($this->product_json);
+
+        return $url['host'];
+    }
+
     public function getCatalogJsonPathAttribute(): string
     {
         $url = parse_url($this->product_json);

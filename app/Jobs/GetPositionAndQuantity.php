@@ -80,5 +80,8 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
 
         $process = new Process([ 'pkill', '-f', "node getQuantity.cjs {$this->site->id}" ]);
         $process->run();
+
+        $process = new Process([ 'pkill', '-f', "{$this->site->host}" ]);
+        $process->run();
     }
 }

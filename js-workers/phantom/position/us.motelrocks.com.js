@@ -16,10 +16,11 @@ module.exports = function (data, done, worker) {
 
         page.open(url + '&page=' + pageId, function (status) {
 
-            if (fail === 10) {
-                fail = 0;
-                loadPage(url, ++pageId);
-                return;
+            console.log('*****');
+            console.log(fail);
+            console.log('*****');
+            if (fail === 300) {
+                done(null);
             }
             if (pageId === 50) {
                 done(null);
@@ -36,27 +37,45 @@ module.exports = function (data, done, worker) {
 
             }
 
+            const ext = page.evaluate(function () {
+                return document.querySelectorAll('#bc-sf-filter-load-more').length;
+            });
+            if (ext === 0) {
+                fail++;
+                loadPage(url, pageId);
+                return;
+            }
+
             const productsHtml = page.evaluate(function () {
-                return document.getElementById('bc-sf-filter-load-more-button-container').length;
+                return document.getElementById('bc-sf-filter-load-more').getAttribute("style");
+            });
+            console.log('***');
+            console.log(url + '&page=' + pageId);
+            console.log(productsHtml);
+            console.log('***');
+            if (productsHtml === 'display: none;') {
+                done(null);
+            }
+
+
+            const loadedProp = page.evaluate(function () {
+                return document.getElementById('bc-sf-filter-products').children.length;
             });
 
-            if (productsHtml === 0) {
-                done(null);
-                loadPage(url, pageId);
+            if (loadedProp > 0) {
 
-
-            } else {
                 const content = page.evaluate(function () {
                     return document.getElementById('bc-sf-filter-products').outerHTML;
                 });
-
 
                 const toWrite = content.match(/bc-product-json-.\d*/g);
                 writeData(toWrite.toString());
                 loadPage(url, ++pageId);
 
+            } else {
+                fail++;
+                loadPage(url, pageId);
             }
-
         });
 
     }

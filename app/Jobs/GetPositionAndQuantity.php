@@ -14,7 +14,7 @@ use Symfony\Component\Process\Process;
 class GetPositionAndQuantity implements ShouldQueue {
 
 
-    public $timeout = 35999;
+    public $timeout = 3600;
     /**
      * @var \App\Models\Site
      */
@@ -32,6 +32,8 @@ class GetPositionAndQuantity implements ShouldQueue {
     {
         $this->site = $site;
     }
+
+    public $tries = 1;
 
     /**
      * Execute the job.

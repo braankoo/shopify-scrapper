@@ -23,7 +23,8 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
 
     public $timeout = 7001;
 
-    public $tries = 1;
+    public $tries = 4;
+
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
@@ -45,12 +46,13 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
     {
         try
         {
-            $process = new Process([ 'pkill', '-f', "node getPosition.cjs 6" ]);
+            $process = new Process([ 'pkill', '-f', "node getPosition.cjs {$this->site->id}" ]);
+
             $process->run();
             $process->wait();
 
             $process = new Process([ 'node', 'getPosition.cjs', $this->site->id ], base_path());
-            $process->setTimeout(null);
+            $process->setTimeout(7000);
             $process->mustRun();
             $process->wait();
 
@@ -62,12 +64,21 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
                 $process->wait();
 
                 $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());
-                $process->setTimeout(3600);
+                $process->setTimeout(7000);
                 $process->start();
             }
         } catch ( \Exception $e )
         {
             dd($e->getMessage());
         }
+    }
+
+    public function fail($exception = null)
+    {
+        $process = new Process([ 'pkill', '-f', "node getPosition.cjs {$this->site->id}" ]);
+        $process->run();
+
+        $process = new Process([ 'pkill', '-f', "node getQuantity.cjs {$this->site->id}" ]);
+        $process->run();
     }
 }

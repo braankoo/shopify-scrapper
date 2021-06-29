@@ -23,7 +23,7 @@ module.exports = function (data, done, worker) {
                 loadPage(url, ++pageId);
                 return;
             }
-            if (pageId === 25) {
+            if (pageId === 50) {
                 done(null);
             }
 

@@ -125,9 +125,9 @@ class SiteController extends Controller {
     public function fetch(Site $site): JsonResponse
     {
         Bus::chain([
-//            new \App\Jobs\GetCatalog($site),
-//            new \App\Jobs\GetProducts($site),
-//            new GetData($site),
+            new \App\Jobs\GetCatalog($site),
+            new \App\Jobs\GetProducts($site),
+            new GetData($site),
             new GetPositionAndQuantity($site)
         ])->dispatch();
 

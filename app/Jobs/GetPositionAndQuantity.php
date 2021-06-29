@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Models\Site;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -42,13 +41,13 @@ class GetPositionAndQuantity implements ShouldQueue {
     public function handle()
     {
         $process = new Process([ 'node', 'getPosition.cjs', $this->site->id ], base_path());
-        $process->setTimeout(36000);
+        $process->setTimeout(null);
         $process->start();
         $process->wait();
         if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))
         {
             $process->wait();
-            $process = new Process([ 'node', base_path('getQuantity.cjs'), $this->site->id ], base_path());
+            $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());
             $process->start();
         }
     }

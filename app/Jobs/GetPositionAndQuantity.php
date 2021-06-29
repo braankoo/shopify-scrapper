@@ -44,33 +44,29 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
      */
     public function handle()
     {
-        try
-        {
-            $process = new Process([ 'pkill', '-f', "node getPosition.cjs {$this->site->id}" ]);
 
+        $process = new Process([ 'pkill', '-f', "node getPosition.cjs {$this->site->id}" ]);
+
+        $process->run();
+        $process->wait();
+
+        $process = new Process([ 'node', 'getPosition.cjs', $this->site->id ], base_path());
+        $process->setTimeout(7000);
+        $process->mustRun();
+        $process->wait();
+
+
+        if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))
+        {
+            $process = new Process([ 'pkill', '-f', "node getQuantity.cjs {$this->site->id}" ]);
             $process->run();
             $process->wait();
 
-            $process = new Process([ 'node', 'getPosition.cjs', $this->site->id ], base_path());
+            $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());
             $process->setTimeout(7000);
-            $process->mustRun();
-            $process->wait();
-
-
-            if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))
-            {
-                $process = new Process([ 'pkill', '-f', "node getQuantity.cjs {$this->site->id}" ]);
-                $process->run();
-                $process->wait();
-
-                $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());
-                $process->setTimeout(7000);
-                $process->start();
-            }
-        } catch ( \Exception $e )
-        {
-            dd($e->getMessage());
+            $process->start();
         }
+
     }
 
     public function fail($exception = null)

@@ -47,7 +47,7 @@ function jobCallback(job, worker, index) {
                             fs.unlinkSync(data[index].filePath);
                         });
                         if ((data.length) - 1 === data[index]) {
-                            conn.query('UPDATE sites set quantity_updated_at = CURDATE() WHERE site_id = ?', [args[0]], function (err) {
+                            conn.query('UPDATE sites set quantity_updated_at = NOW() WHERE site_id = ?', [args[0]], function (err) {
                                 if (err) throw err;
                             });
                         }

@@ -41,7 +41,7 @@ function jobCallback(job, worker, index) {
                     const module = await importModule();
                     try {
                         module.default(positionUrl[index].filePath).then((res) => {
-                            conn.query("UPDATE sites set position_updated_at = CURDATE() WHERE id = ?", [parseInt(args[0])], function (err) {
+                            conn.query("UPDATE sites set position_updated_at = NOW() WHERE id = ?", [parseInt(args[0])], function (err) {
                                 if (err) throw err;
                             });
                             process.exit(0);

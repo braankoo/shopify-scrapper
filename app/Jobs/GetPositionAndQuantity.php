@@ -51,6 +51,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
         {
             $i ++;
             $process->run();
+            $process->wait();
 
         }
 
@@ -60,6 +61,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
         {
             $i ++;
             $process->run();
+            $process->wait();
 
         }
 
@@ -72,11 +74,17 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
         if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))
         {
             sleep(10);
+            $process = new Process([ 'pkill', '-f', "/quantity" ]);
+
+            $process->run();
+            $process->wait();
+
             $process = new Process([ 'pkill', '-f', "node getQuantity.cjs {$this->site->id}" ]);
             for ( $i = 0; $i < 10; $i ++ )
             {
                 $i ++;
                 $process->run();
+                $process->wait();
 
             }
 
@@ -94,6 +102,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
         {
             $i ++;
             $process->run();
+            $process->wait();
 
         }
 
@@ -102,6 +111,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
         {
             $i ++;
             $process->run();
+            $process->wait();
 
         }
 
@@ -111,6 +121,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
         {
             $i ++;
             $process->run();
+            $process->wait();
 
         }
 
@@ -119,6 +130,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
         {
             $i ++;
             $process->run();
+            $process->wait();
 
         }
 

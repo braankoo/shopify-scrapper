@@ -45,25 +45,25 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
     public function handle()
     {
 
-        $process = new Process([ 'pkill', '-f', "node getPosition.cjs {$this->site->id}" ]);
 
         for ( $i = 0; $i < 10; $i ++ )
         {
             $i ++;
+            $process = new Process([ 'pkill', '-f', "getPosition.cjs" ]);
             $process->run();
             $process->wait();
 
         }
 
 
-        $process = new Process([ 'pkill', '-f', "{$this->site->host}" ]);
         for ( $i = 0; $i < 10; $i ++ )
         {
             $i ++;
+            $process = new Process([ 'pkill', '-f', "position/" ]);
             $process->run();
             $process->wait();
-
         }
+
 
         $process = new Process([ 'node', 'getPosition.cjs', $this->site->id ], base_path());
         $process->setTimeout(7000);
@@ -74,18 +74,22 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
         if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))
         {
             sleep(10);
-            $process = new Process([ 'pkill', '-f', "/quantity" ]);
-
-            $process->run();
-            $process->wait();
-
-            $process = new Process([ 'pkill', '-f', "node getQuantity.cjs {$this->site->id}" ]);
             for ( $i = 0; $i < 10; $i ++ )
             {
                 $i ++;
+                $process = new Process([ 'pkill', '-f', "/quantity" ]);
+
                 $process->run();
                 $process->wait();
+            }
 
+            for ( $i = 0; $i < 10; $i ++ )
+            {
+                $i ++;
+                $process = new Process([ 'pkill', '-f', "node getQuantity.cjs {$this->site->id}" ]);
+
+                $process->run();
+                $process->wait();
             }
 
             $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());
@@ -97,38 +101,41 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
 
     public function fail($exception = null)
     {
-        $process = new Process([ 'pkill', '-f', "node getPosition.cjs {$this->site->id}" ]);
+
         for ( $i = 0; $i < 10; $i ++ )
         {
             $i ++;
-            $process->run();
-            $process->wait();
-
-        }
-
-        $process = new Process([ 'pkill', '-f', "position/{$this->site->host}" ]);
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
+            $process = new Process([ 'pkill', '-f', "getPosition.cjs" ]);
             $process->run();
             $process->wait();
 
         }
 
 
-        $process = new Process([ 'pkill', '-f', "node getQuantity.cjs {$this->site->id}" ]);
         for ( $i = 0; $i < 10; $i ++ )
         {
             $i ++;
+            $process = new Process([ 'pkill', '-f', "position/" ]);
             $process->run();
             $process->wait();
 
         }
 
-        $process = new Process([ 'pkill', '-f', "/quantity" ]);
+
         for ( $i = 0; $i < 10; $i ++ )
         {
             $i ++;
+            $process = new Process([ 'pkill', '-f', "node getQuantity.cjs" ]);
+            $process->run();
+            $process->wait();
+
+        }
+
+
+        for ( $i = 0; $i < 10; $i ++ )
+        {
+            $i ++;
+            $process = new Process([ 'pkill', '-f', "/quantity" ]);
             $process->run();
             $process->wait();
 

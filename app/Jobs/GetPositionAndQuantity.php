@@ -125,7 +125,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
 
         }
 
-        $process = new Process([ 'pkill', '-f', "quantity/{$this->site->host}" ]);
+        $process = new Process([ 'pkill', '-f', "/quantity" ]);
         for ( $i = 0; $i < 10; $i ++ )
         {
             $i ++;

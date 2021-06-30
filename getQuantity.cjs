@@ -46,7 +46,7 @@ function jobCallback(job, worker, index) {
                         module.default(data[index].productId, data[index].filePath).then(() => {
                             fs.unlinkSync(data[index].filePath);
                         });
-                        if (data[index] === data.length) {
+                        if ((data.length) - 1 === data[index]) {
                             conn.query('UPDATE sites set quantity_updated_at = CURDATE() WHERE site_id = ?', [args[0]], function (err) {
                                 if (err) throw err;
                             });

@@ -48,7 +48,9 @@ function jobCallback(job, worker, index) {
                             if ((data.length) - 1 === index) {
                                 conn.query('UPDATE sites set quantity_updated_at = NOW() WHERE id = ?', [args[0]], function (err) {
                                     if (err) throw err;
+                                    process.exit();
                                 });
+
                             }
                         });
 

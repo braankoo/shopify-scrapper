@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\GetData;
+use App\Jobs\GetPosition;
 use App\Jobs\GetPositionAndQuantity;
+use App\Jobs\GetQuantity;
 use App\Models\Site;
 use Illuminate\Bus\Batch;
 use Illuminate\Database\Eloquent\Model;
@@ -138,7 +140,8 @@ class SiteController extends Controller {
             new \App\Jobs\GetCatalog($site),
             new \App\Jobs\GetProducts($site),
             new GetData($site),
-            new GetPositionAndQuantity($site)
+            new GetPosition($site),
+            new GetQuantity($site)
         ])->dispatch();
 
         return response()->json([ 'message' => 'Initialized' ], JsonResponse::HTTP_OK);

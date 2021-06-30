@@ -10,20 +10,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Str;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
-
-
-    /**
-     * @var \App\Models\Site
-     */
-    public $site;
-
-    public $timeout = 7001;
-
-    public $tries = 4;
+class GetQuantity implements ShouldQueue {
 
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -44,50 +33,6 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
      */
     public function handle()
     {
-
-
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "getPosition.cjs" ]);
-            $process->run();
-            $process->wait();
-
-        }
-
-
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "position/" ]);
-            $process->run();
-            $process->wait();
-        }
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "/quantity" ]);
-
-            $process->run();
-            $process->wait();
-        }
-
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "getQuantity.cjs" ]);
-
-            $process->run();
-            $process->wait();
-        }
-
-
-        $process = new Process([ 'node', 'getPosition.cjs', $this->site->id ], base_path());
-        $process->setTimeout(7000);
-        $process->mustRun();
-        $process->wait();
-
-
         if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))
         {
             sleep(10);
@@ -111,38 +56,18 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
 
             $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());
             $process->setTimeout(7000);
-            $process->run();
+            $process->wait();
         }
-
     }
 
     public function fail($exception = null)
     {
 
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "getPosition.cjs" ]);
-            $process->run();
-            $process->wait();
-
-        }
-
 
         for ( $i = 0; $i < 10; $i ++ )
         {
             $i ++;
-            $process = new Process([ 'pkill', '-f', "position/" ]);
-            $process->run();
-            $process->wait();
-
-        }
-
-
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "node getQuantity.cjs" ]);
+            $process = new Process([ 'pkill', '-f', "getQuantity.cjs" ]);
             $process->run();
             $process->wait();
 

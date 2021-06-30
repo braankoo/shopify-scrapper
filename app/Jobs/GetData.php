@@ -152,7 +152,7 @@ class GetData implements ShouldQueue {
         }
 
 
-        $this->site->last_scan = Carbon::now();
+        $this->site->json_updated_at = Carbon::now();
         $this->site->save();
 
     }

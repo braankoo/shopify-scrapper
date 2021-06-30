@@ -38,7 +38,6 @@ function jobCallback(job, worker, index) {
                 try {
 
                     async function importModule() {
-
                         return await import(__dirname + '/js-workers/quantity/' + data[index].hostname + '.mjs' );
                     }
 
@@ -47,6 +46,11 @@ function jobCallback(job, worker, index) {
                         module.default(data[index].productId, data[index].filePath).then(() => {
                             fs.unlinkSync(data[index].filePath);
                         });
+                        if (data[index] === data.length) {
+                            conn.query('UPDATE sites set quantity_updated_at = CURDATE() WHERE site_id = ?', [args[0]], function (err) {
+                                if (err) throw err;
+                            });
+                        }
 
                     });
                 } catch (err) {

@@ -124,6 +124,16 @@ class SiteController extends Controller {
      */
     public function fetch(Site $site): JsonResponse
     {
+
+
+        $process = new Process([ 'ps', '-axjf' ]);
+        $process->mustRun();
+        $process->wait();
+        if (preg_match('/Worker.js/', $process->getOutput()) || DB::table('jobs')->count() > 0)
+        {
+            return response()->json([ 'message' => 'Job in progress. Try later.' ], JsonResponse::HTTP_OK);
+        }
+
         Bus::chain([
             new \App\Jobs\GetCatalog($site),
             new \App\Jobs\GetProducts($site),

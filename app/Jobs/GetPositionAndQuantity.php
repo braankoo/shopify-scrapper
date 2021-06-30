@@ -45,13 +45,13 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
     public function handle()
     {
 
-        $process = new Process([ 'pkill', '-f', "node getPosition.cjs 1" ]);
+        $process = new Process([ 'pkill', '-f', "node getPosition.cjs {$this->site->id}" ]);
 
         for ( $i = 0; $i < 10; $i ++ )
         {
             $i ++;
             $process->run();
-            $process->wait();
+
         }
 
 
@@ -60,7 +60,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
         {
             $i ++;
             $process->run();
-            $process->wait();
+
         }
 
         $process = new Process([ 'node', 'getPosition.cjs', $this->site->id ], base_path());
@@ -76,7 +76,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
             {
                 $i ++;
                 $process->run();
-                $process->wait();
+
             }
 
             $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());
@@ -93,7 +93,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
         {
             $i ++;
             $process->run();
-            $process->wait();
+
         }
 
         $process = new Process([ 'pkill', '-f', "{$this->site->host}" ]);
@@ -101,7 +101,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
         {
             $i ++;
             $process->run();
-            $process->wait();
+
         }
 
 
@@ -110,7 +110,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
         {
             $i ++;
             $process->run();
-            $process->wait();
+
         }
 
         $process = new Process([ 'pkill', '-f', "{$this->site->host}" ]);
@@ -118,7 +118,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
         {
             $i ++;
             $process->run();
-            $process->wait();
+
         }
 
     }

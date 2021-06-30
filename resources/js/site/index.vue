@@ -80,8 +80,8 @@ export default {
         },
         fetchData(id) {
             if (window.confirm('Are you sure?')) {
-                this.$http.post(`/api/site/${id}/fetch`).then(() => {
-                    alert('Successfuly initialized');
+                this.$http.post(`/api/site/${id}/fetch`).then((response) => {
+                    alert(response.data.message);
                 });
             }
         }

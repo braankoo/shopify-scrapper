@@ -16,6 +16,11 @@ class GetPosition implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
+     * @var \App\Models\Site
+     */
+    public $site;
+
+    /**
      * Create a new job instance.
      *
      * @return void

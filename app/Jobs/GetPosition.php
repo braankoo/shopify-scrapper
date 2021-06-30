@@ -11,8 +11,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Symfony\Component\Process\Process;
 
-class GetPosition implements ShouldQueue
-{
+class GetPosition implements ShouldQueue {
+
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
@@ -77,5 +77,43 @@ class GetPosition implements ShouldQueue
         $process->setTimeout(7000);
         $process->mustRun();
         $process->wait();
+    }
+
+    public function fail($exception = null)
+    {
+        for ( $i = 0; $i < 10; $i ++ )
+        {
+            $i ++;
+            $process = new Process([ 'pkill', '-f', "getPosition.cjs" ]);
+            $process->run();
+            $process->wait();
+
+        }
+
+
+        for ( $i = 0; $i < 10; $i ++ )
+        {
+            $i ++;
+            $process = new Process([ 'pkill', '-f', "position/" ]);
+            $process->run();
+            $process->wait();
+        }
+        for ( $i = 0; $i < 10; $i ++ )
+        {
+            $i ++;
+            $process = new Process([ 'pkill', '-f', "/quantity" ]);
+
+            $process->run();
+            $process->wait();
+        }
+
+        for ( $i = 0; $i < 10; $i ++ )
+        {
+            $i ++;
+            $process = new Process([ 'pkill', '-f', "getQuantity.cjs" ]);
+
+            $process->run();
+            $process->wait();
+        }
     }
 }

@@ -71,6 +71,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
 
         if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))
         {
+            sleep(10);
             $process = new Process([ 'pkill', '-f', "node getQuantity.cjs {$this->site->id}" ]);
             for ( $i = 0; $i < 10; $i ++ )
             {
@@ -81,7 +82,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
 
             $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());
             $process->setTimeout(7000);
-            $process->start();
+            $process->run();
         }
 
     }

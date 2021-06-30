@@ -49,7 +49,7 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
         $process->run();
         $process->wait();
 
-        $process = new Process([ 'pkill', '-f', "position/{$this->site->url}" ]);
+        $process = new Process([ 'pkill', '-f', "{$this->site->host}" ]);
         $process->run();
         $process->wait();
 
@@ -75,17 +75,21 @@ class GetPositionAndQuantity implements ShouldQueue, ShouldBeUnique {
     public function fail($exception = null)
     {
         $process = new Process([ 'pkill', '-f', "node getPosition.cjs {$this->site->id}" ]);
+        $process->wait();
         $process->run();
 
-        $process = new Process([ 'pkill', '-f', "position/{$this->site->url}" ]);
+        $process = new Process([ 'pkill', '-f', "{$this->site->host}" ]);
+        $process->wait();
         $process->run();
 
 
         $process = new Process([ 'pkill', '-f', "node getQuantity.cjs {$this->site->id}" ]);
+        $process->wait();
         $process->run();
-        
+
 
         $process = new Process([ 'pkill', '-f', "{$this->site->host}" ]);
+        $process->wait();
         $process->run();
     }
 }

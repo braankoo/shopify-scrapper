@@ -32,7 +32,7 @@ class SiteController extends Controller {
             return response()->json(Site::where('product_html', 'LIKE', '%' . $request->input('url') . '%')->paginate(10, [ DB::raw('SUBSTRING_INDEX(sites.product_json, "/", 3)  as site'), 'id' ]), JsonResponse::HTTP_OK);
         }
 
-        return response()->json(Site::paginate(10, [ 'product_html', 'product_json', 'last_scan', 'id' ]), JsonResponse::HTTP_OK);
+        return response()->json(Site::paginate(10, [ 'product_html', 'product_json', 'quantity_updated_at', 'position_updated_at', 'json_updated_at', 'id' ]), JsonResponse::HTTP_OK);
     }
 
     /**

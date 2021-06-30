@@ -20,6 +20,8 @@ class GetPosition implements ShouldQueue {
      */
     public $site;
 
+    public $tries = 5;
+
     /**
      * Create a new job instance.
      *

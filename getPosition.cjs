@@ -43,8 +43,9 @@ function jobCallback(job, worker, index) {
                         module.default(positionUrl[index].filePath).then((res) => {
                             conn.query("UPDATE sites set position_updated_at = NOW() WHERE id = ?", [parseInt(args[0])], function (err) {
                                 if (err) throw err;
+                                process.exit(0);
                             });
-                            process.exit(0);
+
                         });
                     } catch (err) {
                         throw err;

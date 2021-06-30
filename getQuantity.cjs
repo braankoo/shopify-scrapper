@@ -45,12 +45,13 @@ function jobCallback(job, worker, index) {
 
                         module.default(data[index].productId, data[index].filePath).then(() => {
                             fs.unlinkSync(data[index].filePath);
+                            if ((data.length) - 1 === index) {
+                                conn.query('UPDATE sites set quantity_updated_at = NOW() WHERE id = ?', [args[0]], function (err) {
+                                    if (err) throw err;
+                                });
+                            }
                         });
-                        if ((data.length) - 1 === index) {
-                            conn.query('UPDATE sites set quantity_updated_at = NOW() WHERE site_id = ?', [args[0]], function (err) {
-                                if (err) throw err;
-                            });
-                        }
+
 
                     });
                 } catch (err) {

@@ -5,7 +5,7 @@
                 <multiselect :options="filters.loaded.site.url"
                              v-model="filters.selected.site.url"
                              label="site"
-                             track-by="site"
+                             track-by="id"
                              :multiple="true"
                              :searchable="searchable.sites.url"
                              :internal-search="false"
@@ -18,25 +18,6 @@
                              :hide-selected="true"
                              @search-change="find('site','url',$event)"
                              placeholder="Sites"/>
-            </b-col>
-            <b-col>
-                <multiselect
-                    :options="filters.loaded.catalog.title"
-                    v-model="filters.selected.catalog.title"
-                    label="title"
-                    track-by="title"
-                    :multiple="true"
-                    :searchable="searchable.catalog.title"
-                    :internal-search="false"
-                    :clear-on-select="false"
-                    :close-on-select="false"
-                    :options-limit="300"
-                    :limit="3"
-                    :max-height="600"
-                    :show-no-results="false"
-                    :hide-selected="true"
-                    @search-change="find('catalog','title',$event)"
-                    placeholder="Catalog"/>
             </b-col>
             <b-col>
                 <multiselect

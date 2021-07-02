@@ -31,7 +31,7 @@ class SiteController extends Controller {
     {
         if ($request->has('url'))
         {
-            return response()->json(Site::where('product_html', 'LIKE', '%' . $request->input('url') . '%')->paginate(10, [ DB::raw('DISTINCT(SUBSTRING_INDEX(sites.product_json, "/", 3))  as site')]), JsonResponse::HTTP_OK);
+            return response()->json(Site::where('product_html', 'LIKE', '%' . $request->input('url') . '%')->paginate(10, [ DB::raw('sites.product_html  as site'), 'id' ]), JsonResponse::HTTP_OK);
         }
         $jobs = DB::table('jobs')->get();
         $runningJobs = $jobs->filter(function ($job) {

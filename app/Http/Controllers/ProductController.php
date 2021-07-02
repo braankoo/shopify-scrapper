@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -67,10 +68,14 @@ class ProductController extends Controller {
             ->join('variants', 'products.product_id', '=', 'variants.product_id')
             ->leftjoin('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
             ->when(!empty($filters->site->url), function ($q) use ($filters) {
-                $q->whereIn('sites.id', array_map(function ($site) {
-
-                    return Site::where('product_json', 'like', $site->site . '%')->get()->map->id->toArray();
-                }, $filters->site->url));
+                $ids = array_unique(
+                    Arr::flatten(
+                        array_map(function ($site) {
+                            return Site::where('product_json', 'like', $site->site . '%')->get()->map->id->toArray();
+                        },
+                            $filters->site->url))
+                );
+                $q->whereIn('sites.id', $ids);
             })
             ->when(!empty($filters->catalog->title), function ($q) use ($filters) {
                 $q->whereIn('catalogs.title', array_map(
@@ -117,7 +122,7 @@ class ProductController extends Controller {
             ->where('products.status', '=', 'ENABLED')
             ->whereDate('historicals.date_created', '>=', $filters->date_range->start_date)
             ->whereDate('historicals.date_created', '<=', $filters->date_range->end_date)
-            ->groupBy([ 'sites.id', 'catalogs.id', 'products.id' ])
+            ->groupBy([ 'catalogs.id', 'products.id' ])
             ->orderBy($sortBy, $request->input('sortDesc') == 'true' ? 'ASC' : 'DESC')
             ->paginate(20);
     }

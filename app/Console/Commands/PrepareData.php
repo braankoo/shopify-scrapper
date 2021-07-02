@@ -3,12 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Jobs\GetData;
-use App\Jobs\GetPositionAndQuantity;
+use App\Jobs\GetPosition;
+use App\Jobs\GetQuantity;
 use App\Models\Site;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Str;
-use Symfony\Component\Process\Process;
 
 class PrepareData extends Command {
 
@@ -45,13 +44,13 @@ class PrepareData extends Command {
     public function handle()
     {
         Site::each(function ($site) {
-
             Bus::chain([
                 new \App\Jobs\GetCatalog($site),
                 new \App\Jobs\GetProducts($site),
                 new GetData($site),
-                new GetPositionAndQuantity($site)
-            ])->dispatch()->delay(now()->addMinutes(25));
+                new GetPosition($site),
+                new GetQuantity($site)
+            ])->dispatch();
         });
     }
 }

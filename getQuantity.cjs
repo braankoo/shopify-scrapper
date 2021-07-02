@@ -57,7 +57,7 @@ function jobCallback(job, worker, index) {
 
                     });
                 } catch (err) {
-                    console.log(err);
+                    if (err) throw err;
                 }
             }
         );

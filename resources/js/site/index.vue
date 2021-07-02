@@ -21,6 +21,11 @@
                 </b-button-group>
 
             </template>
+            <template #cell(running)="data" class="text-center">
+                <template v-if="data.item.running === 'true'">
+                    <b-badge variant="primary">Running</b-badge>
+                </template>
+            </template>
         </b-table>
         <template #footer>
             <b-pagination

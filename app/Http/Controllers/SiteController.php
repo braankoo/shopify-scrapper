@@ -31,10 +31,39 @@ class SiteController extends Controller {
     {
         if ($request->has('url'))
         {
-            return response()->json(Site::where('product_html', 'LIKE', '%' . $request->input('url') . '%')->paginate(10, [ DB::raw('SUBSTRING_INDEX(sites.product_json, "/", 3)  as site'), 'id' ]), JsonResponse::HTTP_OK);
+            return response()->json(Site::where('product_html', 'LIKE', '%' . $request->input('url') . '%')->paginate(10, [ DB::raw('DISTINCT(SUBSTRING_INDEX(sites.product_json, "/", 3))  as site'), 'id' ]), JsonResponse::HTTP_OK);
         }
+        $jobs = DB::table('jobs')->get();
+        $runningJobs = $jobs->filter(function ($job) {
+            return $job->attempts > 0 && !is_null($job->reserved_at);
+        })->map(function ($job) {
+            $data = json_decode($job->payload);
+            preg_match('/id\\";i:\d{0,10}/', $data->data->command, $matches);
 
-        return response()->json(Site::paginate(10, [ 'product_html', 'product_json', 'quantity_updated_at', 'position_updated_at', 'json_updated_at', 'id' ]), JsonResponse::HTTP_OK);
+            $matches = array_map(function ($match) {
+                return str_replace([ 'id";i:' ], '', $match);
+            }, $matches);
+
+            return $matches;
+
+        })->flatten()->toArray();
+
+        $pagination = Site::paginate(10, [ 'product_html', 'product_json', 'quantity_updated_at', 'position_updated_at', 'json_updated_at', 'id' ]);
+
+        $pagination->getCollection()->transform(function ($site, $key) use ($runningJobs) {
+            return [
+
+                'product_html'        => $site->product_html,
+                'product_json'        => $site->product_json,
+                'quantity_updated_at' => $site->quantity_updated_at,
+                'position_updated_at' => $site->position_updated_at,
+                'json_updated_at'     => $site->json_updated_at,
+                'id'                  => $site->id,
+                'running'             => in_array($site->id, $runningJobs)
+            ];
+        });
+
+        return response()->json($pagination, JsonResponse::HTTP_OK);
     }
 
     /**

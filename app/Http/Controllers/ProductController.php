@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Product;
+use App\Models\Site;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -42,6 +43,7 @@ class ProductController extends Controller {
     {
 
         $filters = json_decode($request->input('filter'));
+
         switch ( $request->input('sortBy') )
         {
             case '';
@@ -66,7 +68,7 @@ class ProductController extends Controller {
             ->leftjoin('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
             ->when(!empty($filters->site->url), function ($q) use ($filters) {
                 $q->whereIn('sites.id', array_map(function ($site) {
-                    return $site->id;
+                    return Site::where('product_json', 'like', $site->site . '%')->first()->id;
                 }, $filters->site->url));
             })
             ->when(!empty($filters->catalog->title), function ($q) use ($filters) {
@@ -169,7 +171,7 @@ class ProductController extends Controller {
                 $sortBy = $request->input('sortBy');
         }
 
-        $data =DB::table('products')
+        $data = DB::table('products')
             ->selectRaw('SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at, IFNULL(products.position,"n/a") as `products.position`,IFNULL(sum(sales),"n/a") as sales,quantity, products.id as product_id')
             ->join('sites', 'products.site_id', '=', 'sites.id')
             ->join('catalog_product', 'products.product_id', '=', 'catalog_product.product_id')

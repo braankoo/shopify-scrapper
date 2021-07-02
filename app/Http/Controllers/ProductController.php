@@ -68,6 +68,7 @@ class ProductController extends Controller {
             ->leftjoin('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
             ->when(!empty($filters->site->url), function ($q) use ($filters) {
                 $q->whereIn('sites.id', array_map(function ($site) {
+
                     return Site::where('product_json', 'like', $site->site . '%')->get()->map->id->toArray();
                 }, $filters->site->url));
             })

@@ -5,7 +5,7 @@
                 <multiselect :options="filters.loaded.site.url"
                              v-model="filters.selected.site.url"
                              label="site"
-                             track-by="id"
+                             track-by="site"
                              :multiple="true"
                              :searchable="searchable.sites.url"
                              :internal-search="false"

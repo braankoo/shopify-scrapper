@@ -69,7 +69,7 @@ class ProductController extends Controller {
             ->join('variants', 'products.product_id', '=', 'variants.product_id')
             ->leftjoin('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
             ->when(!empty($filters->site->url), function ($q) use ($filters) {
-                $q->whereIn('catalogs.site_id', array_map(
+                $q->whereIn('sites.id', array_map(
                         function ($site) {
                             return $site->id;
                         }, $filters->site->url)

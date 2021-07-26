@@ -32,9 +32,9 @@ module.exports = function (data, done, worker) {
             if (status !== 'success') {
                 fail++;
 
-
-                loadPage(url, pageId);
-
+                setTimeout(function () {
+                    loadPage(url, pageId);
+                }, 30000);
                 return;
 
             }

@@ -28,7 +28,8 @@ function jobCallback(job, worker, index) {
                 url: data[index].url,
                 productId: data[index].productId,
                 hostname: data[index].hostname,
-                filePath: data[index].filePath
+                filePath: data[index].filePath,
+                siteId: data[index].siteId
 
             }, function (err) {
                 // Lets log if it worked
@@ -43,7 +44,7 @@ function jobCallback(job, worker, index) {
 
                     importModule().then(function (module) {
 
-                        module.default(data[index].productId, data[index].filePath).then(() => {
+                        module.default(data[index].productId, data[index].siteId, data[index].filePath).then(() => {
                             fs.unlinkSync(data[index].filePath);
                             if ((data.length) - 1 === index) {
                                 conn.query('UPDATE sites set quantity_updated_at = NOW() WHERE id = ?', [args[0]], function (err) {
@@ -69,13 +70,13 @@ function jobCallback(job, worker, index) {
 
 //
 var pool = new Pool({
-    numWorkers: 1,
+    numWorkers: 3,
     jobCallback: jobCallback,
     workerFile: __dirname + '/js-workers/quantity.js',
     workerTimeout: 900000
 });
 if (args.length > 0) {
-    conn.query("SELECT distinct CONCAT(REPLACE(product_json, '.json', ''), CONCAT('/', products.handle)) as url, products.product_id, products.position FROM sites INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id  WHERE sites.id = ? AND products.position IS NOT NULL and products.position <= 1000 and products.status = 'ENABLED' ORDER BY products.position ASC", [args[0]], (err, results, fields) => {
+    conn.query("SELECT distinct CONCAT(REPLACE(product_json, '.json', ''), CONCAT('/', products.handle)) as url, products.product_id, products.position FROM sites INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id  WHERE sites.id = ? AND products.position IS NOT NULL and products.position <= 5000 and products.status = 'ENABLED' ORDER BY products.position ASC", [args[0]], (err, results, fields) => {
         if (err) throw err;
 
         results.forEach(function (result) {
@@ -94,7 +95,7 @@ if (args.length > 0) {
         pool.start();
     });
 } else {
-    conn.query("SELECT distinct CONCAT(REPLACE(product_json, '.json', ''), CONCAT('/', products.handle)) as url, products.product_id, products.position FROM sites INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id WHERE products.position IS NOT NULL and  products.position <= 1000 and products.status = 'ENABLED' ORDER BY products.position ASC", (err, results, fields) => {
+    conn.query("SELECT distinct CONCAT(REPLACE(product_json, '.json', ''), CONCAT('/', products.handle)) as url,sites.id as site_id, products.product_id, products.position FROM sites INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id WHERE products.position IS NOT NULL and  products.position <= 5000 and products.status = 'ENABLED' ORDER BY products.position ASC", (err, results, fields) => {
         if (err) throw err;
         console.log(results);
         results.forEach(function (result) {
@@ -105,7 +106,8 @@ if (args.length > 0) {
                     url: result.url,
                     productId: result.product_id,
                     hostname: hostname,
-                    filePath: filePath
+                    filePath: filePath,
+                    siteId: result.site_id
                 });
         })
         pool.start();

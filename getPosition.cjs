@@ -83,9 +83,9 @@ if (args.length > 0) {
 
             try {
                 const {hostname} = new URL(result[0].product_html);
-                if (fs.existsSync(__dirname + '/data/position/' + hostname + '.csv')) {
-                    fs.unlinkSync(__dirname + '/data/position/' + hostname + '.csv')
-                    fs.closeSync(fs.openSync(__dirname + '/data/position/' + hostname + '.csv', 'w'));
+                if (fs.existsSync(__dirname + '/data/position/' + hostname + result[0].id + '.csv')) {
+                    fs.unlinkSync(__dirname + '/data/position/' + hostname + result[0].id + '.csv')
+                    fs.closeSync(fs.openSync(__dirname + '/data/position/' + hostname + result[0].id + '.csv', 'w'));
                 }
 
 
@@ -94,7 +94,7 @@ if (args.length > 0) {
                         siteId: result[0].id,
                         url: result[0].product_html,
                         hostname: hostname,
-                        filePath: __dirname + '/data/position/' + hostname + '.csv'
+                        filePath: __dirname + '/data/position/' + hostname + result[0].id + '.csv'
 
                     }
                 );

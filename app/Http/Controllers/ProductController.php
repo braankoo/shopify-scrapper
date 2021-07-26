@@ -127,7 +127,7 @@ class ProductController extends Controller {
             ->join('catalogs', 'catalog_product.catalog_id', 'catalogs.catalog_id')
             ->join('sites', 'catalogs.site_id', 'sites.id')
             ->join('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
-            ->leftjoin('products_position', function ($q) {
+            ->leftjoin('product_position', function ($q) {
                 $q->on('products.id', '=', 'product_position.product_id');
                 $q->on('products.site_id', '=', 'sites.id');
                 $q->on(DB::raw('DATE(historicals.date_created)'), '=', DB::raw('DATE(products_position.date_created)'));

@@ -39,41 +39,6 @@ class GetPosition implements ShouldQueue {
      */
     public function handle()
     {
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "getPosition.cjs" ]);
-            $process->run();
-            $process->wait();
-
-        }
-
-
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "position/" ]);
-            $process->run();
-            $process->wait();
-        }
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "/quantity" ]);
-
-            $process->run();
-            $process->wait();
-        }
-
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "getQuantity.cjs" ]);
-
-            $process->run();
-            $process->wait();
-        }
-
 
         $process = new Process([ 'node', 'getPosition.cjs', $this->site->id ], base_path());
         $process->setTimeout(7000);
@@ -83,39 +48,6 @@ class GetPosition implements ShouldQueue {
 
     public function fail($exception = null)
     {
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "getPosition.cjs" ]);
-            $process->run();
-            $process->wait();
 
-        }
-
-
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "position/" ]);
-            $process->run();
-            $process->wait();
-        }
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "/quantity" ]);
-
-            $process->run();
-            $process->wait();
-        }
-
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "getQuantity.cjs" ]);
-
-            $process->run();
-            $process->wait();
-        }
     }
 }

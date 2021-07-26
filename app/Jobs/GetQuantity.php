@@ -41,39 +41,7 @@ class GetQuantity implements ShouldQueue {
         if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))
         {
 
-            for ( $i = 0; $i < 10; $i ++ )
-            {
-                $i ++;
-                $process = new Process([ 'pkill', '-f', "getPosition.cjs" ]);
-                $process->run();
-                $process->wait();
 
-            }
-            for ( $i = 0; $i < 10; $i ++ )
-            {
-                $i ++;
-                $process = new Process([ 'pkill', '-f', "position/" ]);
-                $process->run();
-                $process->wait();
-            }
-            sleep(10);
-            for ( $i = 0; $i < 10; $i ++ )
-            {
-                $i ++;
-                $process = new Process([ 'pkill', '-f', "/quantity" ]);
-
-                $process->run();
-                $process->wait();
-            }
-
-            for ( $i = 0; $i < 10; $i ++ )
-            {
-                $i ++;
-                $process = new Process([ 'pkill', '-f', "getQuantity.cjs" ]);
-
-                $process->run();
-                $process->wait();
-            }
 
             $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());
             $process->setTimeout(14400);
@@ -86,24 +54,6 @@ class GetQuantity implements ShouldQueue {
     {
 
 
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "getQuantity.cjs" ]);
-            $process->run();
-            $process->wait();
-
-        }
-
-
-        for ( $i = 0; $i < 10; $i ++ )
-        {
-            $i ++;
-            $process = new Process([ 'pkill', '-f', "/quantity" ]);
-            $process->run();
-            $process->wait();
-
-        }
 
     }
 }

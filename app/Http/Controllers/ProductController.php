@@ -101,7 +101,7 @@ class ProductController extends Controller {
             ->where('products.status', '=', 'ENABLED')
             ->whereDate('historicals.date_created', '>=', $filters->date_range->start_date)
             ->whereDate('historicals.date_created', '<=', $filters->date_range->end_date)
-            ->groupBy([ 'catalogs.id', 'products.id' ])
+            ->groupBy([ 'catalogs.id', 'products.id', 'sites.id' ])
             ->orderBy($sortBy, $request->input('sortDesc') == 'true' ? 'ASC' : 'DESC')
             ->paginate(20);
     }

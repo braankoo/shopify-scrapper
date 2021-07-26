@@ -75,7 +75,7 @@ class GetData implements ShouldQueue {
 
         $client = new Client([ 'base_uri' => $this->site->url ]);
 
-        $i = 0;
+
 
         $catalog->products()
             ->whereHas('variants',
@@ -85,14 +85,13 @@ class GetData implements ShouldQueue {
                             $q->whereDate('date_created', '=', Carbon::now());
                         });
                 })->where('status', '=', 'ENABLED')->get()
-            ->each(function ($product) use ($client, $catalog, &$i) {
+            ->each(function ($product) use ($client, $catalog) {
 
                 $request = new Request('GET', "collections/{$catalog->handle}/products/{$product->handle}.json");
                 $page = 0;
                 do
                 {
 
-                    $i ++;
                     $response = $client->send(
                         $request,
                         [

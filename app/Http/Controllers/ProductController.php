@@ -121,13 +121,17 @@ class ProductController extends Controller {
         $filters = json_decode($request->input('filter'));
 
         return DB::table('products')
-            ->selectRaw('historicals.date_created, SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at, IFNULL(products.position,"n/a") as `position`,IFNULL(sum(sales),"n/a") as sales, IFNULL(SUM(inventory_quantity),"n/a") as quantity, ROUND((AVG(historicals.price)/1000000),2) as price')
+            ->selectRaw('historicals.date_created, SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at, IFNULL(product_position.position,"n/a") as `position`,IFNULL(sum(sales),"n/a") as sales, IFNULL(SUM(inventory_quantity),"n/a") as quantity, ROUND((AVG(historicals.price)/1000000),2) as price')
             ->join('variants', 'products.product_id', '=', 'variants.product_id')
             ->join('catalog_product', 'products.product_id', 'catalog_product.product_id')
             ->join('catalogs', 'catalog_product.catalog_id', 'catalogs.catalog_id')
             ->join('sites', 'catalogs.site_id', 'sites.id')
             ->join('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
-            ->leftjoin('product_position', 'products.product_id', '=', 'product_position.product_id')
+            ->leftjoin('products_position', function ($q) {
+                $q->on('products.id', '=', 'product_position.product_id');
+                $q->on('products.site_id', '=', 'sites.id');
+                $q->on(DB::raw('DATE(historicals.date_created'), '=', DB::raw('DATE(products_position.date_created'));
+            })
             ->where('products.id', '=', $product->id)
             ->orderBy('historicals.date_created')
             ->groupBy('catalogs.id', 'products.id', 'sites.id', 'historicals.date_created')

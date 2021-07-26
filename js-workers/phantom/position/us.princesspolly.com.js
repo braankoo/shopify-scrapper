@@ -39,33 +39,35 @@ module.exports = function (data, done, worker) {
 
             }
 
-            const productsHtml = page.evaluate(function () {
-                return document.getElementById('bc-sf-filter-products').children.length;
+            const isLastPage = page.evaluate(function () {
+                return document.getElementsByClassName('paginate__link--next')[0].className.includes('--disabled');
             });
 
-            if (productsHtml === 0) {
-                fail++;
-                loadPage(url, pageId);
-
+            if (isLastPage) {
+                done(null);
 
             } else {
-                const content = page.evaluate(function () {
-                    return document.getElementById('bc-sf-filter-products').outerHTML;
+
+                const productsHtml = page.evaluate(function () {
+                    return document.getElementById('bc-sf-filter-products').children.length;
                 });
 
 
-                const isLastPage = page.evaluate(function () {
-                    return document.getElementsByClassName('paginate__link--next')[0].className.includes('--disabled');
-                });
+                if (productsHtml === 0) {
+                    fail++;
+                    loadPage(url, pageId);
 
-
-                if (isLastPage) {
-                    done(null);
 
                 } else {
+                    const content = page.evaluate(function () {
+                        return document.getElementById('bc-sf-filter-products').outerHTML;
+                    });
+
+
                     const toWrite = content.match(/data-product-selected-variant=".\d*/g);
                     writeData(toWrite.toString());
                     loadPage(url, ++pageId);
+
 
                 }
             }

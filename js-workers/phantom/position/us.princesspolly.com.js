@@ -42,8 +42,8 @@ module.exports = function (data, done, worker) {
             });
 
             if (productsHtml === 0) {
-                loadPage(url, pageId);
                 fail++;
+                loadPage(url, pageId);
 
 
             } else {

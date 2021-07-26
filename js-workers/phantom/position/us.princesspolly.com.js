@@ -8,7 +8,7 @@ module.exports = function (data, done, worker) {
 
     var page = webpage.create();
     var pageId = 1;
-    var fail = 0;
+    var fail = 0n;
 
     const writeData = function (data) {
         fs.write(params.filePath, data, 'a');

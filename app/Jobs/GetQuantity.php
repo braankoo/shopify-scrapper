@@ -53,7 +53,10 @@ class GetQuantity implements ShouldQueue {
     public function fail($exception = null)
     {
 
-
+        $process = new Process([ 'pkill', '-f', "node", "getQuantity.cjs", $this->site->id ], base_path());
+        $process->setTimeout(7000);
+        $process->mustRun();
+        $process->wait();
 
     }
 }

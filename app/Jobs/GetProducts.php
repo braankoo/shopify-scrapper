@@ -66,7 +66,7 @@ class GetProducts implements ShouldQueue {
         $client = new Client([ 'base_uri' => $this->site->url ]);
 
 
-        $this->catalog = Catalog::where('handle', '=', $this->site->handler)->where('status', '=', 'ENABLED')->where('site_id', '=', $this->site->id)->first();
+        $this->catalog = Catalog::where('status', '=', 'ENABLED')->where('site_id', '=', $this->site->id)->first();
 
         if (is_null($this->catalog))
         {

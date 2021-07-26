@@ -99,27 +99,8 @@ class ProductController extends Controller {
                         }, $filters->product->type)
                 );
             })
-//            ->when(!empty($filters->created_at->start_date), function ($q) use ($filters) {
-//                $q->whereDate('products.created_at', '>=', $filters->created_at->start_date);
-//            })
-//            ->when(!empty($filters->created_at->end_date), function ($q) use ($filters) {
-//
-//                $q->whereDate('products.created_at', '<=', $filters->created_at->end_date);
-//            })
-//            ->when(!empty($filters->published_at->start_date), function ($q) use ($filters) {
-//                $q->whereDate('products.published_at', '>=', $filters->published_at->start_date);
-//            })
-//            ->when(!empty($filters->published_at->end_date), function ($q) use ($filters) {
-//                $q->whereDate('products.published_at', '<=', $filters->published_at->end_date);
-//            })
-//            ->when(!empty($filters->position), function ($q) use ($filters) {
-//                $q->where('products.position', '=<', $filters->position);
-//            })
-//            ->when(!empty($filters->quantity), function ($q) use ($filters) {
-//                $q->where('quantity', '<=', $filters->quantity);
-//            })
             ->whereNotNull('products.position')
-            ->where('products.position', '<=', 1000)
+            ->where('products.position', '<=', 5000)
             ->where('products.status', '=', 'ENABLED')
             ->whereDate('historicals.date_created', '>=', $filters->date_range->start_date)
             ->whereDate('historicals.date_created', '<=', $filters->date_range->end_date)
@@ -236,7 +217,7 @@ class ProductController extends Controller {
 //                $q->where('quantity', '<=', $filters->quantity);
 //            })
             ->whereNotNull('products.position')
-            ->where('products.position', '<=', 1000)
+            ->where('products.position', '<=', 5000)
             ->where('products.status', '=', 'ENABLED')
             ->whereDate('historicals.date_created', '>=', $filters->date_range->start_date)
             ->whereDate('historicals.date_created', '<=', $filters->date_range->end_date)

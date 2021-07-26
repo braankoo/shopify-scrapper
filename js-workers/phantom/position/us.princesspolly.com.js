@@ -18,14 +18,11 @@ module.exports = function (data, done, worker) {
 
         page.open(url + '&page=' + pageId, function (status) {
 
-            if (fail === 10) {
-                loadPage(url, ++pageId);
-                return;
-            }
-            if (fail === 200) {
+
+            if (fail === 1500) {
                 done(null);
             }
-            if (pageId === 250) {
+            if (pageId === 90) {
                 done(null);
             }
 
@@ -46,6 +43,7 @@ module.exports = function (data, done, worker) {
 
             if (productsHtml === 0) {
                 loadPage(url, pageId);
+                fail++;
 
 
             } else {

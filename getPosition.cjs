@@ -27,7 +27,8 @@ function jobCallback(job, worker, index) {
                 id: index,
                 url: positionUrl[index].url,
                 hostname: positionUrl[index].hostname,
-                filePath: positionUrl[index].filePath
+                filePath: positionUrl[index].filePath,
+                siteId: positionUrl[index].siteId
 
             }, async function (err) {
                 // Lets log if it worked
@@ -40,7 +41,7 @@ function jobCallback(job, worker, index) {
 
                     const module = await importModule();
                     try {
-                        module.default(positionUrl[index].filePath).then((res) => {
+                        module.default(positionUrl[index].filePath, positionUrl[index].siteId).then((res) => {
                             conn.query("UPDATE sites set position_updated_at = NOW() WHERE id = ?", [parseInt(args[0])], function (err) {
                                 if (err) throw err;
                                 process.exit(0);
@@ -66,7 +67,7 @@ function jobCallback(job, worker, index) {
 
 var pool = function (hostname) {
     return new Pool({
-        numWorkers: 1,
+        numWorkers: 3,
         jobCallback: jobCallback,
         workerFile: __dirname + `/js-workers/phantom/position/${hostname}.js`,
         workerTimeout: 1200000

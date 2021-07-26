@@ -67,7 +67,7 @@ function jobCallback(job, worker, index) {
 
 var pool = function (hostname) {
     return new Pool({
-        numWorkers: 3,
+        numWorkers: 4,
         jobCallback: jobCallback,
         workerFile: __dirname + `/js-workers/phantom/position/${hostname}.js`,
         workerTimeout: 1200000

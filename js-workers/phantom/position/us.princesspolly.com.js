@@ -21,7 +21,7 @@ module.exports = function (data, done, worker) {
             console.log(status);
             console.log('***');
 
-            if (fail === 1500) {
+            if (fail === 3000) {
                 done(null);
             }
             if (pageId === 90) {

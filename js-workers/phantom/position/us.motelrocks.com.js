@@ -19,10 +19,10 @@ module.exports = function (data, done, worker) {
             console.log('*****');
             console.log(fail);
             console.log('*****');
-            if (fail === 300) {
+            if (fail === 500) {
                 done(null);
             }
-            if (pageId === 50) {
+            if (pageId === 250) {
                 done(null);
             }
 

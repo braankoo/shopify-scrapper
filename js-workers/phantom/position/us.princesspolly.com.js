@@ -19,11 +19,13 @@ module.exports = function (data, done, worker) {
         page.open(url + '&page=' + pageId, function (status) {
 
             if (fail === 10) {
-                fail = 0;
                 loadPage(url, ++pageId);
                 return;
             }
-            if (pageId === 50) {
+            if (fail === 200) {
+                done(null);
+            }
+            if (pageId === 250) {
                 done(null);
             }
 

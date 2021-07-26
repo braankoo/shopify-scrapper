@@ -21,7 +21,7 @@ function sliceIntoChunks(arr, chunkSize) {
     return res;
 }
 
-export default function (productId, csv) {
+export default function (productId, siteId, csv) {
     return new Promise(function (resolve, reject) {
         fs.readFile(csv, 'utf8', async function (err, data) {
             if (typeof data !== "undefined") {
@@ -38,13 +38,13 @@ export default function (productId, csv) {
                             const quantity = variantQuantity[1];
                             const [rows, fields] = await conn.query('SELECT variant_id FROM variants where product_id = ?', [productId]);
                             const variantRawObj = rows[variant];
-                            await conn.query('UPDATE historicals SET inventory_quantity = ? WHERE variant_id = ? and date_created = CURDATE()', [quantity, variantRawObj.variant_id]);
-                            const [r, f] = await conn.query('SELECT inventory_quantity from historicals WHERE date_created = SUBDATE(CURDATE(),1) and variant_id = ?', [variantRawObj.variant_id]);
+                            await conn.query('UPDATE historicals SET inventory_quantity = ? WHERE variant_id = ? and date_created = CURDATE() and site_id = ?', [quantity, variantRawObj.variant_id, siteId]);
+                            const [r, f] = await conn.query('SELECT inventory_quantity from historicals WHERE date_created = SUBDATE(CURDATE(),1) and variant_id = ? and site_id = ?', [variantRawObj.variant_id, siteId]);
                             if (r.length > 0) {
                                 if (r[0].inventory_quantity === null) {
-                                    await conn.query('UPDATE historicals set sales = ?  WHERE date_created = CURDATE() and variant_id = ?', [0, variantRawObj.variant_id]);
+                                    await conn.query('UPDATE historicals set sales = ?  WHERE date_created = CURDATE() and variant_id = ? and site_id = ?', [0, variantRawObj.variant_id, siteId]);
                                 } else {
-                                    await conn.query('UPDATE historicals set sales = ?  WHERE date_created = CURDATE() and variant_id = ?', [r[0].inventory_quantity - quantity, variantRawObj.variant_id]);
+                                    await conn.query('UPDATE historicals set sales = ?  WHERE date_created = CURDATE() and variant_id = ? and site_id = ?', [r[0].inventory_quantity - quantity, variantRawObj.variant_id, siteId]);
                                 }
                             }
                             productQuantity += parseInt(quantity);

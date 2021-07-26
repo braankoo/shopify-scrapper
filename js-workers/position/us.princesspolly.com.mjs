@@ -20,7 +20,7 @@ function sliceIntoChunks(arr, chunkSize) {
     return res;
 }
 
-export default function (csv) {
+export default function (csv, siteId) {
     return new Promise(function (resolve, reject) {
         fs.readFile(csv, 'utf8', async function (err, data) {
 
@@ -53,11 +53,11 @@ export default function (csv) {
                     });
                     for (const product of productsWithPositions) {
 
-                        await conn.query('UPDATE products SET position = ? WHERE product_id = ?', [product.position, product.product_id]);
-                        await conn.query('INSERT INTO product_position (product_id,position,date_created) VALUES (?,?, CURDATE()) ON DUPLICATE KEY UPDATE position = VALUES(position)', [product.product_id, product.position,]);
+                        await conn.query('UPDATE products SET position = ? WHERE product_id = ? and site_id = ?', [product.position, product.product_id, siteId]);
+                        await conn.query('INSERT INTO product_position (product_id,position,date_created,site_id) VALUES (?,?, CURDATE(),?) ON DUPLICATE KEY UPDATE position = VALUES(position)', [product.product_id, product.position, siteId]);
                     }
                     for (const variant of variantsWithPosition) {
-                        await conn.query('UPDATE historicals SET position = ? WHERE product_id = ? AND variant_id = ? AND date_created = CURDATE()', [variant.position + 1, variant.product_id, variant.variant_id])
+                        await conn.query('UPDATE historicals SET position = ? WHERE product_id = ? AND variant_id = ? AND date_created = CURDATE() and site_id = ?', [variant.position + 1, variant.product_id, variant.variant_id, siteId])
                     }
 
                 })();

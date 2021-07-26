@@ -12,7 +12,7 @@ const conn = await mysql.createConnection({
 });
 
 
-export default function (csv) {
+export default function (csv, siteId) {
     return new Promise(async function (resolve, reject) {
         fs.readFile(csv, 'utf8', async function (err, data) {
 
@@ -20,11 +20,11 @@ export default function (csv) {
             products = products.filter(function (el) {
                 return Number.isInteger(parseInt(el));
             });
-            
+
             for (let i = 0; i < products.length; i++) {
 
-                await conn.query('UPDATE products SET position = ? WHERE product_id = ?', [i + 1, products[i]]);
-                await conn.query('INSERT INTO product_position (product_id,position,date_created) VALUES (?,?, CURDATE()) ON DUPLICATE KEY UPDATE position = VALUES(position)', [products[i], i + 1]);
+                await conn.query('UPDATE products SET position = ? WHERE product_id = ? and site_id = ?', [i + 1, products[i], siteId]);
+                await conn.query('INSERT INTO product_position (product_id,position,date_created,site_id) VALUES (?,?, CURDATE(),?) ON DUPLICATE KEY UPDATE position = VALUES(position)', [products[i], i + 1, siteId]);
             }
             resolve('true');
         });

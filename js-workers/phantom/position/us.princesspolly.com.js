@@ -17,7 +17,9 @@ module.exports = function (data, done, worker) {
     const loadPage = function (url, pageId) {
 
         page.open(url + '&page=' + pageId, function (status) {
-
+            console.log('***');
+            console.log(status);
+            console.log('***');
 
             if (fail === 1500) {
                 done(null);

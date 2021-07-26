@@ -45,11 +45,11 @@ class PrepareData extends Command {
     {
         Site::each(function ($site) {
             Bus::chain([
-                new \App\Jobs\GetCatalog($site),
-                new \App\Jobs\GetProducts($site),
+//                new \App\Jobs\GetCatalog($site),
+//                new \App\Jobs\GetProducts($site),
                 new GetData($site),
-                new GetPosition($site),
-                new GetQuantity($site)
+//                new GetPosition($site),
+//                new GetQuantity($site)
             ])->dispatch();
         });
     }

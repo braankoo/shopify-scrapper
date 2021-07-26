@@ -130,7 +130,7 @@ class ProductController extends Controller {
             ->leftjoin('products_position', function ($q) {
                 $q->on('products.id', '=', 'product_position.product_id');
                 $q->on('products.site_id', '=', 'sites.id');
-                $q->on(DB::raw('DATE(historicals.date_created'), '=', DB::raw('DATE(products_position.date_created'));
+                $q->on(DB::raw('DATE(historicals.date_created'), '=', DB::raw('DATE(products_position.date_created)'));
             })
             ->where('products.id', '=', $product->id)
             ->orderBy('historicals.date_created')

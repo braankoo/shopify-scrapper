@@ -39,7 +39,7 @@ class GetPosition implements ShouldQueue {
      */
     public function handle()
     {
-        $process = Process::fromShellCommandline("pkill -f node getPosition.cjs $this->site->id", base_path());
+        $process = Process::fromShellCommandline("pkill -f 'node getPosition.cjs $this->site->id'", base_path());
         $process->setTimeout(7000);
         $process->mustRun();
         $process->wait();
@@ -52,7 +52,7 @@ class GetPosition implements ShouldQueue {
 
     public function fail($exception = null)
     {
-        $process = Process::fromShellCommandline("pkill -f node getPosition.cjs $this->site->id", base_path());
+        $process = Process::fromShellCommandline("pkill -f 'node getPosition.cjs $this->site->id'", base_path());
         $process->setTimeout(7000);
         $process->mustRun();
         $process->wait();

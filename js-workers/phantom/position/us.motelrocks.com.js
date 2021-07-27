@@ -22,7 +22,7 @@ module.exports = function (data, done, worker) {
             console.log('*****');
             console.log('*****');
             console.log(status);
-            if (fail === 500) {
+            if (fail === 100) {
                 done(null);
             }
 

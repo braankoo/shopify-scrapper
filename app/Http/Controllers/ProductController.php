@@ -78,7 +78,7 @@ class ProductController extends Controller {
             products.id as product_id')
             ->join('sites', 'products.site_id', '=', 'sites.id')
             ->join('catalog_product', function ($q) {
-                $q->on('products.id', '=', 'catalog_product.product_id');
+                $q->on('products.product_id', '=', 'catalog_product.product_id');
                 $q->on('products.site_id', '=', 'catalog_product.site_id');
             })
             ->join('catalogs', 'catalog_product.catalog_id', '=', 'catalogs.catalog_id')

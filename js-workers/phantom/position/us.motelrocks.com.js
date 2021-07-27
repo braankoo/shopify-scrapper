@@ -17,8 +17,11 @@ module.exports = function (data, done, worker) {
         page.open(url + '&page=' + pageId, function (status) {
 
             console.log('*****');
+
             console.log(fail);
             console.log('*****');
+            console.log('*****');
+            console.log(status);
             if (fail === 500) {
                 done(null);
             }

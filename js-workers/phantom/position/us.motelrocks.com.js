@@ -36,7 +36,7 @@ module.exports = function (data, done, worker) {
 
             }
 
-            
+
             const productsHtml = page.evaluate(function () {
                 return document.getElementById('bc-sf-filter-load-more').getAttribute("style");
             });
@@ -61,7 +61,9 @@ module.exports = function (data, done, worker) {
 
             } else {
                 fail++;
-                loadPage(url, pageId);
+                setTimeout(function () {
+                    loadPage(url, pageId);
+                }, 30000);
             }
         });
 

@@ -16,10 +16,14 @@ class GetQuantity implements ShouldQueue {
 
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+
+    public $tries = 5;
     /**
      * @var \App\Models\Site
      */
     public $site;
+
+    public $backoff = [ 100, 200, 300 ];
 
     /**
      * Create a new job instance.
@@ -40,7 +44,6 @@ class GetQuantity implements ShouldQueue {
     {
         if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))
         {
-
 
 
             $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());

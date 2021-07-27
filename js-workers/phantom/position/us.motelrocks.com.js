@@ -49,14 +49,9 @@ module.exports = function (data, done, worker) {
             const productsHtml = page.evaluate(function () {
                 return document.getElementById('bc-sf-filter-load-more').getAttribute("style");
             });
-            console.log('***');
-            console.log(url + '&page=' + pageId);
-            console.log(productsHtml);
-            console.log('***');
             if (productsHtml === 'display: none;') {
                 done(null);
             }
-
 
             const loadedProp = page.evaluate(function () {
                 return document.getElementById('bc-sf-filter-products').children.length;

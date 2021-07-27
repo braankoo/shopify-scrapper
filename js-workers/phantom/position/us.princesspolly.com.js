@@ -17,17 +17,6 @@ module.exports = function (data, done, worker) {
     const loadPage = function (url, pageId) {
 
         page.open(url + '&page=' + pageId, function (status) {
-            console.log('***');
-            console.log(status);
-            console.log('***');
-
-            if (fail === 3000) {
-                done(null);
-            }
-            if (pageId === 90) {
-                done(null);
-            }
-
 
             if (status !== 'success') {
                 fail++;
@@ -45,32 +34,40 @@ module.exports = function (data, done, worker) {
 
             if (isLastPage) {
                 done(null);
+            }
+
+            if (fail === 3000) {
+                done(null);
+            }
+
+            if (pageId === 90) {
+                done(null);
+            }
+
+
+            const productsHtml = page.evaluate(function () {
+                return document.getElementById('bc-sf-filter-products').children.length;
+            });
+
+
+            if (productsHtml === 0) {
+                fail++;
+                loadPage(url, pageId);
+
 
             } else {
-
-                const productsHtml = page.evaluate(function () {
-                    return document.getElementById('bc-sf-filter-products').children.length;
+                const content = page.evaluate(function () {
+                    return document.getElementById('bc-sf-filter-products').outerHTML;
                 });
 
 
-                if (productsHtml === 0) {
-                    fail++;
-                    loadPage(url, pageId);
+                const toWrite = content.match(/data-product-selected-variant=".\d*/g);
+                writeData(toWrite.toString());
+                loadPage(url, ++pageId);
 
 
-                } else {
-                    const content = page.evaluate(function () {
-                        return document.getElementById('bc-sf-filter-products').outerHTML;
-                    });
-
-
-                    const toWrite = content.match(/data-product-selected-variant=".\d*/g);
-                    writeData(toWrite.toString());
-                    loadPage(url, ++pageId);
-
-
-                }
             }
+
         });
 
     }

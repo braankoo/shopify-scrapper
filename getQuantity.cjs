@@ -70,7 +70,7 @@ function jobCallback(job, worker, index) {
 
 //
 var pool = new Pool({
-    numWorkers: 3,
+    numWorkers: 2,
     jobCallback: jobCallback,
     workerFile: __dirname + '/js-workers/quantity.js',
     workerTimeout: 900000

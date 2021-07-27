@@ -22,17 +22,13 @@ module.exports = function (data, done, worker) {
             if (fail === 500) {
                 done(null);
             }
-            if (pageId === 50) {
-                done(null);
-            }
-
 
             if (status !== 'success') {
                 fail++;
 
                 setTimeout(function () {
                     loadPage(url, pageId);
-                }, 10000);
+                }, 30000);
                 return;
 
             }

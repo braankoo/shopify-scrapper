@@ -36,15 +36,7 @@ module.exports = function (data, done, worker) {
 
             }
 
-            const ext = page.evaluate(function () {
-                return document.querySelectorAll('#bc-sf-filter-load-more').length;
-            });
-            if (ext === 0) {
-                fail++;
-                loadPage(url, pageId);
-                return;
-            }
-
+            
             const productsHtml = page.evaluate(function () {
                 return document.getElementById('bc-sf-filter-load-more').getAttribute("style");
             });

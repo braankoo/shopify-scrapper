@@ -48,6 +48,10 @@ module.exports = function (data, done, worker) {
                 return document.getElementById('bc-sf-filter-products').children.length;
             });
 
+            conosle.log('***');
+            console.log(loadedProp);
+            conosle.log('***');
+
             if (loadedProp > 0) {
 
                 const content = page.evaluate(function () {

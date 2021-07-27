@@ -48,9 +48,9 @@ module.exports = function (data, done, worker) {
                 return document.getElementById('bc-sf-filter-products').children.length;
             });
 
-            conosle.log('***');
+            console.log('***');
             console.log(loadedProp);
-            conosle.log('***');
+            console.log('***');
 
             if (loadedProp > 0) {
 

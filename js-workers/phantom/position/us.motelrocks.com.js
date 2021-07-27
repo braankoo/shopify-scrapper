@@ -63,7 +63,7 @@ module.exports = function (data, done, worker) {
                 fail++;
                 setTimeout(function () {
                     loadPage(url, pageId);
-                }, 30000);
+                }, 2000);
             }
         });
 

@@ -41,7 +41,7 @@ class GetPosition implements ShouldQueue {
     {
         $process = Process::fromShellCommandline("pkill -f 'node getPosition.cjs {$this->site->id}'");
         $process->setTimeout(7000);
-        $process->mustRun();
+        $process->run();
         $process->wait();
 
         $process = new Process([ 'node', 'getPosition.cjs', $this->site->id ], base_path());
@@ -54,7 +54,7 @@ class GetPosition implements ShouldQueue {
     {
         $process = Process::fromShellCommandline("pkill -f 'node getPosition.cjs {$this->site->id}'");
         $process->setTimeout(7000);
-        $process->mustRun();
+        $process->run();
         $process->wait();
     }
 }

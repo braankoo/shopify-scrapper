@@ -47,9 +47,8 @@ class GetQuantity implements ShouldQueue {
 
             $process = Process::fromShellCommandline("pkill -f 'node getQuantity.cjs {$this->site->id}'");
             $process->setTimeout(7000);
-            $process->mustRun();
+            $process->run();
             $process->wait();
-
 
             $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());
             $process->setTimeout(14400);
@@ -63,7 +62,7 @@ class GetQuantity implements ShouldQueue {
 
         $process = Process::fromShellCommandline("pkill -f 'node getQuantity.cjs {$this->site->id}'");
         $process->setTimeout(7000);
-        $process->mustRun();
+        $process->run();
         $process->wait();
 
     }

@@ -45,6 +45,11 @@ class GetQuantity implements ShouldQueue {
         if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))
         {
 
+            $process = new Process([ 'pkill', '-f', "node", "getQuantity.cjs", $this->site->id ], base_path());
+            $process->setTimeout(7000);
+            $process->mustRun();
+            $process->wait();
+
 
             $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());
             $process->setTimeout(14400);

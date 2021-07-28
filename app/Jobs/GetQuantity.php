@@ -54,7 +54,7 @@ class GetQuantity implements ShouldQueue {
             $process->wait();
 
             $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());
-            $process->setTimeout(14400);
+            $process->setTimeout(10810);
             $process->run();
             $process->wait();
 

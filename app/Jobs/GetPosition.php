@@ -45,7 +45,7 @@ class GetPosition implements ShouldQueue {
         $process->run();
         $process->wait();
 
-        $process = new Process([ 'pkill', '-f', "position" ]);
+        $process = new Process([ 'pkill', '-f', "{$this->site->host}" ]);
 
 
         $process->run();
@@ -65,7 +65,7 @@ class GetPosition implements ShouldQueue {
         $process->run();
         $process->wait();
 
-        $process = new Process([ 'pkill', '-f', "position" ]);
+        $process = new Process([ 'pkill', '-f', "{$this->site->host}" ]);
         $process->run();
         $process->wait();
     }

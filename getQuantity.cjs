@@ -70,10 +70,10 @@ function jobCallback(job, worker, index) {
 
 //
 var pool = new Pool({
-    numWorkers: 2,
+    numWorkers: 3,
     jobCallback: jobCallback,
     workerFile: __dirname + '/js-workers/quantity.js',
-    workerTimeout: 300
+    workerTimeout: 10800
 });
 if (args.length > 0) {
     conn.query("SELECT distinct CONCAT(REPLACE(product_json, '.json', ''), CONCAT('/', products.handle)) as url, products.product_id, products.position FROM sites INNER JOIN catalogs on sites.id = catalogs.site_id INNER JOIN catalog_product on catalogs.catalog_id = catalog_product.catalog_id INNER JOIN products on catalog_product.product_id = products.product_id  WHERE sites.id = ? AND products.position IS NOT NULL and products.position <= 5000 and products.status = 'ENABLED' ORDER BY products.position ASC", [args[0]], (err, results, fields) => {

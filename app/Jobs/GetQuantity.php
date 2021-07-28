@@ -49,10 +49,11 @@ class GetQuantity implements ShouldQueue {
             $process->run();
             $process->wait();
 
-            $process = new Process([ 'node', 'getQuantity.cjs', $this->site->id ], base_path());
-            $process->setTimeout(14400);
+            $process = new Process([ 'pkill', '-f', "quantity" ]);
             $process->run();
             $process->wait();
+
+
         }
     }
 
@@ -60,6 +61,10 @@ class GetQuantity implements ShouldQueue {
     {
 
         $process = new Process([ 'pkill', '-f', "node getQuantity.cjs {$this->site->id}" ]);
+        $process->run();
+        $process->wait();
+
+        $process = new Process([ 'pkill', '-f', "quantity" ]);
         $process->run();
         $process->wait();
 

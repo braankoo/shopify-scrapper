@@ -41,19 +41,24 @@ class GetPosition implements ShouldQueue {
     {
         $process = new Process([ 'pkill', '-f', "node getPosition.cjs {$this->site->id}" ]);
 
+
         $process->run();
         $process->wait();
 
-        $process = new Process([ 'node', 'getPosition.cjs', $this->site->id ], base_path());
-        $process->setTimeout(7000);
-        $process->mustRun();
+        $process = new Process([ 'pkill', '-f', "position" ]);
+        $process->run();
         $process->wait();
+
     }
 
     public function fail($exception = null)
     {
         $process = new Process([ 'pkill', '-f', "node getPosition.cjs {$this->site->id}" ]);
 
+        $process->run();
+        $process->wait();
+
+        $process = new Process([ 'pkill', '-f', "position" ]);
         $process->run();
         $process->wait();
     }

@@ -70,7 +70,7 @@ var pool = function (hostname) {
         numWorkers: 1,
         jobCallback: jobCallback,
         workerFile: __dirname + `/js-workers/phantom/position/${hostname}.js`,
-        workerTimeout: 10800
+        workerTimeout: 15800
     });
 }
 

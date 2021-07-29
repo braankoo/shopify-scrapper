@@ -45,11 +45,11 @@ class GetQuantity implements ShouldQueue {
         if (!Str::contains($this->site->product_json, [ 'tigermist', 'motelrocks' ]))
         {
 
-            $process = new Process([ 'pkill', '-f', "node getQuantity.cjs {$this->site->id}" ]);
+            $process = new Process([ 'pkill', '-f', "phantom" ]);
             $process->run();
             $process->wait();
 
-            $process = new Process([ 'pkill', '-f', "{$this->site->host}" ]);
+            $process = new Process([ 'pkill', '-f', "node" ]);
             $process->run();
             $process->wait();
 
@@ -65,11 +65,11 @@ class GetQuantity implements ShouldQueue {
     public function fail($exception = null)
     {
 
-        $process = new Process([ 'pkill', '-f', "node getQuantity.cjs {$this->site->id}" ]);
+        $process = new Process([ 'pkill', '-f', "phantom" ]);
         $process->run();
         $process->wait();
 
-        $process = new Process([ 'pkill', '-f', "{$this->site->host}" ]);
+        $process = new Process([ 'pkill', '-f', "node" ]);
         $process->run();
         $process->wait();
 

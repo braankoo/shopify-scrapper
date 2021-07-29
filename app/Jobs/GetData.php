@@ -39,7 +39,7 @@ class GetData implements ShouldQueue {
     /**
      * @var int
      */
-    public $tries = 1;
+    public $tries = 5;
 
 
     /**

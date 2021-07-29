@@ -76,7 +76,6 @@ class GetData implements ShouldQueue {
         $client = new Client([ 'base_uri' => $this->site->url ]);
 
 
-
         $catalog->products()
             ->whereHas('variants',
                 function ($q) {
@@ -114,7 +113,16 @@ class GetData implements ShouldQueue {
 
                             for ( $i = 0; $i < count($data->product->variants); $i ++ )
                             {
-                                $this->arr[] = $this->prepareVariantData($product, $i);
+                                $chunk = $this->prepareVariantData($product, $i);
+                                $this->variantsWithQuantityOperations(
+                                    array_filter($chunk, function ($variant) {
+                                        return array_key_exists('inventory_quantity', $variant);
+                                    })
+                                );
+                                $this->variantsWithOutQuantityOperations(array_filter($chunk, function ($variant) {
+                                        return !array_key_exists('inventory_quantity', $variant);
+                                    })
+                                );
 
                             }
 
@@ -126,22 +134,6 @@ class GetData implements ShouldQueue {
 
 
             });
-
-
-        $chunks = array_chunk($this->arr, 1000);
-        foreach ( $chunks as $chunk )
-        {
-            $this->variantsWithQuantityOperations(
-                array_filter($chunk, function ($variant) {
-                    return array_key_exists('inventory_quantity', $variant);
-                })
-            );
-
-            $this->variantsWithOutQuantityOperations(array_filter($chunk, function ($variant) {
-                    return !array_key_exists('inventory_quantity', $variant);
-                })
-            );
-        }
 
 
         $this->site->json_updated_at = Carbon::now();

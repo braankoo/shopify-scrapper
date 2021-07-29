@@ -39,7 +39,7 @@ class GetData implements ShouldQueue {
     /**
      * @var int
      */
-    public $tries = 5;
+    public $tries = 1;
 
 
     /**
@@ -113,16 +113,15 @@ class GetData implements ShouldQueue {
 
                             for ( $i = 0; $i < count($data->product->variants); $i ++ )
                             {
-                                $chunk = $this->prepareVariantData($product, $i);
-                                $this->variantsWithQuantityOperations(
-                                    array_filter($chunk, function ($variant) {
-                                        return array_key_exists('inventory_quantity', $variant);
-                                    })
-                                );
-                                $this->variantsWithOutQuantityOperations(array_filter($chunk, function ($variant) {
-                                        return !array_key_exists('inventory_quantity', $variant);
-                                    })
-                                );
+                                $variant = $this->prepareVariantData($product, $i);
+                                if (array_key_exists('inventory_quantity', $variant))
+                                {
+                                    $this->variantsWithQuantityOperations($variant);
+                                } else
+                                {
+                                    $this->variantsWithOutQuantityOperations($variant);
+                                }
+
 
                             }
 

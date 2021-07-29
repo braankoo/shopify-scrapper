@@ -123,7 +123,7 @@ class GetProducts implements ShouldQueue {
             }
 
         } while ( $response->getStatusCode() == 200 && !empty($data->products) );
-        $this->catalog->products()->update([ 'status' => 'ENABLED' ]);
+
     }
 
     /**

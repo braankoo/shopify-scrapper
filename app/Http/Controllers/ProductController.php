@@ -66,6 +66,7 @@ class ProductController extends Controller {
             sites.product_html as site,
             catalogs.title as catalog,
             products.title as product,
+            sites.id as site_id,
             image,
             CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),
             CONCAT("/products/",products.handle)) as url,
@@ -128,7 +129,7 @@ class ProductController extends Controller {
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function historical(Product $product, Request $request): \Illuminate\Pagination\LengthAwarePaginator
+    public function historical(int $siteId,Product $product,  Request $request): \Illuminate\Pagination\LengthAwarePaginator
     {
 
         $filters = json_decode($request->input('filter'));
@@ -140,7 +141,7 @@ class ProductController extends Controller {
             ->join('catalogs', 'catalog_product.catalog_id', 'catalogs.catalog_id')
             ->join('sites', 'catalogs.site_id', 'sites.id')
             ->join('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
-            ->leftjoin('product_position', function ($q) {
+            ->join('product_position', function ($q) {
                 $q->on('products.product_id', '=', 'product_position.product_id');
                 $q->on('products.site_id', '=', 'sites.id');
                 $q->on(DB::raw('DATE(historicals.date_created)'), '=', DB::raw('DATE(product_position.date_created)'));

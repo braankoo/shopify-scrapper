@@ -32,7 +32,7 @@ const router = new VueRouter(
                         component: ProductIndex
                     },
                     {
-                        path: 'product/:product/historical',
+                        path: 'product/:siteId/:product/historical',
                         component: index,
                         name: "Product Historical"
                     },

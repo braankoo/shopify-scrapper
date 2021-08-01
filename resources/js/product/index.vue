@@ -139,7 +139,7 @@
                  ref="products-table"
         >
             <template #cell(product)="data" class="text-center">
-                <router-link :to="{ name: 'Product Historical', params: { product: data.item.product_id }}">
+                <router-link :to="{ name: 'Product Historical', params: { product: data.item.product_id, siteId:data.item.site_id }}">
                     {{ data.item.product }}
                 </router-link>
             </template>

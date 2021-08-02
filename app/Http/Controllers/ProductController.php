@@ -139,7 +139,7 @@ class ProductController extends Controller {
             ->join('variants', 'products.product_id', '=', 'variants.product_id')
             ->join('catalog_product', 'products.product_id', 'catalog_product.product_id')
             ->join('catalogs', 'catalog_product.catalog_id', 'catalogs.catalog_id')
-            ->join('sites', 'catalogs.site_id', 'sites.id')
+            ->join('sites', 'products.site_id', 'sites.id')
             ->join('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
             ->leftjoin('product_position', function ($q) {
                 $q->on('products.product_id', '=', 'product_position.product_id');

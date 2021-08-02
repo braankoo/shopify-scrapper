@@ -147,6 +147,7 @@ class ProductController extends Controller {
                 $q->on('historicals.date_created', '=', 'product_position.date_created');
             })
             ->where('products.id', '=', $product->id)
+            ->where('sites.id', '=', $siteId)
             ->orderBy('historicals.date_created')
             ->groupBy('catalogs.id', 'products.id', 'sites.id', 'historicals.date_created')
             ->whereBetween('historicals.date_created', [ $filters->date->start_date, $filters->date->end_date ])

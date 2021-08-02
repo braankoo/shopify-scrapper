@@ -56,10 +56,7 @@ export default function (csv, siteId) {
                         await conn.query('UPDATE products SET position = ? WHERE product_id = ? and site_id = ?', [product.position, product.product_id, siteId]);
                         await conn.query('INSERT INTO product_position (product_id,position,date_created,site_id) VALUES (?,?, CURDATE(),?) ON DUPLICATE KEY UPDATE position = VALUES(position)', [product.product_id, product.position, siteId]);
                     }
-                    for (const variant of variantsWithPosition) {
-                        await conn.query('UPDATE historicals SET position = ? WHERE product_id = ? AND variant_id = ? AND date_created = CURDATE() and site_id = ?', [variant.position + 1, variant.product_id, variant.variant_id, siteId])
-                    }
-
+                    
                 })();
             }
             resolve('true');

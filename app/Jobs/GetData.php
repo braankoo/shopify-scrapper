@@ -218,7 +218,7 @@ class GetData implements ShouldQueue {
 
         if (!empty($data))
         {
-            Historical::upsert($data, [ 'variant_id', 'product_id', 'inventory_quantity', 'site_id', 'date_created' ], array_keys($data[0]));
+            Historical::upsert($data, [ 'variant_id', 'product_id', 'site_id', 'date_created' ], array_keys($data[0]));
         }
     }
 

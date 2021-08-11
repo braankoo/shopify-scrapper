@@ -109,14 +109,13 @@ class GetProducts implements ShouldQueue {
                         $productCatalogRelation[] = [ 'catalog_id' => $this->catalog->catalog_id, 'product_id' => $product->id, 'site_id' => $this->catalog->site->id ];
                     }
 
-
-                    Product::upsert($products, [ 'product_id', 'site_id' ], array_keys($products[0]));
-                    Product::whereIn('product_id', array_map(function ($product) {
-                        return $product['product_id'];
+                    Product::upsert($products, [ 'id', 'site_id' ], array_keys($products[0]));
+                    Product::whereIn('id', array_map(function ($product) {
+                        return $product['id'];
                     }, $products))->whereNull('first_scrape')->update([
                         'first_scrape' => Carbon::now()
                     ]);
-                    Variant::upsert($variants, [ 'product_id', 'variant_id' ], array_keys($variants[0]));
+                    Variant::upsert($variants, [ 'id', 'product_id' ], array_keys($variants[0]));
                     DB::table('catalog_product')->upsert($productCatalogRelation, [ 'catalog_id', 'product_id', 'site_id' ], array_keys($productCatalogRelation[0]));
                 }
                 sleep(5);
@@ -135,7 +134,7 @@ class GetProducts implements ShouldQueue {
     function prepareProductData($product, array $variants): array
     {
         $arr = [];
-        $arr['product_id'] = $product->id;
+        $arr['id'] = $product->id;
         $arr['title'] = $product->title;
         $arr['type'] = $product->product_type;
         $arr['handle'] = $product->handle;
@@ -159,7 +158,7 @@ class GetProducts implements ShouldQueue {
         for ( $i = 0; $i < count($product->variants); $i ++ )
         {
             $variant['product_id'] = $product->id;
-            $variant['variant_id'] = $product->variants[$i]->id;
+            $variant['id'] = $product->variants[$i]->id;
             $variant['sku'] = $product->variants[$i]->sku;
             $variants[] = $variant;
         }

@@ -92,7 +92,7 @@ class GetCatalog implements ShouldQueue {
     private function getCatalog($collection): array
     {
         $catalog = [];
-        $catalog['catalog_id'] = $collection->id;
+        $catalog['id'] = $collection->id;
         $catalog['handle'] = $collection->handle;
         $catalog['title'] = $collection->title;
         $catalog['description'] = $collection->description;

@@ -141,16 +141,16 @@ class ProductController extends Controller {
 
         return DB::table('products')
             ->selectRaw('historicals.date_created, SUBSTRING_INDEX(sites.product_json,"/",3) as site,catalogs.title as catalog, products.title as product,image,CONCAT(CONCAT(CONCAT(SUBSTRING_INDEX(sites.product_json,"/",3), "/collections/"),catalogs.handle),CONCAT("/products/",products.handle)) as url, type,DATE_FORMAT(products.created_at, "%Y-%m-%d") as created_at,DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at, IFNULL(product_position.position,"n/a") as `position`,IFNULL(sum(sales),"n/a") as sales, IFNULL(SUM(inventory_quantity),"n/a") as quantity, ROUND((AVG(historicals.price)/1000000),2) as price')
-            ->join('variants', 'products.product_id', '=', 'variants.product_id')
+            ->join('variants', 'products.id', '=', 'variants.product_id')
             ->join('catalog_product', function ($q) {
-                $q->on('products.product_id', '=', 'catalog_product.product_id');
+                $q->on('products.id', '=', 'catalog_product.product_id');
                 $q->on('products.site_id', '=', 'catalog_product.site_id');
             })
-            ->join('catalogs', 'catalog_product.catalog_id', 'catalogs.catalog_id')
+            ->join('catalogs', 'catalog_product.catalog_id', 'catalogs.id')
             ->join('sites', 'products.site_id', 'sites.id')
-            ->join('historicals', 'variants.variant_id', '=', 'historicals.variant_id')
+            ->join('historicals', 'variants.id', '=', 'historicals.variant_id')
             ->leftjoin('product_position', function ($q) {
-                $q->on('products.product_id', '=', 'product_position.product_id');
+                $q->on('products.id', '=', 'product_position.product_id');
                 $q->on('products.site_id', '=', 'product_position.site_id');
                 $q->on('historicals.date_created', '=', 'product_position.date_created');
             })

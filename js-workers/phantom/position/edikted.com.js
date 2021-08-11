@@ -7,7 +7,7 @@ module.exports = function (data, done, worker) {
     var params = data;
 
     var page = webpage.create();
-
+    page.settings.loadImages = false;
     var fail = 0;
 
     const writeData = function (data) {

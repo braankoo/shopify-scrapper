@@ -79,14 +79,14 @@ class ProductController extends Controller {
             products.id as product_id')
             ->join('sites', 'products.site_id', '=', 'sites.id')
             ->join('catalog_product', function ($q) {
-                $q->on('products.product_id', '=', 'catalog_product.product_id');
+                $q->on('products.id', '=', 'catalog_product.product_id');
                 $q->on('products.site_id', '=', 'catalog_product.site_id');
             })
-            ->join('catalogs', 'catalog_product.catalog_id', '=', 'catalogs.catalog_id')
-            ->join('variants', 'products.product_id', '=', 'variants.product_id')
+            ->join('catalogs', 'catalog_product.catalog_id', '=', 'catalogs.id')
+            ->join('variants', 'products.id', '=', 'variants.product_id')
             ->join('historicals', function ($join) use ($filters) {
-                $join->on('variants.variant_id', '=', 'historicals.variant_id');
-                $join->on('variants.product_id', '=', 'historicals.product_id');
+                $join->on('variants.id', '=', 'historicals.variant_id');
+                $join->on('products.id', '=', 'historicals.product_id');
 
 
             })

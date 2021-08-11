@@ -6,6 +6,7 @@ module.exports = function (data, done, worker) {
 
     const params = data;
     const page = webpage.create();
+    page.settings.loadImages = false;
 
     const writeData = function (data) {
 
@@ -18,7 +19,10 @@ module.exports = function (data, done, worker) {
             fs.remove(path);
         }
         fs.write(path, content, 'a');
+
         done(null);
+        page.quit();
+
 
 
     });

@@ -36,7 +36,7 @@ export default function (productId, siteId, csv) {
                             let variantQuantity = row.match(/[0-9]{1,10}/g);
                             const variant = variantQuantity[0];
                             const quantity = variantQuantity[1];
-                            const [rows, fields] = await conn.query('SELECT variant_id FROM variants where product_id = ?', [productId]);
+                            const [rows, fields] = await conn.query('SELECT id FROM variants where product_id = ?', [productId]);
                             const variantRawObj = rows[variant];
                             await conn.query('UPDATE historicals SET inventory_quantity = ? WHERE variant_id = ? and date_created = CURDATE() and site_id = ? ', [quantity, variantRawObj.variant_id, siteId]);
                             const [r, f] = await conn.query('SELECT inventory_quantity from historicals WHERE date_created = SUBDATE(CURDATE(),1) and variant_id = ? and site_id = ?', [variantRawObj.variant_id, siteId]);
@@ -51,7 +51,7 @@ export default function (productId, siteId, csv) {
                         })();
                     }
 
-                    await conn.query('UPDATE products set quantity = ? WHERE product_id = ? and site_id = ?', [productQuantity, productId, siteId]);
+                    await conn.query('UPDATE products set quantity = ? WHERE id = ? and site_id = ?', [productQuantity, productId, siteId]);
                 }
             }
             resolve('true');

@@ -36,7 +36,7 @@ export default function (csv, siteId) {
             for (const chunk of chunks) {
 
                 await (async () => {
-                    const [rows, fields] = await conn.query('SELECT product_id,variant_id FROM variants WHERE variant_id IN (?)', [chunk]);
+                    const [rows, fields] = await conn.query('SELECT product_id,id FROM variants WHERE id IN (?)', [chunk]);
 
                     const variantsWithPosition = rows.map(function (row) {
                         row.position = variants.findIndex(function (variant) {
@@ -56,7 +56,7 @@ export default function (csv, siteId) {
                         console.log('*****');
                         console.log(product.position, product.product_id, siteId);
                         console.log('*****');
-                        await conn.query('UPDATE products SET position = ? WHERE product_id = ? and site_id = ?', [product.position, product.product_id, siteId]);
+                        await conn.query('UPDATE products SET position = ? WHERE id = ? and site_id = ?', [product.position, product.product_id, siteId]);
                         await conn.query('INSERT INTO product_position (product_id,date_created,site_id,position) VALUES (?,CURDATE(),?,?) ON DUPLICATE KEY UPDATE position = VALUES(position)', [product.product_id, siteId, product.position]);
                     }
 

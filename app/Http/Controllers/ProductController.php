@@ -84,8 +84,9 @@ class ProductController extends Controller {
             })
             ->join('catalogs', 'catalog_product.catalog_id', '=', 'catalogs.catalog_id')
             ->join('variants', 'products.product_id', '=', 'variants.product_id')
-            ->join('historicals', function ($join) use ($filters) {
+            ->join('historicals', function ($join) use ($filters){
                 $join->on('variants.variant_id', '=', 'historicals.variant_id');
+                $join->on('variants.product_id', '=', 'historicals.product_id');
                 $join->whereDate('historicals.date_created', '>=', $filters->date_range->start_date);
                 $join->whereDate('historicals.date_created', '<=', $filters->date_range->end_date);
             })
@@ -120,6 +121,7 @@ class ProductController extends Controller {
             ->whereNotNull('products.position')
             ->where('products.position', '<=', 5000)
             ->where('products.status', '=', 'ENABLED')
+
             ->groupBy([ 'catalogs.id', 'products.id', 'sites.id' ])
             ->orderBy($sortBy, $request->input('sortDesc') == 'true' ? 'ASC' : 'DESC')
             ->paginate(20);

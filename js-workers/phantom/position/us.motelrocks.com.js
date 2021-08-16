@@ -6,7 +6,7 @@ module.exports = function (data, done, worker) {
     var params = data;
 
     var page = webpage.create();
-    page.settings.loadImages = false;
+
     var pageId = 1;
     var fail = 0;
 
@@ -19,10 +19,7 @@ module.exports = function (data, done, worker) {
 
             console.log('*****');
 
-            console.log(fail);
-            console.log('*****');
-            console.log('*****');
-            console.log(status);
+
             if (fail === 100) {
                 done(null);
             }
@@ -48,10 +45,9 @@ module.exports = function (data, done, worker) {
             const loadedProp = page.evaluate(function () {
                 return document.getElementById('bc-sf-filter-products').children.length;
             });
-
-            console.log('***');
+            console.log('********');
             console.log(loadedProp);
-            console.log('***');
+            console.log('********');
 
             if (loadedProp > 0) {
 
@@ -68,7 +64,7 @@ module.exports = function (data, done, worker) {
                 fail++;
                 setTimeout(function () {
                     loadPage(url, pageId);
-                }, 2000);
+                }, 3000);
             }
         });
 

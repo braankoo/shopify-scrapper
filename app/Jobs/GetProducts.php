@@ -106,8 +106,9 @@ class GetProducts implements ShouldQueue {
                     {
                         list($arr, $variants) = $this->prepareProductData($product, $variants);
                         $products[] = $arr;
-                        $productCatalogRelation[] = [ 'catalog_id' => $this->catalog->catalog_id, 'product_id' => $product->id, 'site_id' => $this->catalog->site->id ];
+                        $productCatalogRelation[] = [ 'catalog_id' => $this->catalog->id, 'product_id' => $product->id, 'site_id' => $this->catalog->site->id ];
                     }
+
 
                     Product::upsert($products, [ 'id', 'site_id' ], array_keys($products[0]));
                     Product::whereIn('id', array_map(function ($product) {

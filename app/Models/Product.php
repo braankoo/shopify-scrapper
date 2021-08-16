@@ -12,7 +12,7 @@ class Product extends Model {
 
     public function catalogs(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'catalog_product', 'product_id', 'product_id', 'product_id', 'product_id');
+        return $this->belongsToMany(Catalog::class, 'catalog_product');
     }
 
     /**
@@ -20,6 +20,6 @@ class Product extends Model {
      */
     public function variants(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Variant::class, 'product_id', 'product_id');
+        return $this->hasMany(Variant::class);
     }
 }

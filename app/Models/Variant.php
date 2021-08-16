@@ -12,7 +12,6 @@ class Variant extends Model {
     /**
      * @var string
      */
-    protected $primaryKey = 'variant_id';
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -27,7 +26,7 @@ class Variant extends Model {
      */
     public function historical()
     {
-        return $this->hasMany(Historical::class, 'variant_id', 'variant_id');
+        return $this->hasMany(Historical::class, 'variant_id');
     }
 
 }

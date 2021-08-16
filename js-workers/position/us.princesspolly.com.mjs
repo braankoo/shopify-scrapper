@@ -40,7 +40,7 @@ export default function (csv, siteId) {
 
                     const variantsWithPosition = rows.map(function (row) {
                         row.position = variants.findIndex(function (variant) {
-                            return variant == row.variant_id;
+                            return variant == row.id;
                         });
                         return row;
                     });

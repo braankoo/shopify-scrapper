@@ -11,6 +11,7 @@ module.exports = function (data, done, worker) {
     var pageId = 1;
     var fail = 0;
 
+
     const writeData = function (data) {
         fs.write(params.filePath, data, 'a');
     }

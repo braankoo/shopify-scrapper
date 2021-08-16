@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Jobs\GetData;
 use App\Jobs\GetPosition;
 use App\Jobs\GetQuantity;
+use App\Jobs\MergeData;
 use App\Models\Site;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
@@ -49,7 +50,8 @@ class PrepareData extends Command {
                 new \App\Jobs\GetProducts($site),
                 new GetData($site),
                 new GetPosition($site),
-                new GetQuantity($site)
+                new GetQuantity($site),
+                new MergeData($site),
             ])->dispatch();
         });
     }

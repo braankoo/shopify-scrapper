@@ -70,7 +70,7 @@ class MergeData implements ShouldQueue {
                         and historicals.date_created = product_position.date_created
 
                     WHERE sites.id = :site_id
-                    AND date_created = CURDATE()
+                    AND historicals.date_created = CURDATE()
                     GROUP BY products.id, sites.id, historicals.date_created, catalogs.id
         ", [ 'site_id' => $this->site->id ]);
     }

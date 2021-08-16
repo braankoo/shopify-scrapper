@@ -7,7 +7,6 @@ module.exports = function (data, done, worker) {
     var params = data;
 
     var page = webpage.create();
-    page.settings.loadImages = false;
     var fail = 0;
 
     const writeData = function (data) {
@@ -16,9 +15,9 @@ module.exports = function (data, done, worker) {
 
     const loadPage = function (url, pageId) {
 
-        page.open(url + '?page=' + pageId, function (status) {
+        page.open(url + '&page=' + pageId, function (status) {
 
-            if (fail === 10) {
+            if (fail === 100) {
 
                 done(null);
                 return;
@@ -41,11 +40,18 @@ module.exports = function (data, done, worker) {
             const productsHtml = page.evaluate(function () {
                 return document.querySelector('.ProductList').children.length > 0;
             });
+            console.log('******');
+            console.log(productsHtml);
+            console.log('******');
 
 
             if (!productsHtml) {
                 fail++;
-                loadPage(url, pageId);
+                console.log(url, pageId);
+                setTimeout(function () {
+
+                    loadPage(url, pageId);
+                }, 20000);
 
 
             } else {

@@ -170,7 +170,8 @@ class SiteController extends Controller {
             new \App\Jobs\GetProducts($site),
             new GetData($site),
             new GetPosition($site),
-            new GetQuantity($site)
+            new GetQuantity($site),
+            new MergeData($site)
         ])->dispatch();
 
         return response()->json([ 'message' => 'Initialized' ], JsonResponse::HTTP_OK);

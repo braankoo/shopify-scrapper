@@ -145,7 +145,7 @@ class ProductController extends Controller {
             IFNULL(data.position,"n/a") as `position`,
             IFNULL(sum(sales),"n/a") as sales,
             IFNULL(sum(data.quantity),"n/a") as quantity,
-            DATE_FORMAT(data.date_created, "%Y-%m-%d") as date_created,
+            DATE_FORMAT(data.date_created, "%Y-%m-%d") as date_created
             ')
             ->where('data.product_id', '=', $product->id)
             ->where('data.site_id', '=', $siteId)

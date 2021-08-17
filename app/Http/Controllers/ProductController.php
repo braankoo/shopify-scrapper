@@ -151,7 +151,7 @@ class ProductController extends Controller {
             ->where('data.site_id', '=', $siteId)
             ->orderBy('data.date_created')
             ->whereBetween('data.date_created', [ $filters->date->start_date, $filters->date->end_date ])
-            ->groupBy('data.product_id', 'data.site_id', 'data.date_created')
+            ->groupBy(['data.product_id', 'data.site_id', 'data.date_created'])
             ->paginate(20);
 
     }

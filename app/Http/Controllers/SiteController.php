@@ -18,7 +18,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Validator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Process\Process;
-
+use App\Jobs\MergeData;
 class SiteController extends Controller {
 
     /**

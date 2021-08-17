@@ -130,7 +130,6 @@ class ProductController extends Controller {
     {
 
 
-
         $filters = json_decode($request->input('filter'));
 
         return DB::table('data')
@@ -145,7 +144,8 @@ class ProductController extends Controller {
             DATE_FORMAT(data.published_at, "%Y-%m-%d") as published_at,
             IFNULL(data.position,"n/a") as `position`,
             IFNULL(sum(sales),"n/a") as sales,
-            IFNULL(sum(data.quantity),"n/a") as quantity
+            IFNULL(sum(data.quantity),"n/a") as quantity,
+            DATE_FORMAT(data.date_created, "%Y-%m-%d") as date_created,
             ')
             ->where('data.product_id', '=', $product->id)
             ->where('data.site_id', '=', $siteId)

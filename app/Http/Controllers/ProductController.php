@@ -83,7 +83,7 @@ class ProductController extends Controller {
                 $q->on('data.site_id', '=', 'products.site_id');
             })
             ->when(!empty($filters->site->url), function ($q) use ($filters) {
-                $q->whereIn('sites.id', array_map(
+                $q->whereIn('data.site_id', array_map(
                         function ($site) {
                             return $site->id;
                         }, $filters->site->url)

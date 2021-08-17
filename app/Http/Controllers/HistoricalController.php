@@ -19,7 +19,7 @@ class HistoricalController extends Controller {
     {
         $filters = json_decode($request->input('filter'));
 
-        return DB::table('historicals')
+        return DB::table('data')
             ->selectRaw('ROUND(historicals.price / 1000000,2) as price,inventory_quantity as quantity,compare_at_price, sales,date_created, product_position.position')
             ->join('sites', 'historicals.site_id', '=', 'sites.id')
             ->join('variants', 'variants.variant_id', '=', 'historicals.variant_id')

@@ -63,10 +63,10 @@ class ProductController extends Controller {
 
         return DB::table('data')
             ->selectRaw('
-            site,
+            data.site,
             catalog,
             product,
-            data.site_id as site_id,
+            sites.id as site_id,
             data.image,
             url,
             data.type,
@@ -74,7 +74,7 @@ class ProductController extends Controller {
             DATE_FORMAT(products.published_at, "%Y-%m-%d") as published_at,
             IFNULL(products.position,"n/a") as `products.position`,
             IFNULL(sum(sales),"n/a") as sales,
-            IFNULL(sum(data.quantity),"n/a") as quantity,
+            products.quantity,
             products.position as position,
             product_id')
             ->join('sites', 'data.site_id', '=', 'sites.id')
@@ -115,7 +115,7 @@ class ProductController extends Controller {
             ->where('products.status', '=', 'ENABLED')
             ->where('data.date_created', '>=', $filters->date_range->start_date)
             ->where('data.date_created', '<=', $filters->date_range->end_date)
-            ->groupBy([ 'products.id', 'data.date_created', 'sites.id', ])
+            ->groupBy([ 'products.id', 'sites.id' ])
             ->orderBy($sortBy, $request->input('sortDesc') == 'true' ? 'ASC' : 'DESC')
             ->paginate(20);
     }
@@ -151,7 +151,7 @@ class ProductController extends Controller {
             ->where('data.site_id', '=', $siteId)
             ->orderBy('data.date_created')
             ->whereBetween('data.date_created', [ $filters->date->start_date, $filters->date->end_date ])
-            ->groupBy(['data.product_id', 'data.site_id', 'data.date_created'])
+            ->groupBy([ 'data.product_id', 'data.site_id', 'data.date_created' ])
             ->paginate(20);
 
     }

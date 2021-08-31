@@ -111,7 +111,7 @@ class ProductController extends Controller {
                 );
             })
             ->whereNotNull('products.position')
-            ->where('products.position', '<=', 5000)
+            ->where('products.position', '<=', 1000)
             ->where('products.status', '=', 'ENABLED')
             ->where('data.date_created', '>=', $filters->date_range->start_date)
             ->where('data.date_created', '<=', $filters->date_range->end_date)
